@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% from "_macros.html" import recipe_card, empty %}
+{% block title %}My recipes · {{ APP_NAME }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>My recipes</h1>
+  <div class="actions">
+    <a class="button" href="{{ url_for('recipes.new') }}">＋ Add a recipe</a>
+    {% if has_page('discover.index') %}
+      <a class="button button-secondary" href="{{ url_for('discover.index') }}">🌏 Find ready recipes</a>
+    {% endif %}
+  </div>
+</div>
+
+{% if total %}
+  <form method="get" class="card card-soft row" aria-label="Sort and filter">
+    <label class="field">
+      <span>Sort</span>
+      <select name="sort">
+        {% for key, (label, _order) in sorts.items() %}
+          <option value="{{ key }}" {% if key == sort %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    {% if tags %}
+      <label class="field">
+        <span>Tag</span>
+        <select name="tag">
+          <option value="">All tags</option>
+          {% for tag in tags %}
+            <option value="{{ tag.name }}" {% if tag.name == tag_name %}selected{% endif %}>#{{ tag.name }}</option>
+          {% endfor %}
+        </select>
+      </label>
+    {% endif %}
+    <label class="check"><input type="checkbox" name="favorites" value="1" {% if favorites %}checked{% endif %}> 💗 Favorites only</label>
+    <button type="submit" class="button button-secondary button-small">Show</button>
+    {% if has_page('tags.index') %}<a href="{{ url_for('tags.index') }}">Manage tags</a>{% endif %}
+  </form>
+{% endif %}
+
+{% if recipes %}
+  <p class="muted small" style="margin-top: 1rem">{{ plural(recipes|length, 'recipe') }}</p>
+  <ul class="recipe-grid">
+    {% for recipe in recipes %}<li>{{ recipe_card(recipe) }}</li>{% endfor %}
+  </ul>
+{% elif total %}
+  {% call empty('🙈', 'No recipes match', 'Try another tag, or show all your recipes.') %}
+    <a class="button button-secondary" href="{{ url_for('recipes.index') }}">Show all</a>
+  {% endcall %}
+{% else %}
+  {% call empty('🍜', 'No recipes yet!', 'Your recipe box is sleepy. Add your first recipe, or save a ready one from Discover.') %}
+    <div class="row" style="justify-content: center">
+      <a class="button" href="{{ url_for('recipes.new') }}">＋ Add my first recipe</a>
+      {% if has_page('discover.index') %}
+        <a class="button button-secondary" href="{{ url_for('discover.index') }}">🌏 Discover recipes</a>
+      {% endif %}
+    </div>
+  {% endcall %}
+{% endif %}
+{% endblock %}
