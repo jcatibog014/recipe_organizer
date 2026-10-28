@@ -66,12 +66,13 @@
       <ul class="recipe-grid">
         {% for meal in meals %}
           <li>
-            <a class="recipe-card" href="{{ url_for('discover.show', meal_id=meal.id) }}">
-              <div class="picture {{ block_class(meal) }}">
-                {% if meal.thumb %}<img src="{{ meal.thumb }}/small" alt="" loading="lazy" width="200" height="200">
-                {% else %}<div class="picture-emoji" aria-hidden="true">🍲</div>{% endif %}
-                {% if meal.id in saved %}<span class="badge-saved">Saved</span>{% endif %}
-              </div>
+            <a class="recipe-card{% if not meal.thumb %} no-photo {{ accent_class(meal) }}{% endif %}" href="{{ url_for('discover.show', meal_id=meal.id) }}">
+              {% if meal.thumb %}
+                <div class="picture">
+                  <img src="{{ meal.thumb }}/small" alt="" loading="lazy" width="200" height="200">
+                  {% if meal.id in saved %}<span class="badge-saved">Saved</span>{% endif %}
+                </div>
+              {% endif %}
               <div class="card-body">
                 <h3>{{ meal.name }}</h3>
               </div>

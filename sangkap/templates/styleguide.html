@@ -36,7 +36,7 @@
   <section class="card">
     <h2>Chips</h2>
     <ul class="chips">
-      {% for name, emoji in samples %}<li class="chip">{{ name }}</li>{% endfor %}
+      {% for name in samples %}<li class="chip">{{ name }}</li>{% endfor %}
       <li class="chip chip-tag">#soup</li>
       <li class="chip chip-have">✓ garlic</li>
       <li class="chip chip-missing">✗ gata</li>
@@ -51,13 +51,14 @@
   </section>
 
   <ul class="recipe-grid">
-    {% for title, emoji_tag in [('Sinigang na baboy', 'soup'), ('Leche flan', 'dessert'), ('Pancit bihon', 'noodles'), ('Pork BBQ', 'grill')] %}
+    {% for title, tag in [('Sinigang na baboy', 'soup'), ('Leche flan', 'dessert'), ('Pancit bihon', 'noodles'), ('Pork BBQ', 'grill')] %}
       <li>
-        <div class="recipe-card">
-          <div class="picture block-{{ loop.index0 }}"><div class="picture-emoji" aria-hidden="true">{{ recipe_emoji({'tags': [emoji_tag]}) }}</div>
-            {% if loop.first %}<span class="sticker" aria-hidden="true">♥</span>{% endif %}</div>
-          <div class="card-body"><h2>{{ title }}</h2><p class="meta">45 min · Serves 4</p>
-            <ul class="chips"><li class="chip chip-tag">#{{ emoji_tag }}</li></ul></div>
+        <div class="recipe-card no-photo accent-{{ loop.index0 }}">
+          <div class="card-body">
+            <div class="card-title"><h2>{{ title }}</h2>{% if loop.first %}<span class="heart" aria-hidden="true">♥</span>{% endif %}</div>
+            <p class="meta">45 min · Serves 4</p>
+            <ul class="chips"><li class="chip chip-tag">#{{ tag }}</li></ul>
+          </div>
         </div>
       </li>
     {% endfor %}

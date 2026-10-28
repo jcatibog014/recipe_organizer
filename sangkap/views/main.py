@@ -20,5 +20,5 @@ def styleguide():
     """Every colour, button, chip and card on one page (only while developing)."""
     if not (current_app.debug or current_app.testing):
         abort(404)
-    samples = [(name, emoji) for name, _kind, emoji, _aliases in CATALOG[:12]]
+    samples = [name for name, _kind, _aliases in CATALOG[:12]]
     return render_template("styleguide.html", samples=samples)

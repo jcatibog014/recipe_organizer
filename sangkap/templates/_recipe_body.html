@@ -2,7 +2,7 @@
    and TheMealDB recipes (/discover/...). Needs:
      r            the recipe (an object or a dict): title, description, servings, prep_minutes,
                   cook_minutes, tags (names)
-     photo_url    or None
+     photo_url    or None (then there's no picture at all)
      sticker      or None
      groups       display.ingredient_groups(): [{section, lines: [{quantity, name, note, optional, emoji, ingredient_id}]}]
      steps        [text, ...]
@@ -14,9 +14,11 @@
 {% from "_macros.html" import picture %}
 <div class="recipe-layout">
   <div class="stack">
-    <div class="photo-frame">
-      {{ picture(r, photo_url, sticker) }}
-    </div>
+    {% if photo_url %}
+      <div class="photo-frame">
+        {{ picture(photo_url, sticker) }}
+      </div>
+    {% endif %}
 
     <section class="card" aria-labelledby="ingredients-title">
       <div class="card-head">
