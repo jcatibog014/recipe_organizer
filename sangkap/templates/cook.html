@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Cooking: {{ title }} · {{ APP_NAME }}{% endblock %}
+{% block meta %}{% if noindex %}<meta name="robots" content="noindex">{% endif %}{% endblock %}
+{% block content %}
+<div class="cook" data-cook>
+  <p><a href="{{ back }}">‹ Back to the recipe</a></p>
+  <h1>🔥 {{ title }}</h1>
+
+  <details class="card card-soft">
+    <summary class="label" style="cursor: pointer; min-height: 44px; display: flex; align-items: center">
+      🧺 Ingredients for {{ plural(servings, 'serving') }}
+    </summary>
+    <ul class="ingredient-list">
+      {% for group in groups %}{% for line in group.lines %}
+        <li><label><input type="checkbox"><span class="line">
+          <span class="emoji" aria-hidden="true">{{ line.emoji or '•' }}</span>
+          {% if line.quantity %}<span class="qty">{{ line.quantity }}</span>{% endif %} {{ line.name }}
+          {% if line.note %}<span class="muted">, {{ line.note }}</span>{% endif %}
+        </span></label></li>
+      {% endfor %}{% endfor %}
+    </ul>
+  </details>
+
+  {# With JavaScript: one big step at a time. Without it: every step, big. #}
+  <section class="card cook-one" aria-live="polite">
+    <p class="cook-progress" id="cook-progress"></p>
+    <p class="cook-step" id="cook-step"></p>
+    <div class="cook-controls">
+      <button type="button" class="button button-secondary" id="cook-back">‹ Back</button>
+      <button type="button" class="button" id="cook-next" data-done="{{ back }}">Next step ›</button>
+    </div>
+    <p class="small muted" id="cook-status"></p>
+  </section>
+  <section class="card cook-all">
+    <ol class="step-list cook-step">
+      {% for step in steps %}<li>{{ step }}</li>{% endfor %}
+    </ol>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% from "_macros.html" import recipe_card, empty, csrf %}
+{% block title %}{{ ingredient.name }} · {{ APP_NAME }}{% endblock %}
+{% block content %}
+<p><a href="{{ url_for('ingredients.index') }}">‹ My ingredients</a></p>
+<div class="page-head">
+  <h1>{{ ingredient.name|emoji }} {{ ingredient.name|capitalize }}</h1>
+  <a class="button button-secondary" href="{{ url_for('search.index', have=ingredient.name) }}">🔍 Search with it</a>
+</div>
+{% if ingredient.aliases %}
+  <p class="muted">Also called: {{ ingredient.aliases|map(attribute='alias')|sort|join(', ') }}</p>
+{% endif %}
+
+{% if recipes %}
+  <ul class="recipe-grid">
+    {% for recipe in recipes %}<li>{{ recipe_card(recipe) }}</li>{% endfor %}
+  </ul>
+
+  <section class="card card-soft" style="margin-top: 1.5rem" aria-labelledby="merge-title">
+    <h2 id="merge-title">✏️ Rename or merge</h2>
+    <p class="muted">Typed it two ways (“onions” and “onion”)? Write the name to use. Your recipes that use
+      “{{ ingredient.name }}” will use that one instead.</p>
+    <form method="post" action="{{ url_for('ingredients.merge', ingredient_id=ingredient.id) }}" class="inline-form">
+      {{ csrf() }}
+      <label class="visually-hidden" for="merge-target">New name</label>
+      <input id="merge-target" name="target" list="ingredient-names" maxlength="60" required placeholder="onion">
+      <button type="submit" class="button button-small">Rename / merge</button>
+    </form>
+    <datalist id="ingredient-names">{% for name in suggestions %}<option value="{{ name }}">{% endfor %}</datalist>
+  </section>
+{% else %}
+  {% call empty('🫙', 'No recipes with this yet') %}{% endcall %}
+{% endif %}
+{% endblock %}

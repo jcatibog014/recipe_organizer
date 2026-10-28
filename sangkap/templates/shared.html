@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}{{ recipe.title }} · shared from {{ APP_NAME }}{% endblock %}
+{% block meta %}<meta name="robots" content="noindex">{% endblock %}
+{% block content %}
+<div class="recipe-head">
+  <p class="chip chip-tag" style="width: fit-content">💌 A recipe shared with you</p>
+  <div class="page-head">
+    <h1>{{ recipe.title }}</h1>
+    <button type="button" class="button button-secondary no-print" data-print hidden>🖨️ Print</button>
+  </div>
+  <div class="meta">
+    {% if recipe.prep_minutes %}<span class="chip chip-big">🔪 Prep {{ recipe.prep_minutes|minutes }}</span>{% endif %}
+    {% if recipe.cook_minutes %}<span class="chip chip-big">🔥 Cook {{ recipe.cook_minutes|minutes }}</span>{% endif %}
+    {% for tag in recipe.tags %}<span class="chip chip-big chip-tag">#{{ tag.name }}</span>{% endfor %}
+  </div>
+</div>
+
+{% with r=recipe, sticker='💌', steps=recipe.steps|map(attribute='text')|list,
+        scale_url=url_for('shared.show', code=code), cook_url=url_for('shared.cook', code=code),
+        link_ingredients=False %}
+  {% include "_recipe_body.html" %}
+{% endwith %}
+
+{% if recipe.source == 'themealdb' %}
+  <p class="credit" style="margin-top: 1rem">Recipe data and imagery: <a href="https://www.themealdb.com/" rel="noopener" target="_blank">TheMealDB</a></p>
+{% endif %}
+{% if not g.user %}
+  <section class="card card-soft" style="margin-top: 1.5rem">
+    <h2>Made with Sangkap ✦</h2>
+    <p>A kawaii recipe box that finds recipes by the ingredients you have.</p>
+    <a class="button button-secondary" href="{{ url_for('auth.login') }}">Have a look</a>
+  </section>
+{% endif %}
+{% endblock %}

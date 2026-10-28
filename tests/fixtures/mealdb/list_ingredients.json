@@ -1,0 +1,8 @@
+{"meals": [
+  {"idIngredient": "1", "strIngredient": "Chicken"},
+  {"idIngredient": "2", "strIngredient": "Garlic"},
+  {"idIngredient": "3", "strIngredient": "Aubergine"},
+  {"idIngredient": "4", "strIngredient": "Soy Sauce"},
+  {"idIngredient": "5", "strIngredient": "Spring Onions"},
+  {"idIngredient": "6", "strIngredient": "Carrots"}
+]}

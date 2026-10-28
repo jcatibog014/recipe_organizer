@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
+  <!-- The stand-in background: scattered food emoji, tiled by CSS.
+       The owner's AI-made kawaii tile (static/art/pattern.webp) replaces it. -->
+  <g font-family="'Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',sans-serif" font-size="34" text-anchor="middle">
+    <text x="40" y="52" transform="rotate(-14 40 52)">🧄</text>
+    <text x="148" y="38" transform="rotate(10 148 38)">🍅</text>
+    <text x="252" y="70" transform="rotate(-8 252 70)">🌶️</text>
+    <text x="96" y="122" transform="rotate(16 96 122)">🧅</text>
+    <text x="206" y="146" transform="rotate(-18 206 146)">🥚</text>
+    <text x="34" y="196" transform="rotate(8 34 196)">🥕</text>
+    <text x="140" y="214" transform="rotate(-6 140 214)">🍚</text>
+    <text x="258" y="232" transform="rotate(14 258 232)">🦐</text>
+    <text x="88" y="282" transform="rotate(-12 88 282)">🍋</text>
+    <text x="196" y="286" transform="rotate(12 196 286)">🍄</text>
+  </g>
+</svg>

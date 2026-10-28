@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% from "_macros.html" import field %}
+{% block title %}Style board · {{ APP_NAME }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>✨ Style board</h1>
+  <p class="muted">Every piece of the kawaii look on one page (only while developing). Try the 🌙 button.</p>
+</div>
+
+<div class="stack">
+  <section class="card">
+    <h2>Candy colours</h2>
+    <div class="swatches">
+      {% for name in ['pink', 'mint', 'lemon', 'sky', 'peach', 'lilac', 'pink-soft', 'mint-soft', 'lemon-soft', 'sky-soft', 'surface-soft', 'bg'] %}
+        <div class="swatch" style="background: var(--{{ name }}); color: {{ '#4a2c2a' if name in ['pink', 'mint', 'lemon', 'sky', 'peach', 'lilac'] else 'var(--ink)' }}">--{{ name }}</div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Fonts</h2>
+    <h1 style="margin: 0">M PLUS Rounded 1c for headings</h1>
+    <p>Nunito for reading: 1 ½ cups coconut milk, 3 cloves garlic, ¼ tsp salt.</p>
+  </section>
+
+  <section class="card">
+    <h2>Jelly buttons</h2>
+    <div class="row">
+      <button class="button" type="button">💾 Save recipe</button>
+      <button class="button button-secondary" type="button">Cancel</button>
+      <button class="button button-danger" type="button">Delete</button>
+      <button class="button button-small" type="button">Small</button>
+      <button class="icon-button" type="button" aria-label="Example">＋</button>
+      <button class="link-button" type="button">A link button</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Chips</h2>
+    <ul class="chips">
+      {% for name, emoji in samples %}<li class="chip">{{ emoji }} {{ name }}</li>{% endfor %}
+      <li class="chip chip-tag">#soup</li>
+      <li class="chip chip-have">✓ garlic</li>
+      <li class="chip chip-missing">✗ gata</li>
+      <li class="chip chip-optional">○ sili</li>
+    </ul>
+  </section>
+
+  <section class="card form">
+    <h2>Sunken inputs</h2>
+    {{ field('example', 'Recipe name', 'Chicken adobo') }}
+    {{ field('example2', 'With an error', '', 'Give your recipe a name.') }}
+  </section>
+
+  <ul class="recipe-grid">
+    {% for title, emoji_tag in [('Sinigang na baboy', 'soup'), ('Leche flan', 'dessert'), ('Pancit bihon', 'noodles'), ('Pork BBQ', 'grill')] %}
+      <li>
+        <div class="recipe-card">
+          <div class="picture block-{{ loop.index0 }}"><div class="picture-emoji" aria-hidden="true">{{ recipe_emoji({'tags': [emoji_tag]}) }}</div>
+            {% if loop.first %}<span class="sticker" aria-hidden="true">💗</span>{% endif %}</div>
+          <div class="card-body"><h2>{{ title }}</h2><p class="meta">⏱️ 45 min · 🍽️ 4</p>
+            <ul class="chips"><li class="chip chip-tag">#{{ emoji_tag }}</li></ul></div>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <div class="card empty">
+    <div class="empty-art" aria-hidden="true">🍜</div>
+    <h2>No recipes yet!</h2>
+    <p class="muted">An empty state, floating gently.</p>
+  </div>
+</div>
+{% endblock %}

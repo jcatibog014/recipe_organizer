@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% from "_macros.html" import empty, csrf %}
+{% block title %}Tags · {{ APP_NAME }}{% endblock %}
+{% block content %}
+<p><a href="{{ url_for('recipes.index') }}">‹ My recipes</a></p>
+<div class="page-head">
+  <h1>🏷️ My tags</h1>
+  <p class="muted">Add tags on a recipe's edit page. Rename a tag to one you already have to merge them.</p>
+</div>
+
+{% if rows %}
+  <section class="card">
+    <ul class="list">
+      {% for tag, count in rows %}
+        <li>
+          <a class="chip chip-big chip-tag" href="{{ url_for('recipes.index', tag=tag.name) }}">#{{ tag.name }}
+            <span class="count-pill" aria-label="{{ plural(count, 'recipe') }}">{{ count }}</span></a>
+          <div class="row">
+            <form method="post" action="{{ url_for('tags.rename', tag_id=tag.id) }}" class="inline-form">
+              {{ csrf() }}
+              <label class="visually-hidden" for="tag-{{ tag.id }}">New name for #{{ tag.name }}</label>
+              <input id="tag-{{ tag.id }}" name="name" value="{{ tag.name }}" maxlength="30" required>
+              <button type="submit" class="button button-secondary button-small">Rename</button>
+            </form>
+            <form method="post" action="{{ url_for('tags.delete', tag_id=tag.id) }}"
+                  data-confirm="Delete #{{ tag.name }}? Your recipes stay.">
+              {{ csrf() }}
+              <button type="submit" class="link-button danger">Delete</button>
+            </form>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+{% else %}
+  {% call empty('🏷️', 'No tags yet', 'Tags like “soup” or “quick” help you find recipes fast.') %}{% endcall %}
+{% endif %}
+{% endblock %}
