@@ -1,0 +1,7 @@
+Flask>=3.1,<4
+SQLAlchemy>=2.0,<2.1  # the ORM: models.py is the data model in Python classes
+alembic>=1.13,<2  # database migrations (flask --app sangkap upgrade-db)
+psycopg[binary]>=3.2,<4  # talks to PostgreSQL (Neon) on the live site; SQLite needs nothing extra
+Pillow>=11  # makes uploaded photos small (photos.py) and the background tile (docs/make_background.py)
+gunicorn>=23  # the web server on Render (Linux only; locally use "flask run")
+pytest>=8

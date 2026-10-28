@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
+Thumbs.db
+.env
+# The local SQLite database (your own recipes) lives here. Never commit it.
+instance/
+# Your AI-made picture before docs/make_background.py turns it into static/art/pattern.webp.
+docs/art_src/

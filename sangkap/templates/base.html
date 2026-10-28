@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ APP_NAME }}{% endblock %}</title>
+  <meta name="description" content="Sangkap: your kawaii recipe box. Save recipes and find them by the ingredients you have.">
+  {% block meta %}{% endblock %}
+  <meta name="theme-color" content="#fff8ee" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1e1630" media="(prefers-color-scheme: dark)">
+  {# App icons: the SVG for modern browsers, PNGs for older ones and phone home screens (docs/make_icons.py). #}
+  <link rel="icon" href="{{ url_for('static', filename='icons/logo.svg') }}" type="image/svg+xml">
+  <link rel="icon" href="{{ url_for('static', filename='icons/icon-32.png') }}" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/apple-touch-icon.png') }}">
+  <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
+  {# M PLUS Rounded 1c for headings, Nunito for everything else. Until they arrive, system fonts show. #}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;800&family=Nunito:wght@400;600;700;800&display=swap">
+  {# No defer: it must run before the page is drawn (see theme-init.js). #}
+  <script src="{{ url_for('static', filename='theme-init.js') }}"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+</head>
+<body class="{% if HAS_PATTERN_TILE %}has-tile{% endif %}">
+  <a class="skip-link" href="#main">Skip to the content</a>
+
+  {# Tabs: (emoji, label, endpoint, the blueprints that count as "this tab"). #}
+  {% set tabs = [
+       ('📖', 'Recipes', 'recipes.index', ['recipes', 'tags']),
+       ('🔍', 'Search', 'search.index', ['search']),
+       ('🌏', 'Discover', 'discover.index', ['discover']),
+       ('📅', 'Meal plan', 'plan.index', ['plan']),
+       ('🧄', 'Ingredients', 'ingredients.index', ['ingredients']),
+       ('⚙️', 'Settings', 'auth.settings', ['settings'])] %}
+  {% set section = (request.endpoint or '').split('.')[0] %}
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="{{ url_for('recipes.index') }}">
+        <img src="{{ url_for('static', filename='icons/logo.svg') }}" alt="" width="44" height="44">
+        <span>Sangkap<span class="brand-dot" aria-hidden="true">✦</span></span>
+      </a>
+      <div class="header-actions">
+        <button type="button" class="icon-button" id="theme-toggle" aria-label="Switch light or dark mode">
+          <span class="theme-icon-moon" aria-hidden="true">🌙</span>
+          <span class="theme-icon-sun" aria-hidden="true">☀️</span>
+        </button>
+        {% if g.user %}
+          <span class="header-user">{{ g.user.username }}</span>
+          <form method="post" action="{{ url_for('auth.logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="button button-secondary button-small">Log out</button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+    {% if g.user %}
+      <nav class="site-nav" aria-label="Main">
+        <div class="site-nav-inner">
+          {% for emoji, label, endpoint, sections in tabs if has_page(endpoint) %}
+            {% set current = section in sections or request.endpoint == endpoint %}
+            <a href="{{ url_for(endpoint) }}" {% if current %}aria-current="page"{% endif %}>
+              <span aria-hidden="true">{{ emoji }}</span> {{ label }}
+            </a>
+          {% endfor %}
+        </div>
+      </nav>
+    {% endif %}
+  </header>
+
+  {% if g.user and g.user.is_demo %}
+    <p class="demo-banner">🍡 You are using the <strong>demo</strong>. These are sample recipes, and they start fresh every hour.</p>
+  {% endif %}
+
+  <main id="main" class="page">
+    {% for message in get_flashed_messages() %}
+      <p class="flash" role="status">{{ message }}</p>
+    {% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>{{ APP_NAME }} ✦ your kawaii recipe box</p>
+      {% block footer %}{% endblock %}
+    </div>
+  </footer>
+</body>
+</html>

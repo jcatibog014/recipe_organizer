@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Log in · {{ APP_NAME }}{% endblock %}
+{% block content %}
+<div class="login-layout">
+  <div class="login-hero">
+    <img src="{{ url_for('static', filename='icons/logo.svg') }}" alt="" width="120" height="120">
+    <h1>Hello, cook! 👋</h1>
+    <p class="muted">Your kawaii recipe box. Save recipes, then find them by the ingredients you have.</p>
+  </div>
+
+  <section class="card" aria-labelledby="login-title">
+    <h2 id="login-title">Log in</h2>
+    {% if error %}
+      <p class="form-error" role="alert">{{ error }}</p>
+    {% endif %}
+    <form method="post" action="{{ url_for('auth.login') }}" class="form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="next" value="{{ next }}">
+      <label class="field">
+        <span>Username</span>
+        <input name="username" value="{{ username }}" autocomplete="username" autocapitalize="none" required maxlength="40" autofocus>
+      </label>
+      <label class="field">
+        <span>Password</span>
+        <input name="password" type="password" autocomplete="current-password" required>
+      </label>
+      <button type="submit" class="button">Log in</button>
+    </form>
+  </section>
+
+  <section class="card card-soft" aria-labelledby="demo-title">
+    <h2 id="demo-title">Just looking? 🍡</h2>
+    <p>Try the demo. It has about 20 Filipino recipes, so you can search, plan and cook right away.</p>
+    <form method="post" action="{{ url_for('auth.demo') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button type="submit" class="button button-secondary">Try the demo</button>
+    </form>
+  </section>
+</div>
+{% endblock %}

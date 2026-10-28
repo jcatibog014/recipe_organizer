@@ -1,0 +1,65 @@
+{# Small building blocks used by many pages. #}
+
+{% macro field(name, label, value='', error=None, type='text', hint=None, attrs='') %}
+  <label class="field{% if error %} has-error{% endif %}">
+    <span>{{ label }}{% if hint %} <span class="hint">{{ hint }}</span>{% endif %}</span>
+    <input type="{{ type }}" name="{{ name }}" value="{{ value if value is not none else '' }}" {{ attrs|safe }}
+           {% if error %}aria-invalid="true" aria-describedby="{{ name }}-error"{% endif %}>
+    {% if error %}<p class="field-error" id="{{ name }}-error">{{ error }}</p>{% endif %}
+  </label>
+{% endmacro %}
+
+{% macro textarea(name, label, value='', error=None, hint=None, rows=4) %}
+  <label class="field{% if error %} has-error{% endif %}">
+    <span>{{ label }}{% if hint %} <span class="hint">{{ hint }}</span>{% endif %}</span>
+    <textarea name="{{ name }}" rows="{{ rows }}"
+              {% if error %}aria-invalid="true" aria-describedby="{{ name }}-error"{% endif %}>{{ value or '' }}</textarea>
+    {% if error %}<p class="field-error" id="{{ name }}-error">{{ error }}</p>{% endif %}
+  </label>
+{% endmacro %}
+
+{# The top of a recipe card or page: the photo, or a candy block with an emoji. #}
+{% macro picture(recipe, photo_url=None, sticker=None) %}
+  <div class="picture {{ block_class(recipe) }}">
+    {% if photo_url %}
+      <img src="{{ photo_url }}" alt="" loading="lazy">
+    {% else %}
+      <div class="picture-emoji" aria-hidden="true">{{ recipe_emoji(recipe) }}</div>
+    {% endif %}
+    {% if sticker %}<span class="sticker" aria-hidden="true">{{ sticker }}</span>{% endif %}
+  </div>
+{% endmacro %}
+
+{% macro own_photo_url(recipe) -%}
+  {%- if recipe.photo -%}{{ url_for('recipes.photo', recipe_id=recipe.id, v=recipe.photo.id) }}{%- endif -%}
+{%- endmacro %}
+
+{% macro recipe_card(recipe, extra=None) %}
+  <a class="recipe-card" href="{{ url_for('recipes.show', recipe_id=recipe.id) }}">
+    {{ picture(recipe, own_photo_url(recipe) or None, '💗' if recipe.is_favorite else None) }}
+    <div class="card-body">
+      <h2>{{ recipe.title }}</h2>
+      <p class="meta">
+        {% if recipe.total_minutes %}⏱️ {{ recipe.total_minutes|minutes }} · {% endif %}🍽️ {{ recipe.servings }}
+        {% if recipe.is_favorite %}<span class="visually-hidden">(favorite)</span>{% endif %}
+      </p>
+      {% if extra %}{{ extra }}{% endif %}
+      {% if recipe.tags %}
+        <ul class="chips" aria-label="Tags">
+          {% for tag in recipe.tags[:4] %}<li class="chip chip-tag">#{{ tag.name }}</li>{% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  </a>
+{% endmacro %}
+
+{% macro empty(art, title, text=None) %}
+  <div class="card empty">
+    <div class="empty-art" aria-hidden="true">{{ art }}</div>
+    <h2>{{ title }}</h2>
+    {% if text %}<p class="muted">{{ text }}</p>{% endif %}
+    {{ caller() if caller }}
+  </div>
+{% endmacro %}
+
+{% macro csrf() %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% endmacro %}
