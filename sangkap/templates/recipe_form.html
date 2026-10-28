@@ -16,7 +16,7 @@
       <input type="hidden" name="row_kind" value="section">
       <label class="field">
         <span class="visually-hidden">Heading</span>
-        <input name="row_section" value="{{ row.section }}" placeholder="Heading, e.g. For the sauce" maxlength="60">
+        <input name="row_section" value="{{ row.section }}" placeholder="Heading (e.g. For the sauce)" maxlength="60">
       </label>
       {% for name in ['row_amount', 'row_unit', 'row_name', 'row_note', 'row_optional'] %}
         <input type="hidden" name="{{ name }}" value="">
@@ -41,11 +41,11 @@
       </label>
       <label class="name-field">
         <span class="visually-hidden">Ingredient</span>
-        <input name="row_name" value="{{ row.name }}" list="ingredient-names" placeholder="Ingredient (garlic, toyo…)" autocomplete="off" maxlength="60">
+        <input name="row_name" value="{{ row.name }}" list="ingredient-names" placeholder="Ingredient" autocomplete="off" maxlength="60">
       </label>
       <label class="note-field">
         <span class="visually-hidden">Note</span>
-        <input name="row_note" value="{{ row.note }}" placeholder="Note (minced…)" maxlength="120">
+        <input name="row_note" value="{{ row.note }}" placeholder="Note (optional)" maxlength="120">
       </label>
       <label>
         <span class="visually-hidden">Needed or optional</span>
@@ -65,20 +65,18 @@
     <span class="step-number" aria-hidden="true">{{ number }}</span>
     <label>
       <span class="visually-hidden">Step {{ number }}</span>
-      <textarea name="step_text" rows="2" maxlength="2000" placeholder="What to do…">{{ text }}</textarea>
+      <textarea name="step_text" rows="2" maxlength="2000" placeholder="Describe this step">{{ text }}</textarea>
     </label>
     {{ row_tools('step') }}
   </div>
 {% endmacro %}
 
 {% block content %}
-<div class="page-head">
-  <h1>{{ '✏️ Edit recipe' if recipe else '✨ New recipe' }}</h1>
-  {% if recipe %}<a href="{{ url_for('recipes.show', recipe_id=recipe.id) }}">‹ Back to the recipe</a>{% endif %}
-</div>
+<a class="back-link" href="{{ url_for('recipes.show', recipe_id=recipe.id) if recipe else url_for('recipes.index') }}">‹ {{ 'Back to the recipe' if recipe else 'My recipes' }}</a>
+<div class="page-head"><h1>{{ 'Edit recipe' if recipe else 'New recipe' }}</h1></div>
 
 {% if message %}<p class="notice" role="status">{{ message }}</p>{% endif %}
-{% if errors %}<p class="notice notice-warn" role="alert">Some things need fixing. They are marked below.</p>{% endif %}
+{% if errors %}<p class="notice notice-warn" role="alert">Please fix the fields marked below.</p>{% endif %}
 
 <form method="post" enctype="multipart/form-data" class="stack"
       action="{{ url_for('recipes.edit', recipe_id=recipe.id) if recipe else url_for('recipes.new') }}">
@@ -87,37 +85,37 @@
   <button type="submit" name="action" value="save" class="visually-hidden" tabindex="-1" aria-hidden="true">Save</button>
 
   <section class="card form" aria-labelledby="about-title">
-    <h2 id="about-title">📖 About</h2>
+    <h2 id="about-title">Details</h2>
     {{ field('title', 'Name', form.title, errors.title, attrs='required maxlength="120" placeholder="Chicken adobo"') }}
     {{ textarea('description', 'Short description', form.description, errors.description, hint='(optional)', rows=2) }}
     <div class="fields-row">
       {{ field('servings', 'Servings', form.servings, errors.servings, type='number', attrs='min="1" max="100" required inputmode="numeric"') }}
-      {{ field('prep_minutes', 'Prep (minutes)', form.prep_minutes, errors.prep_minutes, type='number', attrs='min="0" max="1440" inputmode="numeric"') }}
-      {{ field('cook_minutes', 'Cook (minutes)', form.cook_minutes, errors.cook_minutes, type='number', attrs='min="0" max="1440" inputmode="numeric"') }}
+      {{ field('prep_minutes', 'Prep time (minutes)', form.prep_minutes, errors.prep_minutes, type='number', attrs='min="0" max="1440" inputmode="numeric"') }}
+      {{ field('cook_minutes', 'Cook time (minutes)', form.cook_minutes, errors.cook_minutes, type='number', attrs='min="0" max="1440" inputmode="numeric"') }}
     </div>
-    {{ field('tags', 'Tags', form.tags, errors.tags, hint='(with commas: soup, quick, filipino)', attrs='maxlength="400" autocomplete="off"') }}
+    {{ field('tags', 'Tags', form.tags, errors.tags, hint='(separated by commas, e.g. soup, quick, Filipino)', attrs='maxlength="400" autocomplete="off"') }}
   </section>
 
   <section class="card form" aria-labelledby="ingredients-title">
-    <h2 id="ingredients-title">🧺 Ingredients</h2>
-    <p class="muted small">Amount like <strong>2</strong>, <strong>1 1/2</strong> or <strong>2-3</strong>. Leave it empty for “to taste”. Empty rows are skipped.</p>
+    <h2 id="ingredients-title">Ingredients</h2>
+    <p class="muted small">Write amounts like <strong>2</strong>, <strong>1 1/2</strong> or <strong>2-3</strong>. Leave the amount empty for “to taste”. Empty rows are skipped.</p>
     {% if errors.rows %}<p class="form-error">{{ errors.rows }}</p>{% endif %}
     <div class="rows" id="ingredient-rows">
       {% for row in rows %}{{ ingredient_row(row) }}{% endfor %}
     </div>
     <div class="form-actions">
       <button type="submit" name="action" value="more" class="button button-secondary button-small"
-              data-add-row="tpl-ingredient" data-list="ingredient-rows">＋ Ingredient</button>
+              data-add-row="tpl-ingredient" data-list="ingredient-rows">Add ingredient</button>
       <button type="submit" name="action" value="more" class="button button-secondary button-small"
-              data-add-row="tpl-section" data-list="ingredient-rows">＋ Heading</button>
+              data-add-row="tpl-section" data-list="ingredient-rows">Add heading</button>
     </div>
     <details class="paste" {% if not recipe and not form.title %}open{% endif %}>
-      <summary>📋 Paste a whole ingredient list</summary>
+      <summary>Paste an ingredient list</summary>
       <label class="field">
-        <span class="hint">One ingredient per line, like “3 cloves garlic, minced”. A line that ends with “:” becomes a heading.</span>
+        <span class="hint">One ingredient per line, such as “3 cloves garlic, minced”. A line that ends with a colon (:) becomes a heading.</span>
         <textarea name="paste" rows="5" placeholder="1 kg chicken&#10;1/2 cup soy sauce&#10;6 cloves garlic, crushed&#10;salt to taste"></textarea>
       </label>
-      <button type="submit" name="action" value="paste" class="button button-small">Turn into rows</button>
+      <button type="submit" name="action" value="paste" class="button button-small">Add to ingredients</button>
     </details>
     <datalist id="ingredient-names">
       {% for name in suggestions %}<option value="{{ name }}">{% endfor %}
@@ -125,39 +123,38 @@
   </section>
 
   <section class="card form" aria-labelledby="steps-title">
-    <h2 id="steps-title">👩‍🍳 Steps</h2>
+    <h2 id="steps-title">Steps</h2>
     {% if errors.steps %}<p class="form-error">{{ errors.steps }}</p>{% endif %}
     <div class="rows" id="step-rows">
       {% for text in steps %}{{ step_row(text, loop.index) }}{% endfor %}
     </div>
     <div class="form-actions">
       <button type="submit" name="action" value="more" class="button button-secondary button-small"
-              data-add-row="tpl-step" data-list="step-rows">＋ Step</button>
+              data-add-row="tpl-step" data-list="step-rows">Add step</button>
     </div>
   </section>
 
   <section class="card form" aria-labelledby="photo-title">
-    <h2 id="photo-title">📸 Photo</h2>
+    <h2 id="photo-title">Photo</h2>
     {% if recipe and recipe.photo %}
-      <img src="{{ url_for('recipes.photo', recipe_id=recipe.id, v=recipe.photo.id) }}" alt="The recipe's photo now"
-           style="max-width: 16rem; border-radius: 18px">
+      <img class="photo-preview" src="{{ url_for('recipes.photo', recipe_id=recipe.id, v=recipe.photo.id) }}" alt="The current photo">
       <button type="submit" class="link-button danger" formaction="{{ url_for('recipes.delete_photo', recipe_id=recipe.id) }}"
               formnovalidate>Remove the photo</button>
     {% endif %}
     <label class="field">
-      <span>{{ 'Change the photo' if recipe and recipe.photo else 'Add a photo' }} <span class="hint">(JPG, PNG or WebP, up to 10 MB; we make it small)</span></span>
+      <span>{{ 'Replace the photo' if recipe and recipe.photo else 'Add a photo' }} <span class="hint">(JPG, PNG or WebP, up to 10 MB)</span></span>
       <input type="file" name="photo" accept="image/jpeg,image/png,image/webp,image/gif">
     </label>
   </section>
 
   <section class="card form" aria-labelledby="notes-title">
-    <h2 id="notes-title">📝 My notes <span class="hint muted small">(only you see these)</span></h2>
-    {{ textarea('notes', 'Notes', form.notes, errors.notes, hint='(tips, changes, who loved it…)', rows=3) }}
-    {{ field('source_url', 'From a website?', form.source_url, errors.source_url, type='url', hint='(optional link)', attrs='maxlength="500" placeholder="https://"') }}
+    <h2 id="notes-title">Private notes</h2>
+    {{ textarea('notes', 'Notes', form.notes, errors.notes, hint='(only you can see these)', rows=3) }}
+    {{ field('source_url', 'Source link', form.source_url, errors.source_url, type='url', hint='(optional)', attrs='maxlength="500" placeholder="https://"') }}
   </section>
 
   <div class="sticky-actions form-actions">
-    <button type="submit" name="action" value="save" class="button">💾 Save recipe</button>
+    <button type="submit" name="action" value="save" class="button">Save recipe</button>
     <a href="{{ url_for('recipes.show', recipe_id=recipe.id) if recipe else url_for('recipes.index') }}">Cancel</a>
   </div>
 

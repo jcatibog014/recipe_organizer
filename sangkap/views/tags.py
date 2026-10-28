@@ -65,5 +65,5 @@ def delete(tag_id):
     s = db.session()
     s.delete(tag)  # its recipe_tags rows go too; the recipes stay
     s.commit()
-    flash(f"Deleted #{tag.name}. Your recipes are still there.")
+    flash(f"Deleted #{tag.name}. Your recipes are unchanged.")
     return redirect(url_for("tags.index"))

@@ -1,14 +1,16 @@
 {% extends "base.html" %}
 {% from "_macros.html" import recipe_card, empty, csrf %}
-{% block title %}{{ ingredient.name }} · {{ APP_NAME }}{% endblock %}
+{% block title %}{{ ingredient.name|capitalize }} · {{ APP_NAME }}{% endblock %}
 {% block content %}
-<p><a href="{{ url_for('ingredients.index') }}">‹ My ingredients</a></p>
+<a class="back-link" href="{{ url_for('ingredients.index') }}">‹ Ingredients</a>
 <div class="page-head">
-  <h1>{{ ingredient.name|emoji }} {{ ingredient.name|capitalize }}</h1>
-  <a class="button button-secondary" href="{{ url_for('search.index', have=ingredient.name) }}">🔍 Search with it</a>
+  <h1>{{ ingredient.name|capitalize }}</h1>
+  <div class="actions">
+    <a class="button button-secondary" href="{{ url_for('search.index', have=ingredient.name) }}">Search recipes with it</a>
+  </div>
 </div>
 {% if ingredient.aliases %}
-  <p class="muted">Also called: {{ ingredient.aliases|map(attribute='alias')|sort|join(', ') }}</p>
+  <p class="page-intro muted">Also called: {{ ingredient.aliases|map(attribute='alias')|sort|join(', ') }}</p>
 {% endif %}
 
 {% if recipes %}
@@ -16,19 +18,19 @@
     {% for recipe in recipes %}<li>{{ recipe_card(recipe) }}</li>{% endfor %}
   </ul>
 
-  <section class="card card-soft" style="margin-top: 1.5rem" aria-labelledby="merge-title">
-    <h2 id="merge-title">✏️ Rename or merge</h2>
-    <p class="muted">Typed it two ways (“onions” and “onion”)? Write the name to use. Your recipes that use
-      “{{ ingredient.name }}” will use that one instead.</p>
+  <section class="card card-soft section-gap" aria-labelledby="merge-title">
+    <h2 id="merge-title">Rename or merge</h2>
+    <p class="muted">Wrote it two ways, like “onions” and “onion”? Enter the name to keep. Your recipes that use
+      “{{ ingredient.name }}” will switch to it.</p>
     <form method="post" action="{{ url_for('ingredients.merge', ingredient_id=ingredient.id) }}" class="inline-form">
       {{ csrf() }}
       <label class="visually-hidden" for="merge-target">New name</label>
-      <input id="merge-target" name="target" list="ingredient-names" maxlength="60" required placeholder="onion">
-      <button type="submit" class="button button-small">Rename / merge</button>
+      <input id="merge-target" name="target" list="ingredient-names" maxlength="60" required placeholder="New name">
+      <button type="submit" class="button">Rename</button>
     </form>
     <datalist id="ingredient-names">{% for name in suggestions %}<option value="{{ name }}">{% endfor %}</datalist>
   </section>
 {% else %}
-  {% call empty('🫙', 'No recipes with this yet') %}{% endcall %}
+  {% call empty('🫙', 'No recipes use this yet') %}{% endcall %}
 {% endif %}
 {% endblock %}

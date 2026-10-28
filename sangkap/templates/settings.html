@@ -2,25 +2,35 @@
 {% from "_macros.html" import field, csrf %}
 {% block title %}Settings · {{ APP_NAME }}{% endblock %}
 {% block content %}
-<div class="page-head"><h1>⚙️ Settings</h1></div>
+<div class="page-head"><h1>Settings</h1></div>
 
-<div class="kind-groups">
+<div class="settings-grid">
   <section class="card" aria-labelledby="more-title">
-    <h2 id="more-title">🗂️ My things</h2>
-    <ul class="list">
-      {% if has_page('tags.index') %}<li><a href="{{ url_for('tags.index') }}">🏷️ Tags</a></li>{% endif %}
-      {% if has_page('ingredients.index') %}<li><a href="{{ url_for('ingredients.index') }}">🧄 Ingredients</a></li>{% endif %}
+    <h2 id="more-title">Your recipe box</h2>
+    <ul class="list settings-list">
+      {% if has_page('tags.index') %}
+        <li>
+          <div><strong>Tags</strong><span class="muted small">Rename, merge or delete your tags.</span></div>
+          <a class="button button-secondary button-small" href="{{ url_for('tags.index') }}">Manage tags</a>
+        </li>
+      {% endif %}
+      {% if has_page('ingredients.index') %}
+        <li>
+          <div><strong>Ingredients</strong><span class="muted small">See and rename the ingredients you use.</span></div>
+          <a class="button button-secondary button-small" href="{{ url_for('ingredients.index') }}">Open</a>
+        </li>
+      {% endif %}
       {% if has_page('auth.export') %}
         <li>
-          <span>💾 Backup of all my recipes</span>
-          <a class="button button-secondary button-small" href="{{ url_for('auth.export') }}">Download (JSON)</a>
+          <div><strong>Backup</strong><span class="muted small">Download all your recipes as one JSON file.</span></div>
+          <a class="button button-secondary button-small" href="{{ url_for('auth.export') }}">Download</a>
         </li>
       {% endif %}
     </ul>
   </section>
 
   <section class="card" aria-labelledby="password-title">
-    <h2 id="password-title">🔑 Change password</h2>
+    <h2 id="password-title">Change password</h2>
     {% if g.user.is_demo %}
       <p class="muted">The demo account can't change its password.</p>
     {% else %}

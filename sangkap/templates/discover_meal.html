@@ -3,35 +3,35 @@
 {% block title %}{{ recipe.title }} · Discover · {{ APP_NAME }}{% endblock %}
 {% block content %}
 <div class="recipe-head">
-  <p class="no-print"><a href="{{ url_for('discover.index') }}">‹ Discover</a></p>
+  <a class="back-link no-print" href="{{ url_for('discover.index') }}">‹ Discover</a>
   <div class="page-head">
     <h1>{{ recipe.title }}</h1>
     <div class="actions no-print">
+      <button type="button" class="button button-secondary" data-print hidden>Print</button>
       {% if saved_id %}
-        <a class="button button-secondary" href="{{ url_for('recipes.show', recipe_id=saved_id) }}">📖 In your recipes</a>
+        <a class="button button-secondary" href="{{ url_for('recipes.show', recipe_id=saved_id) }}">Open your saved copy</a>
       {% else %}
         <form method="post" action="{{ url_for('discover.save', meal_id=recipe.id) }}">
           {{ csrf() }}
-          <button type="submit" class="button">💾 Save to my recipes</button>
+          <button type="submit" class="button">Save to my recipes</button>
         </form>
       {% endif %}
-      <button type="button" class="button button-secondary" data-print hidden>🖨️ Print</button>
     </div>
   </div>
   <div class="meta">
     {% for tag in recipe.tags %}<span class="chip chip-big chip-tag">#{{ tag }}</span>{% endfor %}
-    {% if recipe.youtube %}<a class="chip chip-big" href="{{ recipe.youtube }}" rel="noopener noreferrer" target="_blank">▶️ Video</a>{% endif %}
+    {% if recipe.youtube %}<a class="chip chip-big" href="{{ recipe.youtube }}" rel="noopener noreferrer" target="_blank">Watch the video</a>{% endif %}
   </div>
-  <p class="small muted">Servings are a guess: TheMealDB doesn't say how many it feeds.</p>
+  <p class="small muted no-margin">The number of servings is an estimate, because TheMealDB doesn't list it.</p>
 </div>
 
-{% with r=recipe, photo_url=(recipe.image ~ '/medium') if recipe.image else None, sticker='🌏', steps=recipe.steps,
+{% with r=recipe, photo_url=(recipe.image ~ '/medium') if recipe.image else None, sticker=None, steps=recipe.steps,
         scale_url=url_for('discover.show', meal_id=recipe.id), cook_url=url_for('discover.cook', meal_id=recipe.id),
         link_ingredients=False %}
   {% include "_recipe_body.html" %}
 {% endwith %}
 
-<p class="credit" style="margin-top: 1rem">
+<p class="credit section-gap">
   Recipe data and imagery: <a href="https://www.themealdb.com/" rel="noopener" target="_blank">TheMealDB</a>
   {% if recipe.source_url %} · <a href="{{ recipe.source_url }}" rel="noopener noreferrer" target="_blank">Original recipe</a>{% endif %}
 </p>

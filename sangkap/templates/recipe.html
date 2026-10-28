@@ -3,71 +3,71 @@
 {% block title %}{{ recipe.title }} · {{ APP_NAME }}{% endblock %}
 {% block content %}
 <div class="recipe-head">
-  <p class="no-print"><a href="{{ url_for('recipes.index') }}">‹ My recipes</a></p>
+  <a class="back-link no-print" href="{{ url_for('recipes.index') }}">‹ My recipes</a>
   <div class="page-head">
-    <h1>{{ recipe.title }}{% if recipe.is_favorite %} <span aria-label="favorite">💗</span>{% endif %}</h1>
+    <h1>{{ recipe.title }}</h1>
     <div class="actions no-print">
-      <a class="button" href="{{ url_for('recipes.edit', recipe_id=recipe.id) }}">✏️ Edit</a>
       <form method="post" action="{{ url_for('recipes.favorite', recipe_id=recipe.id) }}">
         {{ csrf() }}
-        <button type="submit" class="button button-secondary">{{ '💔 Unfavorite' if recipe.is_favorite else '💗 Favorite' }}</button>
+        <button type="submit" class="button button-secondary">{{ 'Remove from favorites' if recipe.is_favorite else 'Add to favorites' }}</button>
       </form>
       {% if has_page('plan.index') %}
-        <a class="button button-secondary" href="{{ url_for('plan.index', add=recipe.id) }}">📅 Plan it</a>
+        <a class="button button-secondary" href="{{ url_for('plan.index', add=recipe.id) }}">Add to meal plan</a>
       {% endif %}
-      <button type="button" class="button button-secondary" data-print hidden>🖨️ Print</button>
+      <button type="button" class="button button-secondary" data-print hidden>Print</button>
+      <a class="button" href="{{ url_for('recipes.edit', recipe_id=recipe.id) }}">Edit</a>
     </div>
   </div>
   <div class="meta">
-    {% if recipe.prep_minutes %}<span class="chip chip-big">🔪 Prep {{ recipe.prep_minutes|minutes }}</span>{% endif %}
-    {% if recipe.cook_minutes %}<span class="chip chip-big">🔥 Cook {{ recipe.cook_minutes|minutes }}</span>{% endif %}
-    {% if recipe.total_minutes %}<span class="chip chip-big chip-have">⏱️ Total {{ recipe.total_minutes|minutes }}</span>{% endif %}
+    {% if recipe.prep_minutes %}<span class="chip chip-big">Prep {{ recipe.prep_minutes|minutes }}</span>{% endif %}
+    {% if recipe.cook_minutes %}<span class="chip chip-big">Cook {{ recipe.cook_minutes|minutes }}</span>{% endif %}
+    {% if recipe.total_minutes %}<span class="chip chip-big chip-have">Total {{ recipe.total_minutes|minutes }}</span>{% endif %}
     {% for tag in recipe.tags %}
       <a class="chip chip-big chip-tag" href="{{ url_for('recipes.index', tag=tag.name) }}">#{{ tag.name }}</a>
     {% endfor %}
   </div>
 </div>
 
-{% with r=recipe, photo_url=own_photo_url(recipe) or None, sticker=('💗' if recipe.is_favorite else '✨'),
+{% with r=recipe, photo_url=own_photo_url(recipe) or None, sticker=('♥' if recipe.is_favorite else None),
         steps=recipe.steps|map(attribute='text')|list,
         scale_url=url_for('recipes.show', recipe_id=recipe.id),
         cook_url=url_for('recipes.cook', recipe_id=recipe.id), link_ingredients=True %}
   {% include "_recipe_body.html" %}
 {% endwith %}
 
-<div class="two-columns" style="margin-top: 1.5rem">
+<div class="recipe-layout recipe-extras no-print">
   <section class="card" id="share" aria-labelledby="share-title">
-    <h2 id="share-title">💌 Share</h2>
+    <h2 id="share-title">Share</h2>
     {% if recipe.share_code %}
       {% set link = url_for('shared.show', code=recipe.share_code, _external=True) %}
-      <p>Anyone with this link can read this recipe (but not your notes):</p>
+      <p>Anyone with this link can read this recipe. They can't see your private notes.</p>
       <p><input type="text" value="{{ link }}" readonly aria-label="Share link"></p>
-      <form method="post" action="{{ url_for('recipes.share', recipe_id=recipe.id) }}" class="no-print">
+      <form method="post" action="{{ url_for('recipes.share', recipe_id=recipe.id) }}">
         {{ csrf() }}
         <button type="submit" class="button button-secondary button-small">Stop sharing</button>
       </form>
     {% else %}
-      <p class="muted">Only you can see this recipe. Make a link to send it to family and friends.</p>
-      <form method="post" action="{{ url_for('recipes.share', recipe_id=recipe.id) }}" class="no-print">
+      <p class="muted">Only you can see this recipe. Create a link to send it to family and friends.</p>
+      <form method="post" action="{{ url_for('recipes.share', recipe_id=recipe.id) }}">
         {{ csrf() }}
-        <button type="submit" class="button button-small">Make a share link</button>
+        <button type="submit" class="button button-small">Create a share link</button>
       </form>
     {% endif %}
   </section>
 
   <section class="card card-soft" aria-labelledby="notes-title">
-    <h2 id="notes-title">📝 My notes <span class="hint muted small">(only you see these)</span></h2>
-    {% if recipe.notes %}<p style="white-space: pre-line">{{ recipe.notes }}</p>{% else %}<p class="muted">No notes yet.</p>{% endif %}
+    <h2 id="notes-title">Private notes</h2>
+    {% if recipe.notes %}<p class="pre-line">{{ recipe.notes }}</p>{% else %}<p class="muted">No notes yet. Only you can see them.</p>{% endif %}
     {% if recipe.source_url %}
-      <p class="credit">From: <a href="{{ recipe.source_url }}" rel="noopener noreferrer" target="_blank">{{ recipe.source_url|truncate(60) }}</a></p>
+      <p class="credit">Source: <a href="{{ recipe.source_url }}" rel="noopener noreferrer" target="_blank">{{ recipe.source_url|truncate(60) }}</a></p>
     {% endif %}
     {% if recipe.source == 'themealdb' %}
       <p class="credit">Recipe data and imagery: <a href="https://www.themealdb.com/" rel="noopener" target="_blank">TheMealDB</a></p>
     {% endif %}
-    <form method="post" action="{{ url_for('recipes.delete', recipe_id=recipe.id) }}" class="no-print"
+    <form method="post" action="{{ url_for('recipes.delete', recipe_id=recipe.id) }}"
           data-confirm="Delete “{{ recipe.title }}”? This can't be undone.">
       {{ csrf() }}
-      <button type="submit" class="link-button danger">🗑️ Delete this recipe</button>
+      <button type="submit" class="link-button danger">Delete this recipe</button>
     </form>
   </section>
 </div>

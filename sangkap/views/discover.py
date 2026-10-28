@@ -16,7 +16,7 @@ SOURCE = "themealdb"
 FEATURED_AREA = "Filipino"
 MAX_INGREDIENTS = 3  # one TheMealDB call each
 DEMO_MAX_SAVED = 10
-DOWN_MESSAGE = "Discover is resting 💤 (we can't reach TheMealDB right now). Please try again in a little while."
+DOWN_MESSAGE = "Discover is unavailable because we can't reach TheMealDB right now. Please try again later."
 
 
 def candidates(s, name):
@@ -116,7 +116,7 @@ def save(meal_id):
     s = db.session()
     existing = saved_ids(s).get(str(meal_id))
     if existing:
-        flash("You saved this one already. Here it is! 📖")
+        flash("You've already saved this recipe. Here it is.")
         return redirect(url_for("recipes.show", recipe_id=existing))
     if g.user.is_demo:
         count = s.scalar(select(func.count()).select_from(Recipe)
@@ -151,7 +151,7 @@ def save(meal_id):
         except (mealdb.MealDBError, PhotoError, OSError, ValueError):
             pass  # the recipe is still worth saving without its picture
     s.commit()
-    flash(f"Saved “{recipe.title}” to your recipes! Now it's yours to change. 🎉")
+    flash(f"Saved “{recipe.title}” to your recipes. You can now edit it.")
     return redirect(url_for("recipes.show", recipe_id=recipe.id))
 
 

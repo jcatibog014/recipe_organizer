@@ -33,6 +33,7 @@ PAGES = [
     ("shopping-list.png", "/plan/shopping", "dark", DESKTOP),
     ("cook-mode.png", "/recipes/{adobo}/cook", "dark", PHONE),
     ("phone.png", "/", "light", PHONE),
+    ("settings.png", "/settings", "light", DESKTOP),
     ("styleguide.png", "/styleguide", "light", DESKTOP),
 ]
 
@@ -63,7 +64,7 @@ def shoot(page, name, path, size):
 def shoot_shared(browser, page, adobo):
     """Turn sharing on, open the link as a stranger, then turn it off again."""
     page.goto(f"{BASE}/recipes/{adobo}")
-    page.get_by_role("button", name="Make a share link").click()
+    page.get_by_role("button", name="Create a share link").click()
     link = page.get_by_label("Share link").input_value()
     stranger = browser.new_page(viewport=DESKTOP, color_scheme="light")
     stranger.goto(link)

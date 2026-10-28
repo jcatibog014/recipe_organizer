@@ -19,18 +19,18 @@
     </div>
 
     <section class="card" aria-labelledby="ingredients-title">
-      <div class="row" style="justify-content: space-between">
-        <h2 id="ingredients-title">🧺 Ingredients</h2>
+      <div class="card-head">
+        <h2 id="ingredients-title">Ingredients</h2>
         <div class="servings no-print" aria-label="Servings">
           {% set fewer = [servings - 1, 1]|max %}
           {% set more = [servings + 1, 100]|min %}
           <a class="icon-button" href="{{ scale_url }}?servings={{ fewer }}#ingredients-title" aria-label="Fewer servings ({{ fewer }})">−</a>
           <span class="count" aria-live="polite">{{ plural(servings, 'serving') }}</span>
-          <a class="icon-button" href="{{ scale_url }}?servings={{ more }}#ingredients-title" aria-label="More servings ({{ more }})">＋</a>
+          <a class="icon-button" href="{{ scale_url }}?servings={{ more }}#ingredients-title" aria-label="More servings ({{ more }})">+</a>
         </div>
       </div>
       {% if servings != r.servings %}
-        <p class="small muted">Amounts changed from {{ plural(r.servings, 'serving') }}. <a href="{{ scale_url }}#ingredients-title">Back to {{ r.servings }}</a></p>
+        <p class="small muted">Amounts adjusted from {{ plural(r.servings, 'serving') }}. <a href="{{ scale_url }}#ingredients-title">Reset to {{ r.servings }}</a></p>
       {% endif %}
 
       {% for group in groups %}
@@ -41,7 +41,6 @@
               <label>
                 <input type="checkbox" class="no-print">
                 <span class="line">
-                  <span class="emoji" aria-hidden="true">{{ line.emoji or '•' }}</span>
                   {% if line.quantity %}<span class="qty">{{ line.quantity }}</span>{% endif %}
                   {% if link_ingredients and line.ingredient_id and has_page('ingredients.show') -%}
                     <a href="{{ url_for('ingredients.show', ingredient_id=line.ingredient_id) }}">{{ line.name }}</a>
@@ -60,13 +59,13 @@
 
   <div class="stack">
     {% if r.description %}
-      <section class="card card-soft"><p style="white-space: pre-line">{{ r.description }}</p></section>
+      <section class="card card-soft"><p class="pre-line">{{ r.description }}</p></section>
     {% endif %}
     <section class="card" aria-labelledby="steps-title">
-      <div class="row" style="justify-content: space-between">
-        <h2 id="steps-title">👩‍🍳 Steps</h2>
+      <div class="card-head">
+        <h2 id="steps-title">Steps</h2>
         {% if steps %}
-          <a class="button button-small no-print" href="{{ cook_url }}?servings={{ servings }}">🔥 Cook mode</a>
+          <a class="button button-small no-print" href="{{ cook_url }}?servings={{ servings }}">Start cooking</a>
         {% endif %}
       </div>
       {% if steps %}

@@ -2,11 +2,9 @@
 {% from "_macros.html" import empty, csrf %}
 {% block title %}Tags · {{ APP_NAME }}{% endblock %}
 {% block content %}
-<p><a href="{{ url_for('recipes.index') }}">‹ My recipes</a></p>
-<div class="page-head">
-  <h1>🏷️ My tags</h1>
-  <p class="muted">Add tags on a recipe's edit page. Rename a tag to one you already have to merge them.</p>
-</div>
+<a class="back-link" href="{{ url_for('auth.settings') }}">‹ Settings</a>
+<div class="page-head"><h1>Tags</h1></div>
+<p class="page-intro muted">Add tags on a recipe's edit page. To merge two tags, rename one to the other's name.</p>
 
 {% if rows %}
   <section class="card">
@@ -33,6 +31,6 @@
     </ul>
   </section>
 {% else %}
-  {% call empty('🏷️', 'No tags yet', 'Tags like “soup” or “quick” help you find recipes fast.') %}{% endcall %}
+  {% call empty('🏷️', 'No tags yet', 'Tags like “soup” or “quick” help you find recipes quickly.') %}{% endcall %}
 {% endif %}
 {% endblock %}

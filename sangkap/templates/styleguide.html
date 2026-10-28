@@ -2,10 +2,8 @@
 {% from "_macros.html" import field %}
 {% block title %}Style board · {{ APP_NAME }}{% endblock %}
 {% block content %}
-<div class="page-head">
-  <h1>✨ Style board</h1>
-  <p class="muted">Every piece of the kawaii look on one page (only while developing). Try the 🌙 button.</p>
-</div>
+<div class="page-head"><h1>Style board</h1></div>
+<p class="page-intro muted">Every part of the look on one page (only while developing). Try the light and dark switch.</p>
 
 <div class="stack">
   <section class="card">
@@ -26,11 +24,11 @@
   <section class="card">
     <h2>Jelly buttons</h2>
     <div class="row">
-      <button class="button" type="button">💾 Save recipe</button>
+      <button class="button" type="button">Save recipe</button>
       <button class="button button-secondary" type="button">Cancel</button>
       <button class="button button-danger" type="button">Delete</button>
       <button class="button button-small" type="button">Small</button>
-      <button class="icon-button" type="button" aria-label="Example">＋</button>
+      <button class="icon-button" type="button" aria-label="Example">+</button>
       <button class="link-button" type="button">A link button</button>
     </div>
   </section>
@@ -38,11 +36,11 @@
   <section class="card">
     <h2>Chips</h2>
     <ul class="chips">
-      {% for name, emoji in samples %}<li class="chip">{{ emoji }} {{ name }}</li>{% endfor %}
+      {% for name, emoji in samples %}<li class="chip">{{ name }}</li>{% endfor %}
       <li class="chip chip-tag">#soup</li>
       <li class="chip chip-have">✓ garlic</li>
       <li class="chip chip-missing">✗ gata</li>
-      <li class="chip chip-optional">○ sili</li>
+      <li class="chip chip-optional">sili (optional)</li>
     </ul>
   </section>
 
@@ -57,8 +55,8 @@
       <li>
         <div class="recipe-card">
           <div class="picture block-{{ loop.index0 }}"><div class="picture-emoji" aria-hidden="true">{{ recipe_emoji({'tags': [emoji_tag]}) }}</div>
-            {% if loop.first %}<span class="sticker" aria-hidden="true">💗</span>{% endif %}</div>
-          <div class="card-body"><h2>{{ title }}</h2><p class="meta">⏱️ 45 min · 🍽️ 4</p>
+            {% if loop.first %}<span class="sticker" aria-hidden="true">♥</span>{% endif %}</div>
+          <div class="card-body"><h2>{{ title }}</h2><p class="meta">45 min · Serves 4</p>
             <ul class="chips"><li class="chip chip-tag">#{{ emoji_tag }}</li></ul></div>
         </div>
       </li>
@@ -67,7 +65,7 @@
 
   <div class="card empty">
     <div class="empty-art" aria-hidden="true">🍜</div>
-    <h2>No recipes yet!</h2>
+    <h2>No recipes yet</h2>
     <p class="muted">An empty state, floating gently.</p>
   </div>
 </div>

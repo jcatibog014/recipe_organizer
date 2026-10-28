@@ -59,7 +59,12 @@ class Item:
 
 
 def round_up(amount):
-    """Up to the next ⅛, so you buy enough: 2.19 cups -> 2 ¼ cups (never "2.19")."""
+    """Up to the next ⅛, so you buy enough: 2.19 cups -> 2 ¼ cups (never "2.19").
+
+    Thirds are kept as they are (⅓ cup stays ⅓, not ⅜).
+    """
+    if abs(amount * 3 - round(amount * 3)) < 0.01:
+        return amount
     return math.ceil(amount * 8 - 1e-9) / 8
 
 
