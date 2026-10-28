@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% from "_macros.html" import recipe_card, empty %}
+{% block title %}Discover · {{ APP_NAME }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>🌏 Discover ready recipes</h1>
+  <a class="button button-secondary" href="{{ url_for('discover.index', area='Filipino') }}">🌺 Filipino</a>
+</div>
+
+<form method="get" action="{{ url_for('discover.index') }}" class="card search-panel" role="search">
+  <div class="fields-row">
+    <label class="field">
+      <span>🧺 With these ingredients <span class="hint">(up to {{ max_ingredients }}, with commas)</span></span>
+      <input type="search" name="have" value="{{ have_text }}" list="ingredient-names" autocomplete="off" placeholder="chicken, garlic">
+    </label>
+    <label class="field">
+      <span>…or a name</span>
+      <input type="search" name="q" value="{{ q }}" maxlength="60" placeholder="adobo, curry, pie">
+    </label>
+  </div>
+  <div class="fields-row">
+    {% if areas %}
+      <label class="field">
+        <span>Country</span>
+        <select name="area">
+          <option value="">Any</option>
+          {% for name in areas %}<option {% if name == area and not featured %}selected{% endif %}>{{ name }}</option>{% endfor %}
+        </select>
+      </label>
+    {% endif %}
+    {% if categories %}
+      <label class="field">
+        <span>Kind</span>
+        <select name="category">
+          <option value="">Any</option>
+          {% for name in categories %}<option {% if name == category %}selected{% endif %}>{{ name }}</option>{% endfor %}
+        </select>
+      </label>
+    {% endif %}
+  </div>
+  <div class="row">
+    <button type="submit" class="button">🔍 Find recipes</button>
+    <span class="small muted">The ingredients come first, then the name, then country, then kind.</span>
+  </div>
+  <datalist id="ingredient-names">{% for name in suggestions %}<option value="{{ name }}">{% endfor %}</datalist>
+</form>
+
+{% if mine %}
+  <section style="margin-top: 1.5rem">
+    <h2>📖 Already in your recipes</h2>
+    <ul class="recipe-grid">{% for recipe in mine %}<li>{{ recipe_card(recipe) }}</li>{% endfor %}</ul>
+  </section>
+{% endif %}
+
+<section style="margin-top: 1.5rem" aria-live="polite">
+  {% if error %}
+    {% call empty('😴', 'Discover is resting', error) %}{% endcall %}
+  {% else %}
+    <h2>
+      {% if have_text %}With {{ have_text }}{% elif q %}“{{ q }}”{% elif featured %}🌺 Filipino favorites{% else %}{{ area or category }}{% endif %}
+      <span class="muted small">({{ plural(meals|length, 'recipe') }})</span>
+    </h2>
+    {% if have_text %}<p class="small muted">Each recipe uses every ingredient you listed.</p>{% endif %}
+    {% if meals %}
+      <ul class="recipe-grid">
+        {% for meal in meals %}
+          <li>
+            <a class="recipe-card" href="{{ url_for('discover.show', meal_id=meal.id) }}">
+              <div class="picture {{ block_class(meal) }}">
+                {% if meal.thumb %}<img src="{{ meal.thumb }}/small" alt="" loading="lazy" width="200" height="200">
+                {% else %}<div class="picture-emoji" aria-hidden="true">🍲</div>{% endif %}
+                {% if meal.id in saved %}<span class="sticker" aria-hidden="true">📖</span>{% endif %}
+              </div>
+              <div class="card-body">
+                <h3>{{ meal.name }}</h3>
+                {% if meal.id in saved %}<p class="meta">In your recipes</p>{% endif %}
+              </div>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      {% call empty('🧅', 'No matches', 'Try fewer ingredients, or the English name (TheMealDB is in English).') %}{% endcall %}
+    {% endif %}
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block footer %}<p>Recipe data and imagery: <a href="https://www.themealdb.com/" rel="noopener" target="_blank">TheMealDB</a></p>{% endblock %}
