@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% from "_macros.html" import empty %}
+{% block title %}Shopping list · {{ APP_NAME }}{% endblock %}
+{% block content %}
+<p class="no-print"><a href="{{ url_for('plan.index', week=monday.isoformat()) }}">‹ Meal plan</a></p>
+<div class="page-head">
+  <h1>🛒 Shopping list</h1>
+  <button type="button" class="button button-secondary no-print" data-print hidden>🖨️ Print</button>
+</div>
+<p class="muted">For {{ label }}: {{ plural(entries|length, 'planned meal') }}. Optional ingredients are left out.
+  <span class="no-print">Ticks are kept on this device.</span></p>
+
+{% if groups %}
+  <div class="kind-groups" data-shopping-key="{{ monday.isoformat() }}">
+    {% for kind, items in groups %}
+      <section class="card" aria-labelledby="shop-{{ kind }}">
+        <h2 id="shop-{{ kind }}">{{ KIND_LABELS[kind] }}</h2>
+        <ul class="shopping-list">
+          {% for item in items %}
+            <li>
+              <label>
+                <input type="checkbox" data-item="{{ item.name }}">
+                <span class="line">
+                  <span aria-hidden="true">{{ item.emoji or '•' }}</span>
+                  <strong>{{ item.name }}</strong>
+                  {% set quantities = item.quantities() %}
+                  {% if quantities %}: {{ quantities|join(' + ') }}{% endif %}
+                  {% if item.loose %}<span class="muted">{{ '(+ some to taste)' if quantities else '(to taste)' }}</span>{% endif %}
+                  <span class="for">for {{ item.recipes|join(', ') }}</span>
+                </span>
+              </label>
+            </li>
+          {% endfor %}
+        </ul>
+      </section>
+    {% endfor %}
+  </div>
+{% else %}
+  {% call empty('🛒', 'Nothing to buy yet', 'Plan some meals for this week first.') %}
+    <a class="button" href="{{ url_for('plan.index', week=monday.isoformat()) }}">📅 Go to the meal plan</a>
+  {% endcall %}
+{% endif %}
+{% endblock %}
