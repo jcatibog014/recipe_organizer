@@ -157,7 +157,7 @@ def handle_form(recipe):
     if action == "paste":
         pasted = rows_from_paste(paste.parse_block(request.form.get("paste", "")))
         kept = [row for row in rows if row["name"] or row["amount"] or row["section"]]
-        message = (f"Added {len(pasted)} rows from your list. Check them, then save. ✨" if pasted
+        message = (f"Added {len(pasted)} rows from your list. Check them, then save." if pasted
                    else "We couldn't find any ingredients in that text.")
         return render_form(recipe, form_values, kept + pasted + [blank_row()], steps or [""], message=message)
 
@@ -168,7 +168,7 @@ def handle_form(recipe):
     if recipe is None:
         count = s.scalar(select(func.count()).select_from(Recipe).where(Recipe.user_id == g.user.id))
         if g.user.is_demo and count >= DEMO_MAX_RECIPES:
-            abort(403, f"The demo can hold up to {DEMO_MAX_RECIPES} recipes.")
+            abort(403, f"The demo can have up to {DEMO_MAX_RECIPES} recipes.")
         recipe = Recipe(user_id=g.user.id)
         s.add(recipe)
     save(recipe, data)
@@ -178,10 +178,10 @@ def handle_form(recipe):
             set_photo(recipe, upload.read())
         except PhotoError as error:
             s.commit()
-            flash(f"The recipe is saved, but not the photo: {error}")
+            flash(f"The recipe was saved, but the photo wasn't. {error}")
             return redirect(url_for("recipes.edit", recipe_id=recipe.id))
     s.commit()
-    flash(f"Saved “{recipe.title}”! 🎉")
+    flash(f"Saved “{recipe.title}”.")
     return redirect(url_for("recipes.show", recipe_id=recipe.id))
 
 
@@ -239,11 +239,11 @@ def share(recipe_id):
     recipe = owned_recipe(recipe_id)
     if recipe.share_code:
         recipe.share_code = None
-        flash("Sharing is off. The old link doesn't work any more.")
+        flash("Sharing is off. The old link no longer works.")
     else:
         # 9 random bytes = 12 letters: nobody can guess a link.
         recipe.share_code = secrets.token_urlsafe(9)
-        flash("Sharing is on! Anyone with the link can read this recipe. 💌")
+        flash("Sharing is on. Anyone with the link can read this recipe.")
     db.session().commit()
     return redirect(url_for("recipes.show", recipe_id=recipe.id) + "#share")
 
@@ -282,5 +282,5 @@ def delete_photo(recipe_id):
     if recipe.photo is not None:
         recipe.photo = None
         db.session().commit()
-        flash("The photo is removed.")
+        flash("The photo has been removed.")
     return redirect(url_for("recipes.edit", recipe_id=recipe.id))

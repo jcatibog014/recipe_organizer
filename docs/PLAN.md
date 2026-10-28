@@ -101,6 +101,10 @@ Results load with `selectinload` (a test counts the queries: no N+1).
   ingredients and photos), share links, TheMealDB mapping + Discover (offline fixtures), shopping totals, demo limits.
 - Manual: `flask --app sangkap run --debug --port 5003`, light/dark, phone width, cook mode; screenshots with `docs/take_screenshots.py`.
 
+## After launch
+
+- **UI/UX cleanup (PR #2, 2026-10-29):** decorative emoji removed (kept only for recipe pictures, empty-state illustrations and the ♥ sticker), wording and capitalization checked, the header on one row with the tabs lined up with the logo, the star after "Sangkap" removed, a tidy filter row on My recipes ("Manage tags" moved to Settings; filters apply on change), aligned forms and cards, sliding steps in cook mode (with swipe), a two-column shopping list, and the footer kept at the bottom.
+
 ## Ideas for later
 
 - Import a recipe from any web page (schema.org `Recipe` JSON-LD).

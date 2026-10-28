@@ -25,26 +25,43 @@
 <body class="{% if HAS_PATTERN_TILE %}has-tile{% endif %}">
   <a class="skip-link" href="#main">Skip to the content</a>
 
-  {# Tabs: (emoji, label, endpoint, the blueprints that count as "this tab"). #}
+  {# Tabs: (label, endpoint, the blueprints that count as "this tab"). #}
   {% set tabs = [
-       ('📖', 'Recipes', 'recipes.index', ['recipes', 'tags']),
-       ('🔍', 'Search', 'search.index', ['search']),
-       ('🌏', 'Discover', 'discover.index', ['discover']),
-       ('📅', 'Meal plan', 'plan.index', ['plan']),
-       ('🧄', 'Ingredients', 'ingredients.index', ['ingredients']),
-       ('⚙️', 'Settings', 'auth.settings', ['settings'])] %}
+       ('Recipes', 'recipes.index', ['recipes']),
+       ('Search', 'search.index', ['search']),
+       ('Discover', 'discover.index', ['discover']),
+       ('Meal plan', 'plan.index', ['plan']),
+       ('Ingredients', 'ingredients.index', ['ingredients']),
+       ('Settings', 'auth.settings', ['tags'])] %}
   {% set section = (request.endpoint or '').split('.')[0] %}
 
+  {# One row on wide screens: logo, tabs, then the theme switch and log out.
+     On narrow screens the tabs move to a second row that scrolls sideways. #}
   <header class="site-header">
     <div class="header-inner">
       <a class="brand" href="{{ url_for('recipes.index') }}">
-        <img src="{{ url_for('static', filename='icons/logo.svg') }}" alt="" width="44" height="44">
-        <span>Sangkap<span class="brand-dot" aria-hidden="true">✦</span></span>
+        <img src="{{ url_for('static', filename='icons/logo.svg') }}" alt="" width="40" height="40">
+        <span>Sangkap</span>
       </a>
+      {% if g.user %}
+        <nav class="site-nav" aria-label="Main">
+          {% for label, endpoint, sections in tabs if has_page(endpoint) %}
+            {% set current = section in sections or request.endpoint == endpoint %}
+            <a href="{{ url_for(endpoint) }}" {% if current %}aria-current="page"{% endif %}>{{ label }}</a>
+          {% endfor %}
+        </nav>
+      {% endif %}
       <div class="header-actions">
-        <button type="button" class="icon-button" id="theme-toggle" aria-label="Switch light or dark mode">
-          <span class="theme-icon-moon" aria-hidden="true">🌙</span>
-          <span class="theme-icon-sun" aria-hidden="true">☀️</span>
+        <button type="button" class="icon-button" id="theme-toggle" aria-label="Switch to dark mode">
+          {# A moon in light mode (press for dark), a sun in dark mode. CSS shows one. #}
+          <svg class="theme-icon-moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" fill="currentColor"/>
+          </svg>
+          <svg class="theme-icon-sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <circle cx="12" cy="12" r="4.5" fill="currentColor"/>
+            <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
         </button>
         {% if g.user %}
           <span class="header-user">{{ g.user.username }}</span>
@@ -55,22 +72,10 @@
         {% endif %}
       </div>
     </div>
-    {% if g.user %}
-      <nav class="site-nav" aria-label="Main">
-        <div class="site-nav-inner">
-          {% for emoji, label, endpoint, sections in tabs if has_page(endpoint) %}
-            {% set current = section in sections or request.endpoint == endpoint %}
-            <a href="{{ url_for(endpoint) }}" {% if current %}aria-current="page"{% endif %}>
-              <span aria-hidden="true">{{ emoji }}</span> {{ label }}
-            </a>
-          {% endfor %}
-        </div>
-      </nav>
-    {% endif %}
   </header>
 
   {% if g.user and g.user.is_demo %}
-    <p class="demo-banner">🍡 You are using the <strong>demo</strong>. These are sample recipes, and they start fresh every hour.</p>
+    <p class="demo-banner">You're using the <strong>demo</strong>. The recipes are samples, and they reset every hour.</p>
   {% endif %}
 
   <main id="main" class="page">
@@ -82,7 +87,7 @@
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <p>{{ APP_NAME }} ✦ your kawaii recipe box</p>
+      <p>{{ APP_NAME }} · your kawaii recipe box</p>
       {% block footer %}{% endblock %}
     </div>
   </footer>

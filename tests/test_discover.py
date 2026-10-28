@@ -56,7 +56,7 @@ def test_save_copies_it_into_my_recipes_once(app, owner_client, owner_id, ctx):
     assert ctx.scalar(select(func.count()).select_from(Recipe)) == 1
     page = owner_client.get(f"/recipes/{recipe_id}").data.decode()
     assert "Recipe data and imagery" in page
-    assert "In your recipes" in owner_client.get("/discover/53069").data.decode()
+    assert "Open your saved copy" in owner_client.get("/discover/53069").data.decode()
 
 
 def test_saved_recipes_are_searchable_by_our_names(app, owner_client, owner_id):
@@ -78,6 +78,6 @@ def test_when_themealdb_is_down(owner_client, monkeypatch):
         raise OSError("no internet")
     monkeypatch.setattr(mealdb, "FETCH_JSON", broken)
     page = owner_client.get("/discover").data.decode()
-    assert "Discover is resting" in page
+    assert "Discover is unavailable" in page
     assert owner_client.get("/discover/53069").status_code == 503
     assert owner_client.get("/").status_code == 200  # the rest of the app is fine

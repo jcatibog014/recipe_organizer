@@ -6,58 +6,52 @@
   <div class="result-why" aria-label="Ingredients">
     {% for name in result.matched %}<span class="chip chip-have">✓ {{ name }}</span>{% endfor %}
     {% for name in result.missing %}<span class="chip chip-missing">✗ {{ name }}</span>{% endfor %}
-    {% if result.optional %}<span class="chip chip-optional">○ {{ result.optional|join(', ') }} (optional)</span>{% endif %}
+    {% if result.optional %}<span class="chip chip-optional">{{ result.optional|join(', ') }} (optional)</span>{% endif %}
   </div>
 {% endmacro %}
 
 {% block content %}
-<div class="page-head">
-  <h1>🔍 What can I cook?</h1>
-</div>
+<div class="page-head"><h1>What can I cook?</h1></div>
 
 <form method="get" action="{{ url_for('search.index') }}" class="card search-panel" role="search">
+  <input type="hidden" name="sent" value="1">
+
   <label class="field">
-    <span>🧺 I have… <span class="hint">(with commas: chicken, garlic, gata)</span></span>
+    <span>Ingredients I have <span class="hint">(separated by commas)</span></span>
     <input type="search" name="have" value="{{ have_text }}" list="ingredient-names" autocomplete="off" placeholder="chicken, bawang, gata">
   </label>
   {% if have %}
     <ul class="chips" aria-label="Ingredients you have">
       {% for name, remove in have %}
-        <li class="chip chip-big chip-have">{{ name|emoji }} {{ name }} <a class="x" href="{{ remove }}" aria-label="Remove {{ name }}">✕</a></li>
+        <li class="chip chip-big chip-have">{{ name }} <a class="x" href="{{ remove }}" aria-label="Remove {{ name }}">✕</a></li>
       {% endfor %}
     </ul>
   {% endif %}
 
   <fieldset class="mode-switch">
-    <legend>Show recipes that…</legend>
-    {% for value, label in [('all', 'use ALL of these'), ('any', 'use ANY of these'), ('pantry', 'I can cook with these')] %}
+    <legend>Match</legend>
+    {% for value, label in [('all', 'All ingredients'), ('any', 'Any ingredient'), ('pantry', 'What I can cook')] %}
       <label><input type="radio" name="mode" value="{{ value }}" {% if q.mode == value %}checked{% endif %}> {{ label }}</label>
     {% endfor %}
   </fieldset>
 
-  <input type="hidden" name="sent" value="1">
-  <label class="check">
-    <input type="checkbox" name="staples" value="1" {% if use_staples %}checked{% endif %}>
-    🧂 I always have {{ staples|join(', ') }}
-  </label>
-
   <div class="fields-row">
     <label class="field">
-      <span>Can be missing</span>
+      <span>Missing ingredients allowed</span>
       <select name="missing">
-        {% for n in range(4) %}<option value="{{ n }}" {% if q.missing_max == n %}selected{% endif %}>{{ n }} ingredient{{ '' if n == 1 else 's' }}</option>{% endfor %}
+        {% for n in range(4) %}<option value="{{ n }}" {% if q.missing_max == n %}selected{% endif %}>{{ 'None' if n == 0 else n }}</option>{% endfor %}
       </select>
     </label>
     <label class="field">
-      <span>🚫 Without</span>
+      <span>Without</span>
       <input type="search" name="without" value="{{ without_text }}" list="ingredient-names" autocomplete="off" placeholder="peanuts, shrimp">
     </label>
     <label class="field">
-      <span>Words</span>
+      <span>Keywords</span>
       <input type="search" name="q" value="{{ args.q or '' }}" maxlength="100" placeholder="adobo">
     </label>
     <label class="field">
-      <span>⏱️ Ready in</span>
+      <span>Total time</span>
       <select name="time">
         <option value="">Any time</option>
         {% for minutes in minute_choices %}<option value="{{ minutes }}" {% if q.max_minutes == minutes %}selected{% endif %}>{{ minutes|minutes }} or less</option>{% endfor %}
@@ -68,32 +62,39 @@
   {% if without %}
     <ul class="chips" aria-label="Ingredients to leave out">
       {% for name, remove in without %}
-        <li class="chip chip-no">🚫 {{ name }} <a class="x" href="{{ remove }}" aria-label="Remove {{ name }}">✕</a></li>
+        <li class="chip chip-no">Without {{ name }} <a class="x" href="{{ remove }}" aria-label="Stop leaving out {{ name }}">✕</a></li>
       {% endfor %}
     </ul>
   {% endif %}
 
   {% if my_tags %}
     <fieldset class="mode-switch">
-      <legend>Tags <span class="hint muted">(recipes with every one you tick)</span></legend>
+      <legend>Tags <span class="hint muted">(recipes must have every tag you select)</span></legend>
       {% for tag in my_tags %}
         <label><input type="checkbox" name="tag" value="{{ tag.id }}" {% if tag.id in q.tag_ids %}checked{% endif %}> #{{ tag.name }}</label>
       {% endfor %}
     </fieldset>
   {% endif %}
 
-  <div class="row">
-    <label class="check"><input type="checkbox" name="favorites" value="1" {% if q.favorites %}checked{% endif %}> 💗 Favorites only</label>
-    <button type="submit" class="button">🔍 Search</button>
+  <div class="search-options">
+    <label class="check">
+      <input type="checkbox" name="staples" value="1" {% if use_staples %}checked{% endif %}>
+      I always have {{ staples[:-1]|join(', ') }} and {{ staples[-1] }}
+    </label>
+    <label class="check"><input type="checkbox" name="favorites" value="1" {% if q.favorites %}checked{% endif %}> Favorites only</label>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="button">Search</button>
     <a href="{{ url_for('search.index') }}">Clear</a>
   </div>
 
   {% if popular %}
-    <div>
-      <p class="small muted" style="margin-bottom: 0.3rem">Quick add (your most-used ingredients):</p>
+    <div class="quick-add">
+      <p class="small muted">Your most-used ingredients:</p>
       <ul class="chips">
         {% for ingredient in popular %}
-          <li><a class="chip" href="{{ url_for('search.index', have=(have_text ~ ', ' ~ ingredient.name) if have_text else ingredient.name, mode=q.mode) }}">{{ ingredient.name|emoji }} {{ ingredient.name }}</a></li>
+          <li><a class="chip" href="{{ url_for('search.index', have=(have_text ~ ', ' ~ ingredient.name) if have_text else ingredient.name, mode=q.mode) }}">+ {{ ingredient.name }}</a></li>
         {% endfor %}
       </ul>
     </div>
@@ -102,13 +103,13 @@
 </form>
 
 {% if unknown %}
-  <p class="notice notice-warn" style="margin-top: 1rem" role="status">
-    🤔 None of your recipes know “{{ unknown|join('”, “') }}” yet. Check the spelling, or try the English or Filipino name.
+  <p class="notice notice-warn section-gap" role="status">
+    None of your recipes use “{{ unknown|join('”, “') }}”. Check the spelling, or try the English or Filipino name.
   </p>
 {% endif %}
 
 {% if results is not none %}
-  <h2 style="margin-top: 1.5rem" aria-live="polite">{{ plural(results|length, 'recipe') }} found</h2>
+  <h2 class="section-gap" aria-live="polite">{{ plural(results|length, 'recipe') }} found</h2>
   {% if results %}
     <ul class="recipe-grid">
       {% for result in results %}
@@ -116,9 +117,9 @@
       {% endfor %}
     </ul>
   {% else %}
-    {% call empty('🧅', 'No matches', 'Try “use ANY of these”, allow 1 or 2 missing ingredients, or search Discover for new ideas.') %}
+    {% call empty('🧅', 'No matches', 'Try “Any ingredient”, allow a missing ingredient, or look for new recipes in Discover.') %}
       {% if has_page('discover.index') and have_text %}
-        <a class="button button-secondary" href="{{ url_for('discover.index', have=have_text) }}">🌏 Find ready recipes with these</a>
+        <a class="button button-secondary" href="{{ url_for('discover.index', have=have_text) }}">Discover recipes with these</a>
       {% endif %}
     {% endcall %}
   {% endif %}

@@ -15,7 +15,7 @@ from . import owned_recipe
 bp = Blueprint("plan", __name__)
 
 MEALS = ("breakfast", "lunch", "dinner", "snack")
-MEAL_LABELS = {"breakfast": "🍳 Breakfast", "lunch": "🍱 Lunch", "dinner": "🍲 Dinner", "snack": "🍡 Snack"}
+MEAL_LABELS = {"breakfast": "Breakfast", "lunch": "Lunch", "dinner": "Dinner", "snack": "Snack"}
 DEMO_MAX_ENTRIES = 60
 
 
@@ -64,7 +64,8 @@ def index():
         add_id = None
     return render_template(
         "plan.html", days=days, monday=monday, label=week_label(monday), today=today(),
-        recipes=recipes, add_id=add_id, meals=MEALS, meal_labels=MEAL_LABELS,
+        recipes=recipes, add_id=add_id, meal_kinds=MEALS, meal_labels=MEAL_LABELS,
+        this_week=week_start(today()),
         previous=monday - timedelta(days=7), next=monday + timedelta(days=7), count=len(entries),
     )
 
@@ -90,7 +91,7 @@ def add():
         abort(403, f"The demo can plan up to {DEMO_MAX_ENTRIES} meals.")
     s.add(PlanEntry(user_id=g.user.id, recipe=recipe, day=day, meal=meal, servings=servings))
     s.commit()
-    flash(f"Added {recipe.title} to {day:%A}. 😋")
+    flash(f"Added {recipe.title} to {day:%A}.")
     return redirect(url_for("plan.index", week=monday.isoformat()) + f"#day-{day.isoformat()}")
 
 

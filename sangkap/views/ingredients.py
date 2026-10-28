@@ -59,14 +59,14 @@ def merge(ingredient_id):
     source = visible_ingredient(ingredient_id)
     target_name = ingredients.normalize(request.form.get("target", ""))
     if not target_name:
-        flash("Write the new name first.")
+        flash("Enter a new name first.")
         return redirect(url_for("ingredients.show", ingredient_id=source.id))
     s = db.session()
     # The demo is shared by everyone, so it can't add aliases to the shared catalog.
     target, moved = ingredients.merge(s, g.user.id, source, target_name, keep_alias=not g.user.is_demo)
     s.commit()
     if moved:
-        flash(f"Moved {moved} ingredient line{'s' if moved != 1 else ''} from “{source.name}” to “{target.name}”. ✨")
+        flash(f"Moved {moved} ingredient line{'s' if moved != 1 else ''} from “{source.name}” to “{target.name}”.")
     else:
-        flash("Nothing to change.")
+        flash("Nothing needed to change.")
     return redirect(url_for("ingredients.show", ingredient_id=target.id))

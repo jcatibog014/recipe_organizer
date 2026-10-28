@@ -2,16 +2,18 @@
 {% from "_macros.html" import empty %}
 {% block title %}Shopping list · {{ APP_NAME }}{% endblock %}
 {% block content %}
-<p class="no-print"><a href="{{ url_for('plan.index', week=monday.isoformat()) }}">‹ Meal plan</a></p>
+<a class="back-link no-print" href="{{ url_for('plan.index', week=monday.isoformat()) }}">‹ Meal plan</a>
 <div class="page-head">
-  <h1>🛒 Shopping list</h1>
-  <button type="button" class="button button-secondary no-print" data-print hidden>🖨️ Print</button>
+  <h1>Shopping list</h1>
+  <div class="actions">
+    <button type="button" class="button button-secondary no-print" data-print hidden>Print</button>
+  </div>
 </div>
-<p class="muted">For {{ label }}: {{ plural(entries|length, 'planned meal') }}. Optional ingredients are left out.
-  <span class="no-print">Ticks are kept on this device.</span></p>
+<p class="page-intro muted">{{ label }} · {{ plural(entries|length, 'planned meal') }}. Optional ingredients and water are left out.
+  <span class="no-print">Your ticks are saved on this device.</span></p>
 
 {% if groups %}
-  <div class="kind-groups" data-shopping-key="{{ monday.isoformat() }}">
+  <div class="shopping-columns" data-shopping-key="{{ monday.isoformat() }}">
     {% for kind, items in groups %}
       <section class="card" aria-labelledby="shop-{{ kind }}">
         <h2 id="shop-{{ kind }}">{{ KIND_LABELS[kind] }}</h2>
@@ -20,13 +22,14 @@
             <li>
               <label>
                 <input type="checkbox" data-item="{{ item.name }}">
+                {% set quantities = item.quantities() %}
                 <span class="line">
-                  <span aria-hidden="true">{{ item.emoji or '•' }}</span>
-                  <strong>{{ item.name }}</strong>
-                  {% set quantities = item.quantities() %}
-                  {% if quantities %}: {{ quantities|join(' + ') }}{% endif %}
-                  {% if item.loose %}<span class="muted">{{ '(+ some to taste)' if quantities else '(to taste)' }}</span>{% endif %}
-                  <span class="for">for {{ item.recipes|join(', ') }}</span>
+                  <span class="item-name">{{ item.name|capitalize }}</span>
+                  <span class="item-qty">
+                    {%- if quantities %}{{ quantities|join(' + ') }}{% if item.loose %} + to taste{% endif %}
+                    {%- else %}to taste{% endif -%}
+                  </span>
+                  <span class="for">For {{ item.recipes|join(', ') }}</span>
                 </span>
               </label>
             </li>
@@ -37,7 +40,7 @@
   </div>
 {% else %}
   {% call empty('🛒', 'Nothing to buy yet', 'Plan some meals for this week first.') %}
-    <a class="button" href="{{ url_for('plan.index', week=monday.isoformat()) }}">📅 Go to the meal plan</a>
+    <a class="button" href="{{ url_for('plan.index', week=monday.isoformat()) }}">Go to the meal plan</a>
   {% endcall %}
 {% endif %}
 {% endblock %}

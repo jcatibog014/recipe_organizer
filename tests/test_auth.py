@@ -35,7 +35,7 @@ def test_five_wrong_passwords_lock_the_account(app, client):
     for _ in range(auth.MAX_FAILED_LOGINS):
         post(client, "/login", {"username": OWNER, "password": "nope"})
     response = post(client, "/login", {"username": OWNER, "password": OWNER_PASSWORD})
-    assert b"Too many wrong tries" in response.data
+    assert b"Too many failed attempts" in response.data
     with app.app_context():
         user = auth.find_user(db.session(), OWNER)
         assert user.locked_until > utcnow() + timedelta(minutes=14)

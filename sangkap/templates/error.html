@@ -4,8 +4,8 @@
 {% set art = {404: '🌶️', 403: '🙅', 413: '🐘'}.get(code, '😵') %}
 <div class="card narrow empty">
   <div class="empty-art" aria-hidden="true">{{ art }}</div>
-  <h1>Oops! <span class="muted">({{ code }})</span></h1>
+  <h1>Something went wrong <span class="muted">({{ code }})</span></h1>
   <p>{{ message }}</p>
-  <p><a href="{{ url_for('recipes.index') }}">Back to my recipes</a></p>
+  <a class="button button-secondary" href="{{ url_for('recipes.index') }}">Back to my recipes</a>
 </div>
 {% endblock %}

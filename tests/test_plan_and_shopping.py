@@ -27,7 +27,8 @@ def item(**amounts):
     ({"tsp": 1.5}, ["1 ½ tsp"]),
     ({"": 3}, ["3"]),
     ({"cup": 2, "tbsp": 3}, ["2 ¼ cups"]),  # 2.1875 rounds up, never "2.19"
-    ({"pc": 1 / 3}, ["⅜ pc"]),
+    ({"cup": 1 / 3}, ["⅓ cup"]),            # thirds stay thirds
+    ({"pc": 0.3}, ["⅜ pc"]),
 ])
 def test_totals(amounts, expected):
     assert item(**amounts).quantities() == expected
@@ -70,9 +71,9 @@ def test_shopping_list_scales_and_adds_up(app, week, owner_id, ctx):
 
 def test_plan_page_and_shopping_page(week, owner_client):
     page = owner_client.get("/plan").data.decode()
-    assert "Adobo" in page and "Sinangag" in page and "for 8" in page
+    assert "Adobo" in page and "Sinangag" in page and "Serves 8" in page
     shop = owner_client.get("/plan/shopping").data.decode()
-    assert "2 kg" in shop and "1 ⅛ cups" in shop and "(to taste)" in shop
+    assert "2 kg" in shop and "1 ⅛ cups" in shop and ">to taste<" in shop
     nothing = owner_client.get(f"/plan/shopping?week={(week + timedelta(days=14)).isoformat()}").data.decode()
     assert "Nothing to buy yet" in nothing
 
@@ -84,7 +85,7 @@ def test_add_and_remove_a_meal(app, owner_client, owner_id, ctx):
                                                 "servings": "", "week": "2026-11-02"})
     assert response.headers["Location"].startswith("/plan?week=2026-11-02")
     page = owner_client.get("/plan?week=2026-11-04").data.decode()  # any day finds its week
-    assert "Tinola" in page and "for 5" in page and "Nov 2–8, 2026" in page
+    assert "Tinola" in page and "Serves 5" in page and "Nov 2–8, 2026" in page
 
     from sqlalchemy import select
     entry = ctx.scalar(select(PlanEntry))

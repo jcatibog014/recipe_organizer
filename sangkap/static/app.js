@@ -44,6 +44,16 @@ function setUpConfirms() {
   });
 }
 
+// ---------- Filters that apply at once ----------
+// A form with data-autosubmit sends itself when a box changes, so its
+// "Show" button (data-autosubmit-button) is only needed without JavaScript.
+
+function setUpAutosubmit() {
+  document.querySelectorAll("form[data-autosubmit]").forEach((form) => {
+    form.addEventListener("change", () => form.requestSubmit());
+  });
+}
+
 // ---------- Recipe form: add, remove and move rows ----------
 // Without JavaScript the form still works: it shows a few empty rows, and
 // "More rows" sends the form to get more. With it, rows are added here.
@@ -103,23 +113,46 @@ function setUpRowEditing() {
 }
 
 // ---------- Cook mode: one big step at a time, screen stays on ----------
+// Steps slide like pages: Next slides the old step out to the left and the
+// new one in from the right (Previous does the opposite). On a phone you
+// can swipe. With "reduce motion" turned on, steps fade instead.
 
 let wakeLock = null;
 
 async function keepScreenOn(status) {
   if (!("wakeLock" in navigator)) {
-    if (status) status.textContent = "Tip: this browser can't keep the screen on by itself.";
+    if (status) status.textContent = "Tip: this browser can't keep the screen on, so tap it now and then.";
     return;
   }
   try {
     wakeLock = await navigator.wakeLock.request("screen");
-    if (status) status.textContent = "☀️ The screen will stay on while you cook.";
+    if (status) status.textContent = "The screen will stay on while you cook.";
     wakeLock.addEventListener("release", () => {
       wakeLock = null;
     });
   } catch (e) {
-    if (status) status.textContent = "Tip: the screen may turn off. Tap it now and then.";
+    if (status) status.textContent = "Tip: the screen may turn off, so tap it now and then.";
   }
+}
+
+const SLIDE_OUT_MS = 180;
+const SLIDE_IN_MS = 260;
+
+function slideFrames(direction, entering) {
+  // direction 1 = next (move left), -1 = previous (move right).
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const away = reduce ? "0" : `${-direction * 40}%`;
+  const from = reduce ? "0" : `${direction * 40}%`;
+  if (entering) {
+    return [
+      { transform: `translateX(${from})`, opacity: 0 },
+      { transform: "translateX(0)", opacity: 1 },
+    ];
+  }
+  return [
+    { transform: "translateX(0)", opacity: 1 },
+    { transform: `translateX(${away})`, opacity: 0 },
+  ];
 }
 
 function setUpCookMode() {
@@ -128,34 +161,69 @@ function setUpCookMode() {
   const steps = Array.from(cook.querySelectorAll(".cook-all li")).map((li) => li.textContent.trim());
   const text = cook.querySelector("#cook-step");
   const progress = cook.querySelector("#cook-progress");
+  const bar = cook.querySelector("#cook-bar");
   const back = cook.querySelector("#cook-back");
   const next = cook.querySelector("#cook-next");
   const status = cook.querySelector("#cook-status");
   if (!steps.length || !text) return;
   let index = 0;
+  let moving = false;
 
   function show() {
     text.textContent = steps[index];
     progress.textContent = `Step ${index + 1} of ${steps.length}`;
+    if (bar) bar.style.width = `${((index + 1) / steps.length) * 100}%`;
     back.disabled = index === 0;
-    next.textContent = index === steps.length - 1 ? "All done! 🎉" : "Next step ›";
+    next.textContent = index === steps.length - 1 ? "Finish" : "Next step ›";
   }
 
-  back.addEventListener("click", () => {
-    if (index > 0) index -= 1;
-    show();
-  });
+  function go(direction) {
+    const target = index + direction;
+    if (moving || target < 0 || target >= steps.length) return;
+    if (!text.animate) {
+      index = target;
+      show();
+      return;
+    }
+    moving = true;
+    const out = text.animate(slideFrames(direction, false), { duration: SLIDE_OUT_MS, easing: "ease-in" });
+    out.onfinish = () => {
+      index = target;
+      show();
+      const into = text.animate(slideFrames(direction, true), { duration: SLIDE_IN_MS, easing: "ease-out" });
+      into.onfinish = () => {
+        moving = false;
+      };
+    };
+  }
+
+  back.addEventListener("click", () => go(-1));
   next.addEventListener("click", () => {
     if (index < steps.length - 1) {
-      index += 1;
-      show();
+      go(1);
     } else if (next.dataset.done) {
       window.location.href = next.dataset.done;
     }
   });
   document.addEventListener("keydown", (event) => {
-    if (event.key === "ArrowRight") next.click();
-    if (event.key === "ArrowLeft") back.click();
+    if (event.key === "ArrowRight") go(1);
+    if (event.key === "ArrowLeft") go(-1);
+  });
+
+  // Swipe left for the next step, right for the previous one.
+  let startX = null;
+  let startY = null;
+  const viewport = cook.querySelector(".cook-viewport") || text;
+  viewport.addEventListener("pointerdown", (event) => {
+    startX = event.clientX;
+    startY = event.clientY;
+  });
+  viewport.addEventListener("pointerup", (event) => {
+    if (startX === null) return;
+    const dx = event.clientX - startX;
+    const dy = event.clientY - startY;
+    startX = null;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) go(dx < 0 ? 1 : -1);
   });
   // The lock is dropped when the tab is hidden; ask again when it's back.
   document.addEventListener("visibilitychange", () => {
@@ -203,6 +271,7 @@ function setUpPrintButtons() {
 document.addEventListener("DOMContentLoaded", () => {
   setUpThemeToggle();
   setUpConfirms();
+  setUpAutosubmit();
   setUpRowEditing();
   setUpCookMode();
   setUpShoppingTicks();

@@ -2,10 +2,8 @@
 {% from "_macros.html" import empty %}
 {% block title %}Ingredients · {{ APP_NAME }}{% endblock %}
 {% block content %}
-<div class="page-head">
-  <h1>🧄 My ingredients</h1>
-  <p class="muted">{{ plural(total, 'ingredient') }} in your recipes. The number is how many recipes use it.</p>
-</div>
+<div class="page-head"><h1>Ingredients</h1></div>
+<p class="page-intro muted">{{ plural(total, 'ingredient') }} in your recipes. The number shows how many recipes use each one.</p>
 
 {% if total %}
   <div class="kind-groups">
@@ -15,7 +13,7 @@
         <ul class="list">
           {% for ingredient, count in rows %}
             <li>
-              <a href="{{ url_for('ingredients.show', ingredient_id=ingredient.id) }}">{{ ingredient.name|emoji }} {{ ingredient.name }}</a>
+              <a href="{{ url_for('ingredients.show', ingredient_id=ingredient.id) }}">{{ ingredient.name|capitalize }}</a>
               <span class="count-pill" aria-label="{{ plural(count, 'recipe') }}">{{ count }}</span>
             </li>
           {% endfor %}
@@ -25,7 +23,7 @@
   </div>
 {% else %}
   {% call empty('🧺', 'No ingredients yet', 'They show up here when you add recipes.') %}
-    <a class="button" href="{{ url_for('recipes.new') }}">＋ Add a recipe</a>
+    <a class="button" href="{{ url_for('recipes.new') }}">Add a recipe</a>
   {% endcall %}
 {% endif %}
 {% endblock %}

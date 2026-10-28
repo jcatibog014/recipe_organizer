@@ -110,7 +110,7 @@ def test_other_users_recipes_are_not_found(app, owner_client, other_id):
 def test_delete_and_favorite(app, owner_client, owner_id):
     recipe_id = add_recipe(app, owner_id, "Gone soon")
     post(owner_client, f"/recipes/{recipe_id}/favorite")
-    assert "💗" in owner_client.get("/?favorites=1").data.decode()
+    assert "(favorite)" in owner_client.get("/?favorites=1").data.decode()
     post(owner_client, f"/recipes/{recipe_id}/delete")
     assert owner_client.get(f"/recipes/{recipe_id}").status_code == 404
 

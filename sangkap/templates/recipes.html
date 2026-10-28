@@ -5,17 +5,18 @@
 <div class="page-head">
   <h1>My recipes</h1>
   <div class="actions">
-    <a class="button" href="{{ url_for('recipes.new') }}">＋ Add a recipe</a>
     {% if has_page('discover.index') %}
-      <a class="button button-secondary" href="{{ url_for('discover.index') }}">🌏 Find ready recipes</a>
+      <a class="button button-secondary" href="{{ url_for('discover.index') }}">Discover recipes</a>
     {% endif %}
+    <a class="button" href="{{ url_for('recipes.new') }}">Add a recipe</a>
   </div>
 </div>
 
 {% if total %}
-  <form method="get" class="card card-soft row" aria-label="Sort and filter">
+  {# With JavaScript, changing a filter shows the list at once; without it, press Show. #}
+  <form method="get" class="card card-soft toolbar" aria-label="Sort and filter" data-autosubmit>
     <label class="field">
-      <span>Sort</span>
+      <span>Sort by</span>
       <select name="sort">
         {% for key, (label, _order) in sorts.items() %}
           <option value="{{ key }}" {% if key == sort %}selected{% endif %}>{{ label }}</option>
@@ -33,27 +34,28 @@
         </select>
       </label>
     {% endif %}
-    <label class="check"><input type="checkbox" name="favorites" value="1" {% if favorites %}checked{% endif %}> 💗 Favorites only</label>
-    <button type="submit" class="button button-secondary button-small">Show</button>
-    {% if has_page('tags.index') %}<a href="{{ url_for('tags.index') }}">Manage tags</a>{% endif %}
+    <label class="check check-pill">
+      <input type="checkbox" name="favorites" value="1" {% if favorites %}checked{% endif %}> Favorites only
+    </label>
+    <button type="submit" class="button button-secondary" data-autosubmit-button>Show</button>
   </form>
 {% endif %}
 
 {% if recipes %}
-  <p class="muted small" style="margin-top: 1rem">{{ plural(recipes|length, 'recipe') }}</p>
+  <p class="list-count muted small">{{ plural(recipes|length, 'recipe') }}</p>
   <ul class="recipe-grid">
     {% for recipe in recipes %}<li>{{ recipe_card(recipe) }}</li>{% endfor %}
   </ul>
 {% elif total %}
   {% call empty('🙈', 'No recipes match', 'Try another tag, or show all your recipes.') %}
-    <a class="button button-secondary" href="{{ url_for('recipes.index') }}">Show all</a>
+    <a class="button button-secondary" href="{{ url_for('recipes.index') }}">Show all recipes</a>
   {% endcall %}
 {% else %}
-  {% call empty('🍜', 'No recipes yet!', 'Your recipe box is sleepy. Add your first recipe, or save a ready one from Discover.') %}
-    <div class="row" style="justify-content: center">
-      <a class="button" href="{{ url_for('recipes.new') }}">＋ Add my first recipe</a>
+  {% call empty('🍜', 'No recipes yet', 'Add your first recipe, or save a ready-made one from Discover.') %}
+    <div class="row row-center">
+      <a class="button" href="{{ url_for('recipes.new') }}">Add a recipe</a>
       {% if has_page('discover.index') %}
-        <a class="button button-secondary" href="{{ url_for('discover.index') }}">🌏 Discover recipes</a>
+        <a class="button button-secondary" href="{{ url_for('discover.index') }}">Discover recipes</a>
       {% endif %}
     </div>
   {% endcall %}

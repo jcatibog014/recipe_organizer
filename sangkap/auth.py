@@ -81,7 +81,7 @@ def check_login(s, username, password, moment):
         return None, WRONG_LOGIN
 
     if user.locked_until and user.locked_until > moment:
-        return None, "Too many wrong tries. Please wait 15 minutes and try again."
+        return None, "Too many failed attempts. Please wait 15 minutes and try again."
 
     if not check_password_hash(user.password_hash, password or ""):
         user.failed_logins += 1
@@ -191,14 +191,14 @@ def demo():
     user = demo_user(s, utcnow())
     s.commit()
     log_in(user)
-    flash("Welcome to the demo! These recipes are samples, so feel free to try anything. ✨")
+    flash("Welcome to the demo! The recipes here are samples, so feel free to try anything.")
     return redirect(url_for("recipes.index"))
 
 
 @bp.post("/logout")
 def logout():
     session.clear()
-    flash("You are logged out. See you next meal! 👋")
+    flash("You have logged out. See you next meal!")
     return redirect(url_for("auth.login"))
 
 
@@ -220,7 +220,7 @@ def settings():
         if not errors:
             set_password(g.user, new)
             db.session().commit()
-            flash("Your password is changed.")
+            flash("Your password has been changed.")
             return redirect(url_for("auth.settings"))
     return render_template("settings.html", errors=errors), 400 if errors else 200
 

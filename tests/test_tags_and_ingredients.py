@@ -51,7 +51,7 @@ def test_ingredients_page(app, owner_client, owner_id):
     add_recipe(app, owner_id, "Adobo", ["1 kg chicken", "1 head garlic"])
     add_recipe(app, owner_id, "Sinangag", ["8 cloves garlic"])
     page = owner_client.get("/ingredients").data.decode()
-    assert "Meat" in page and "chicken" in page and 'aria-label="2 recipes"' in page
+    assert "Meat" in page and "Chicken" in page and 'aria-label="2 recipes"' in page
 
 
 def test_ingredient_page_and_merge(app, owner_client, owner_id, ctx):

@@ -36,11 +36,11 @@
 
 {% macro recipe_card(recipe, extra=None) %}
   <a class="recipe-card" href="{{ url_for('recipes.show', recipe_id=recipe.id) }}">
-    {{ picture(recipe, own_photo_url(recipe) or None, '💗' if recipe.is_favorite else None) }}
+    {{ picture(recipe, own_photo_url(recipe) or None, '♥' if recipe.is_favorite else None) }}
     <div class="card-body">
       <h2>{{ recipe.title }}</h2>
       <p class="meta">
-        {% if recipe.total_minutes %}⏱️ {{ recipe.total_minutes|minutes }} · {% endif %}🍽️ {{ recipe.servings }}
+        {% if recipe.total_minutes %}{{ recipe.total_minutes|minutes }} · {% endif %}Serves {{ recipe.servings }}
         {% if recipe.is_favorite %}<span class="visually-hidden">(favorite)</span>{% endif %}
       </p>
       {% if extra %}{{ extra }}{% endif %}

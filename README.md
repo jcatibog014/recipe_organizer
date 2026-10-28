@@ -27,15 +27,15 @@ It has a bright, cute ("kawaii") look, in light mode and dark mode.
 | **Shopping list**: amounts are added up. | **Add or edit** a recipe. |
 | ![Ingredients](docs/screenshots/ingredients.png) | ![A shared recipe](docs/screenshots/shared-recipe.png) |
 | **Ingredients**: how many recipes use each one. | **A shared recipe**: anyone with the link can read it. |
-| ![Login](docs/screenshots/login.png) | ![Style board](docs/screenshots/styleguide.png) |
-| **Log in**, or try the demo. | The **style board**: all the colours and buttons. |
+| ![Login](docs/screenshots/login.png) | ![Settings](docs/screenshots/settings.png) |
+| **Log in**, or try the demo. | **Settings**: tags, ingredients, backup and password. |
 
 <p>
   <img src="docs/screenshots/phone.png" alt="My recipes on a phone" width="240">
   <img src="docs/screenshots/cook-mode.png" alt="Cook mode on a phone" width="240">
 </p>
 
-On a **phone**, and in **cook mode**: big text, one step at a time, and the screen stays on.
+On a **phone**, and in **cook mode**: big text, one step at a time. The steps slide like pages (you can swipe), and the screen stays on.
 
 ## What you can do
 
@@ -43,13 +43,13 @@ On a **phone**, and in **cook mode**: big text, one step at a time, and the scre
 |---|---|
 | 📖 **Recipes** | See all your recipes. Sort them, and show one tag or your favorites. |
 | ✏️ **Add / edit** | Write the ingredients one per row. Or **paste a whole list** ("2 cups rice", "3 cloves garlic, minced"): Sangkap makes the rows for you. Add steps, tags and a photo. |
-| 🍽️ **A recipe** | Press **−** or **＋** to cook for more or fewer people. The amounts change (1 ½ cups → 2 ¼ cups). Press **Cook mode** to cook step by step. |
+| 🍽️ **A recipe** | Press **−** or **+** to cook for more or fewer people. The amounts change (1 ½ cups → 2 ¼ cups). Press **Start cooking** to cook step by step. |
 | 🔍 **Search** | Write what you have ("manok, bawang, luya"). Choose: recipes with **all** of them, with **any** of them, or recipes you **can cook now** (with 0, 1 or 2 things missing). You can also say **without** ("no shrimp"). |
-| 🌏 **Discover** | Find ready recipes on TheMealDB: by ingredient, by name, or by country (start with 🌺 Filipino). Read one, cook it, or **save it** to your recipes. |
+| 🌏 **Discover** | Find ready recipes on TheMealDB: by ingredient, by name, or by cuisine (start with **Filipino recipes**). Read one, cook it, or **save it** to your recipes. |
 | 📅 **Meal plan** | Put recipes on the days of the week. Then open the **shopping list**. |
 | 🧄 **Ingredients** | See your ingredients and how many recipes use each one. Fix a name you wrote two ways ("onions" and "onion"). |
 | 💌 **Share** | Make a link for one recipe. Anyone with the link can read it (not your notes). Stop sharing at any time. |
-| ⚙️ **Settings** | Change your password. Download all your recipes (a backup file). |
+| ⚙️ **Settings** | Manage your tags. Change your password. Download all your recipes (a backup file). |
 
 Filipino and English names both work: **bawang** = garlic, **kamatis** = tomato, **toyo** = soy sauce, **gata** = coconut milk, and many more.
 
