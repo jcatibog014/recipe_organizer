@@ -4,8 +4,8 @@
      Text is always dark cocoa on light, cream on dark (>= 4.5:1).
    - "Puffy" 3D: jelly buttons with a ledge that press down, pillow cards,
      glossy chips, sunken inputs.
-   - A scattered-ingredients pattern sits behind everything at 40% (25% in
-     dark). Cards are solid, so the pattern is never behind text.
+   - A scattered-ingredients pattern sits behind everything at 14% (10% in
+     dark): a soft texture. Cards are solid, so the pattern is never behind text.
    Colours live in variables on :root. Dark mode ("midnight snack") is set
    twice below: once for the system setting and once for the toggle.
    Change both dark blocks together. */
@@ -50,7 +50,7 @@
   --shadow: 0 2px 0 rgb(74 44 42 / 0.05), 0 10px 24px rgb(194 24 91 / 0.10);
   --shadow-small: 0 1px 0 rgb(74 44 42 / 0.06), 0 4px 10px rgb(194 24 91 / 0.10);
   --gloss: linear-gradient(180deg, rgb(255 255 255 / 0.65), rgb(255 255 255 / 0) 55%);
-  --pattern-opacity: 0.4;
+  --pattern-opacity: 0.14;
   /* "What can I cook?": the fridge (mint-white) and the wooden pantry. */
   --fridge-body: #f3fbf8;
   --fridge-top: #ddf3ea;
@@ -62,6 +62,10 @@
   --wood-edge: #c99a68;
   --plank: #b7854f;
   --pick-bg: #ffffff;
+  /* Meal plan: the faint box under each day, and the dashed Add button. */
+  --day-bg: #f9f9f9;
+  --day-edge: #ebe5e1;
+  --add-edge: #c9bfba;
   --radius: 24px;
   --radius-small: 14px;
   --font-body: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -108,7 +112,7 @@
     --shadow: 0 2px 0 rgb(0 0 0 / 0.25), 0 10px 24px rgb(0 0 0 / 0.35);
     --shadow-small: 0 1px 0 rgb(0 0 0 / 0.25), 0 4px 10px rgb(0 0 0 / 0.3);
     --gloss: linear-gradient(180deg, rgb(255 255 255 / 0.18), rgb(255 255 255 / 0) 55%);
-    --pattern-opacity: 0.25;
+    --pattern-opacity: 0.1;
     --fridge-body: #22323d;
     --fridge-top: #2a3f4b;
     --fridge-edge: #4f7a74;
@@ -119,6 +123,9 @@
     --wood-edge: #7a5638;
     --plank: #8a6240;
     --pick-bg: #2f2645;
+    --day-bg: #241b38;
+    --day-edge: #3a2f55;
+    --add-edge: #6a5a8c;
   }
 }
 
@@ -161,7 +168,7 @@
   --shadow: 0 2px 0 rgb(0 0 0 / 0.25), 0 10px 24px rgb(0 0 0 / 0.35);
   --shadow-small: 0 1px 0 rgb(0 0 0 / 0.25), 0 4px 10px rgb(0 0 0 / 0.3);
   --gloss: linear-gradient(180deg, rgb(255 255 255 / 0.18), rgb(255 255 255 / 0) 55%);
-  --pattern-opacity: 0.25;
+  --pattern-opacity: 0.1;
   --fridge-body: #22323d;
   --fridge-top: #2a3f4b;
   --fridge-edge: #4f7a74;
@@ -172,6 +179,9 @@
   --wood-edge: #7a5638;
   --plank: #8a6240;
   --pick-bg: #2f2645;
+  --day-bg: #241b38;
+  --day-edge: #3a2f55;
+  --add-edge: #6a5a8c;
 }
 
 /* ---------- Base ---------- */
@@ -1055,31 +1065,207 @@ details.paste summary { cursor: pointer; font-weight: 800; min-height: 44px; dis
 
 /* ---------- Meal plan ---------- */
 
-.week-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; margin-bottom: 1.25rem; }
-.week-nav .label { font-family: var(--font-round); font-weight: 800; font-size: 1.15rem; min-width: 13rem; text-align: center; }
-.week-today { margin-left: 0.25rem; }
+/* Title | week picker | Shopping list, all on one line. */
+.plan-head {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.plan-head h1 { margin: 0; }
+.plan-shopping { justify-self: end; }
+.week-picker { display: flex; align-items: center; gap: 0.6rem; }
+.week-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.25rem;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--shadow-small), inset 0 0 0 2px var(--line);
+}
+.week-arrow {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: var(--ink);
+  font-size: 1.3rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+.week-arrow:hover { background: var(--surface-soft); }
+.week-pill .label {
+  min-width: 12.5rem;
+  padding: 0 0.5rem;
+  text-align: center;
+  font-family: var(--font-round);
+  font-weight: 800;
+}
+
+/* Seven day columns, all the same height. */
 .week {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 0.75rem;
+  align-items: stretch;
 }
-.day { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow), inset 0 0 0 2px var(--line); padding: 0.75rem; display: grid; gap: 0.5rem; align-content: start; }
-.day.is-today { box-shadow: var(--shadow), inset 0 0 0 3px var(--pink); }
-.day h2 { font-size: 1rem; margin: 0; display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; }
-.meal { background: var(--surface-soft); border-radius: var(--radius-small); padding: 0.45rem 0.6rem; font-size: 0.92rem; }
-.meal .meal-name { font-weight: 800; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-soft); }
-.meal a { display: block; margin: 0.1rem 0 0.2rem; }
-.meal form { margin: 0; }
-.meal { position: relative; padding-right: 2.2rem; }
-.meal-remove { position: absolute; top: 0.1rem; right: 0.1rem; }
-.meal-remove button {
-  display: grid; place-items: center;
-  width: 40px; height: 40px; border: 0; border-radius: 50%;
-  background: transparent; color: var(--ink-soft); font: inherit; font-weight: 800; cursor: pointer;
+.day-col { display: flex; flex-direction: column; gap: 0.45rem; min-width: 0; }
+.day-label {
+  display: flex;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  align-items: baseline;
+  gap: 0.2rem 0.4rem;
+  margin: 0;
+  padding: 0 0.3rem;
+  font-size: 1rem;
+  color: var(--ink);
 }
-.meal-remove button:hover { background: var(--pink-soft); color: var(--danger); }
-.day details summary { cursor: pointer; font-weight: 800; min-height: 44px; display: flex; align-items: center; color: var(--link); }
-.day details .form { gap: 0.5rem; margin-top: 0.4rem; }
+.day-date { color: var(--ink-soft); font-weight: 700; }
+/* Today: the label turns pink with a dot (on one line, so every box starts at the same height). */
+.day-col.is-today .day-label, .day-col.is-today .day-date { color: var(--link); }
+.day-col.is-today .day-label::before {
+  content: "";
+  align-self: center;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+/* The faint box under each day; it fills the column's height. */
+.day-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-height: 24rem;
+  padding: 0.6rem;
+  border-radius: 18px;
+  background: var(--day-bg);
+  box-shadow: inset 0 0 0 1px var(--day-edge), 0 2px 6px rgb(0 0 0 / 0.05);
+}
+.day-col.is-today .day-box { box-shadow: inset 0 0 0 2px var(--accent), 0 2px 6px rgb(0 0 0 / 0.05); }
+
+/* A planned meal: a solid white card. */
+.meal-card {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.55rem 0.65rem 0.7rem;
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 4px 10px rgb(0 0 0 / 0.06);
+}
+.meal-top { display: flex; align-items: center; justify-content: space-between; gap: 0.25rem; }
+.meal-pill {
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  color: #3d2a28;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+.meal-breakfast { background: var(--lemon); }
+.meal-lunch { background: var(--mint); }
+.meal-dinner { background: var(--peach); }
+.meal-snack { background: var(--lilac); }
+.meal-title {
+  color: var(--ink);
+  font-weight: 800;
+  line-height: 1.3;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.meal-title:hover { text-decoration: underline; }
+.meal-serves { color: var(--ink-soft); font-size: 0.82rem; }
+
+/* The ⋯ menu (open recipe, remove). A <details>, so it works without JavaScript. */
+.meal-menu { position: relative; }
+.meal-menu summary {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: var(--ink-soft);
+  font-weight: 800;
+  list-style: none;
+  cursor: pointer;
+}
+.meal-menu summary::-webkit-details-marker { display: none; }
+.meal-menu summary:hover, .meal-menu[open] summary { background: var(--surface-soft); color: var(--ink); }
+.menu-pop {
+  position: absolute;
+  top: 36px;
+  right: 0;
+  z-index: 5;
+  display: grid;
+  min-width: 8.5rem;
+  padding: 0.35rem;
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--shadow), inset 0 0 0 1px var(--line);
+}
+.menu-pop form { margin: 0; }
+.menu-pop a, .menu-pop button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 40px;
+  padding: 0 0.75rem;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.menu-pop a:hover, .menu-pop button:hover { background: var(--surface-soft); }
+.menu-pop .danger { color: var(--danger); }
+
+/* + Add a meal: a dashed button across the day's box. */
+.add-meal summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  border: 2px dashed var(--add-edge);
+  border-radius: 12px;
+  color: var(--ink-soft);
+  font-weight: 800;
+  list-style: none;
+  cursor: pointer;
+}
+.add-meal summary::-webkit-details-marker { display: none; }
+.add-meal summary:hover { border-color: var(--accent); color: var(--link); }
+.add-meal[open] summary { border-style: solid; }
+.add-meal .form {
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.6rem;
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+@media (max-width: 1100px) {
+  .week { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .day-box { min-height: 16rem; }
+}
+@media (max-width: 860px) {
+  .plan-head { grid-template-columns: 1fr auto; }
+  .week-picker { grid-column: 1 / -1; grid-row: 2; justify-content: center; flex-wrap: wrap; }
+  .week { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .week { grid-template-columns: 1fr; }
+  .day-box { min-height: 0; }
+  .week-pill .label { min-width: 0; }
+}
 
 /* Shelves flow down in columns, like a notebook, with no gaps under short ones. */
 .shopping-columns { columns: 3 17rem; column-gap: 1.25rem; }
@@ -1162,7 +1348,6 @@ details.paste summary { cursor: pointer; font-weight: 800; min-height: 44px; dis
 
 @media (max-width: 860px) {
   .recipe-layout, .two-columns { grid-template-columns: 1fr; }
-  .week { grid-template-columns: 1fr; }
 }
 @media (max-width: 720px) {
   .ingredient-row { grid-template-columns: 5rem minmax(0, 1fr); }

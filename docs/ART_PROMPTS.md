@@ -1,7 +1,7 @@
 # The kawaii background picture
 
 Sangkap has one picture to make: a **background tile** of cute 3D ingredients.
-It repeats behind every page at 40% (25% in dark mode).
+It repeats behind every page as a soft texture: 14% strong (10% in dark mode).
 Until you make it, the app shows a pattern of food emoji instead, so nothing is broken.
 
 ## 1. Make the picture
