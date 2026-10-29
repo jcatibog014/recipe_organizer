@@ -8,6 +8,9 @@ is only a tool for this script, so it is not in requirements.txt:
     .venv\\Scripts\\flask --app sangkap run --port 5003      (in another terminal)
     .venv\\Scripts\\python docs\\take_screenshots.py
 
+Every picture is one screen (no full-page shots), so they are all the same
+size and the README table stays short and even.
+
 Add a line to PAGES when a page is added. Discover needs the internet (TheMealDB).
 """
 import re
@@ -66,13 +69,7 @@ def shoot(page, name, path, size):
     page.goto(f"{BASE}{path}")
     page.wait_for_load_state("networkidle")  # fonts and pictures are in
     page.wait_for_timeout(500)
-    # Sticky bars (Save, Find recipes) would float mid-picture in a full-page shot,
-    # so pin them where they are in the page first.
-    # The sidebar is as tall as the screen and stays put while you scroll; in a
-    # full-page picture, stretch it down the whole page instead.
-    page.add_style_tag(content=".find-bar, .sticky-actions { position: static !important; }"
-                       " .has-sidebar .sidebar { position: static !important; height: auto !important; }")
-    page.screenshot(path=OUT / name, full_page=size is DESKTOP)
+    page.screenshot(path=OUT / name)
     print("saved", name)
 
 
@@ -84,7 +81,7 @@ def shoot_shared(browser, page, adobo):
     stranger = browser.new_page(viewport=DESKTOP, color_scheme="light")
     stranger.goto(link)
     stranger.wait_for_load_state("networkidle")
-    stranger.screenshot(path=OUT / "shared-recipe.png", full_page=True)
+    stranger.screenshot(path=OUT / "shared-recipe.png")
     stranger.close()
     page.get_by_role("button", name="Stop sharing").click()
     print("saved shared-recipe.png")
