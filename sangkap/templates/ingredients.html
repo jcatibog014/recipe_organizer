@@ -1,29 +1,99 @@
 {% extends "base.html" %}
-{% from "_macros.html" import empty %}
-{% block title %}Ingredients · {{ APP_NAME }}{% endblock %}
-{% block content %}
-<div class="page-head"><h1>Ingredients</h1></div>
-<p class="page-intro muted">{{ plural(total, 'ingredient') }} in your recipes. The number shows how many recipes use each one.</p>
+{% from "_macros.html" import recipe_card, empty %}
+{% block title %}What can I cook? · {{ APP_NAME }}{% endblock %}
 
-{% if total %}
-  <div class="kind-groups">
-    {% for kind, rows in groups.items() if rows %}
-      <section class="card" aria-labelledby="kind-{{ kind }}">
-        <h2 id="kind-{{ kind }}">{{ KIND_LABELS[kind] }}</h2>
-        <ul class="list">
-          {% for ingredient, count in rows %}
-            <li>
-              <a href="{{ url_for('ingredients.show', ingredient_id=ingredient.id) }}">{{ ingredient.name|capitalize }}</a>
-              <span class="count-pill" aria-label="{{ plural(count, 'recipe') }}">{{ count }}</span>
-            </li>
-          {% endfor %}
-        </ul>
-      </section>
-    {% endfor %}
+{# One shelf of the fridge or pantry: its name, then an item to tap for each ingredient. #}
+{% macro shelf(kind) %}
+  <div class="shelf" role="group" aria-labelledby="shelf-{{ kind }}">
+    <h3 class="shelf-name" id="shelf-{{ kind }}">{{ KIND_LABELS[kind] }}</h3>
+    <div class="shelf-items">
+      {% for ingredient in shelves[kind] %}
+        <label class="pick">
+          <input type="checkbox" name="have" value="{{ ingredient.id }}" {% if ingredient.id in picked %}checked{% endif %}>
+          <span>{{ ingredient.name|capitalize }}</span>
+        </label>
+      {% endfor %}
+    </div>
   </div>
-{% else %}
-  {% call empty('🧺', 'No ingredients yet', 'They show up here when you add recipes.') %}
+{% endmacro %}
+
+{# The one line under a result's description: what's missing, or what it uses. #}
+{% macro why(result) %}
+  {% if mode == 'pantry' %}
+    {% if result.missing %}<p class="card-why">Missing: {{ result.missing|join(', ') }}</p>
+    {% else %}<p class="card-why is-ready">Ready to cook</p>{% endif %}
+  {% else %}
+    <p class="card-why is-ready">Uses: {{ result.matched|join(', ') }}</p>
+  {% endif %}
+{% endmacro %}
+
+{% block content %}
+<div class="page-head"><h1>What can I cook?</h1></div>
+<p class="page-intro muted">Tap what you have in your fridge and pantry, then find recipes you can make.</p>
+
+{% if not shelves %}
+  {% call empty('🧺', 'Your kitchen is empty', 'Add a recipe, and its ingredients will appear here.') %}
     <a class="button" href="{{ url_for('recipes.new') }}">Add a recipe</a>
   {% endcall %}
+{% else %}
+  {% set has_fridge = fridge_shelves|select('in', shelves)|list or crisper in shelves %}
+  {% set has_pantry = pantry_shelves|select('in', shelves)|list %}
+  <form method="get" action="{{ url_for('ingredients.index') }}#results" class="kitchen-form" data-picker>
+    <div class="kitchen">
+      {% if has_fridge %}
+        <section class="fridge" aria-labelledby="fridge-title">
+          <div class="fridge-top"><h2 id="fridge-title">Fridge</h2></div>
+          <span class="fridge-handle" aria-hidden="true"></span>
+          {% for kind in fridge_shelves if kind in shelves %}{{ shelf(kind) }}{% endfor %}
+          {% if crisper in shelves %}<div class="crisper">{{ shelf(crisper) }}</div>{% endif %}
+        </section>
+      {% endif %}
+      {% if has_pantry %}
+        <section class="pantry" aria-labelledby="pantry-title">
+          <div class="pantry-top"><h2 id="pantry-title">Pantry</h2><span class="pantry-knob" aria-hidden="true"></span></div>
+          {% for kind in pantry_shelves if kind in shelves %}{{ shelf(kind) }}{% endfor %}
+        </section>
+      {% endif %}
+    </div>
+
+    <div class="find-bar">
+      <span class="picked-count" data-picked-count aria-live="polite">
+        {{ plural(picked|length, 'ingredient') ~ ' picked' if picked else 'Nothing picked yet' }}
+      </span>
+      <label class="field find-match">
+        <span class="visually-hidden">Show recipes that are</span>
+        <select name="match">
+          {% for key, (label, _mode, _missing) in matches.items() %}
+            <option value="{{ key }}" {% if key == match %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <button type="submit" class="button">Find recipes</button>
+      <a href="{{ url_for('ingredients.index') }}">Clear</a>
+    </div>
+  </form>
+
+  {% if searched %}
+    <section id="results" class="section-gap" aria-live="polite">
+      {% if not picked %}
+        <p class="notice notice-warn">Tap at least one ingredient first.</p>
+      {% elif results %}
+        <h2>{{ plural(results|length, 'recipe') }} found</h2>
+        <p class="small muted">
+          With {{ picked_names|join(', ') }}.
+          {% if mode == 'pantry' %}Water, salt, oil and pepper count as always in your kitchen.{% endif %}
+        </p>
+        <ul class="recipe-grid">
+          {% for result in results %}<li>{{ recipe_card(result.recipe, why(result)) }}</li>{% endfor %}
+        </ul>
+      {% else %}
+        {% call empty('🧅', 'No matches', 'Try “Missing 2 ingredients at most”, or find new recipes with these.') %}
+          {% if has_page('discover.index') %}
+            <a class="button button-secondary" href="{{ url_for('discover.index', have=picked_names[:3]|join(', ')) }}">Find recipe ideas</a>
+          {% endif %}
+        {% endcall %}
+      {% endif %}
+    </section>
+  {% endif %}
 {% endif %}
 {% endblock %}

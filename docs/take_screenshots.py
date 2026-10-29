@@ -20,14 +20,16 @@ OUT = Path(__file__).parent / "screenshots"
 DESKTOP = {"width": 1200, "height": 800}
 PHONE = {"width": 390, "height": 844}
 
-# (file name, address, theme, screen size). "{adobo}" is the demo's Chicken Adobo.
+# (file name, address, theme, screen size). "{adobo}" is the demo's Chicken Adobo;
+# "{picked}" ticks chicken, garlic, ginger and rice on "What can I cook?".
 PAGES = [
     ("recipes.png", "/", "light", DESKTOP),
     ("recipes-dark.png", "/", "dark", DESKTOP),
     ("recipe.png", "/recipes/{adobo}?servings=6", "light", DESKTOP),
     ("edit-recipe.png", "/recipes/{adobo}/edit", "light", DESKTOP),
-    ("search.png", "/search?have=chicken%2C+garlic%2C+ginger%2C+rice&mode=pantry&missing=1", "light", DESKTOP),
-    ("ingredients.png", "/ingredients", "light", DESKTOP),
+    ("what-can-i-cook.png", "/ingredients?{picked}&match=missing1", "light", DESKTOP),
+    ("what-can-i-cook-dark.png", "/ingredients?{picked}&match=missing1", "dark", DESKTOP),
+    ("ingredients.png", "/ingredients/manage", "light", DESKTOP),
     ("discover.png", "/discover", "light", DESKTOP),
     ("meal-plan.png", "/plan", "light", DESKTOP),
     ("shopping-list.png", "/plan/shopping", "dark", DESKTOP),
@@ -47,17 +49,27 @@ def demo_page(browser, theme, size):
 
 
 def find_adobo(page):
-    page.goto(f"{BASE}/search?q=Chicken+Adobo")
+    page.goto(f"{BASE}/?q=Chicken+Adobo")
     match = re.search(r'/recipes/(\d+)"', page.content())
     return match.group(1)
+
+
+def picked_ingredients(page, names=("Chicken", "Garlic", "Ginger", "Rice")):
+    """The ?have=... part that ticks these ingredients (their ids differ per database)."""
+    page.goto(f"{BASE}/ingredients")
+    html = page.content()
+    ids = [re.search(rf'value="(\d+)"[^>]*>\s*<span>{name}</span>', html).group(1) for name in names]
+    return "&".join(f"have={i}" for i in ids)
 
 
 def shoot(page, name, path, size):
     page.goto(f"{BASE}{path}")
     page.wait_for_load_state("networkidle")  # fonts and pictures are in
     page.wait_for_timeout(500)
-    # The edit form has a sticky Save bar, so show it as one screen, the way people see it.
-    page.screenshot(path=OUT / name, full_page=size is DESKTOP and "edit" not in name)
+    # Sticky bars (Save, Find recipes) would float mid-picture in a full-page shot,
+    # so pin them where they are in the page first.
+    page.add_style_tag(content=".find-bar, .sticky-actions { position: static !important; }")
+    page.screenshot(path=OUT / name, full_page=size is DESKTOP)
     print("saved", name)
 
 
@@ -95,6 +107,8 @@ def main():
             page = pages[key]
             if "{adobo}" in path:
                 path = path.replace("{adobo}", find_adobo(page))
+            if "{picked}" in path:
+                path = path.replace("{picked}", picked_ingredients(page))
             shoot(page, name, path, size)
         light = pages[("light", DESKTOP["width"])]
         shoot_shared(browser, light, find_adobo(light))

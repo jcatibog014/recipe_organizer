@@ -19,14 +19,14 @@ It has a bright, cute ("kawaii") look, in light mode and dark mode.
 |---|---|
 | ![My recipes](docs/screenshots/recipes.png) | ![My recipes in dark mode](docs/screenshots/recipes-dark.png) |
 | **My recipes**: every recipe on a card. | The same page in **dark mode**. |
-| ![A recipe](docs/screenshots/recipe.png) | ![Search](docs/screenshots/search.png) |
-| **A recipe** for 6 people: the amounts change. | **What can I cook?** It shows what is missing. |
+| ![A recipe](docs/screenshots/recipe.png) | ![What can I cook?](docs/screenshots/what-can-i-cook.png) |
+| **A recipe** for 6 people: the amounts change. | **What can I cook?** Tap what is in your fridge and pantry. |
 | ![Recipe ideas](docs/screenshots/discover.png) | ![Meal plan](docs/screenshots/meal-plan.png) |
 | **Recipe ideas**: new recipes from TheMealDB. | **Meal plan** for the week. |
 | ![Shopping list](docs/screenshots/shopping-list.png) | ![Edit a recipe](docs/screenshots/edit-recipe.png) |
 | **Shopping list**: amounts are added up. | **Add or edit** a recipe. |
 | ![Ingredients](docs/screenshots/ingredients.png) | ![A shared recipe](docs/screenshots/shared-recipe.png) |
-| **Ingredients**: how many recipes use each one. | **A shared recipe**: anyone with the link can read it. |
+| **Manage ingredients**: how many recipes use each one. | **A shared recipe**: anyone with the link can read it. |
 | ![Login](docs/screenshots/login.png) | ![Settings](docs/screenshots/settings.png) |
 | **Log in**, or try the demo. | **Settings**: tags, ingredients, backup and password. |
 
@@ -41,13 +41,13 @@ On a **phone**, and in **cook mode**: big text, one step at a time. The steps sl
 
 | Page | What it does |
 |---|---|
-| 📖 **Recipes** | See all your recipes. Sort them, and show one tag or your favorites. |
+| 📖 **My recipes** | See all your recipes. **Search by name**, sort them, and show one tag or your favorites. |
 | ✏️ **Add / edit** | Write the ingredients one per row. Or **paste a whole list** ("2 cups rice", "3 cloves garlic, minced"): Sangkap makes the rows for you. Add steps, tags and a photo. |
 | 🍽️ **A recipe** | Press **−** or **+** to cook for more or fewer people. The amounts change (1 ½ cups → 2 ¼ cups). Press **Start cooking** to cook step by step. |
-| 🔍 **What can I cook?** | Search **your own** recipes. Write what you have ("manok, bawang, luya"). Choose: recipes with **all** of them, with **any** of them, or recipes you **can cook now** (with 0, 1 or 2 things missing). You can also say **without** ("no shrimp"). |
+| 🔍 **What can I cook?** | Your kitchen as a **fridge** and a **pantry**. **Tap** the ingredients you have, then press **Find recipes**. Choose: ready to cook, missing 1 or 2 things, uses all you picked, or uses any. Water, salt, oil and pepper always count as "in your kitchen". |
 | 🌏 **Recipe ideas** | Find **new** recipes on TheMealDB: by ingredient, by name, or by cuisine (start with **Filipino recipes**). Read one, cook it, or **save it** to your recipes. |
 | 📅 **Meal plan** | Put recipes on the days of the week. Then open the **shopping list**. |
-| 🧄 **Ingredients** | See your ingredients and how many recipes use each one. Fix a name you wrote two ways ("onions" and "onion"). |
+| 🧄 **Manage ingredients** (in Settings) | See how many recipes use each ingredient. Fix a name you wrote two ways ("onions" and "onion"). |
 | 💌 **Share** | Make a link for one recipe. Anyone with the link can read it (not your notes). Stop sharing at any time. |
 | ⚙️ **Settings** | Manage your tags. Change your password. Download all your recipes (a backup file). |
 

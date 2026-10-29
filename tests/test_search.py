@@ -82,13 +82,6 @@ def test_staples_never_count_as_missing(box, ctx, owner_id):
     assert [(r.recipe.title, r.missing) for r in results] == [("Sinangag", [])]
 
 
-def test_search_page_staples_box(box, owner_client):
-    have = "/search?have=rice,garlic&mode=pantry&missing=0"
-    assert "1 recipe found" in owner_client.get(have).data.decode()             # a link: staples on
-    assert "1 recipe found" in owner_client.get(have + "&sent=1&staples=1").data.decode()
-    assert "0 recipes found" in owner_client.get(have + "&sent=1").data.decode()  # box unticked
-
-
 def test_without(box, ctx, owner_id):
     assert titles(ctx, owner_id, without=ids_of(ctx, "chicken", "shrimp")) == ["Sinangag"]
     assert titles(ctx, owner_id, have=ids_of(ctx, "garlic"), without=ids_of(ctx, "rice")) == [
@@ -128,22 +121,62 @@ def test_results_load_in_a_fixed_number_of_queries(app, box, owner_id):
     assert len(statements) <= 5, statements
 
 
-def test_search_page(app, box, owner_client):
-    page = owner_client.get("/search?have=manok,+bawang&mode=all").data.decode()
-    assert "1 recipe found" in page and "Adobo" in page and "Pedro" not in page
-    assert "✓ chicken" in page
+# ---------- The "What can I cook?" page (/ingredients) ----------
+
+def picker_url(ctx, *names, match=None):
+    url = "/ingredients?" + "&".join(f"have={i}" for i in ids_of(ctx, *names))
+    return url + (f"&match={match}" if match else "")
 
 
-def test_search_page_unknown_ingredient(box, owner_client):
-    page = owner_client.get("/search?have=unicorn").data.decode()
-    assert "0 recipes found" in page and "unicorn" in page and "No matches" in page
+def test_kitchen_shows_my_ingredients_in_fridge_and_pantry(box, owner_client):
+    page = owner_client.get("/ingredients").data.decode()
+    assert "Fridge" in page and "Pantry" in page and "Fruits &amp; vegetables" in page
+    assert ">Chayote<" in page and ">Soy sauce<" in page
+    assert "Pedro" not in page and "recipes found" not in page  # no search yet
 
 
-def test_search_page_pantry_shows_what_is_missing(box, owner_client):
-    page = owner_client.get("/search?have=chicken,ginger,garlic,rice&mode=pantry&missing=1").data.decode()
-    assert "2 recipes found" in page and "✗ chayote" in page and "malunggay (optional)" in page
+def test_default_match_is_missing_one(box, ctx, owner_client):
+    # Staples (salt) never count, so Sinangag is ready; Tinola misses chayote only.
+    page = owner_client.get(picker_url(ctx, "chicken", "ginger", "garlic", "rice")).data.decode()
+    assert "2 recipes found" in page and "Missing: chayote" in page and "Ready to cook" in page
+    assert "Pedro" not in page
+    assert 'value="missing1" selected' in page
 
 
-def test_bad_query_values_are_ignored(box, owner_client):
-    response = owner_client.get("/search?mode=nope&missing=lots&time=7&tag=999")
-    assert response.status_code == 200
+def test_ready_to_cook_counts_staples_as_had(box, ctx, owner_client):
+    page = owner_client.get(picker_url(ctx, "rice", "garlic", match="ready")).data.decode()
+    assert "1 recipe found" in page and "Sinangag" in page and "Ready to cook" in page
+
+
+def test_uses_all_and_any(box, ctx, owner_client):
+    page = owner_client.get(picker_url(ctx, "chicken", "garlic", match="all")).data.decode()
+    assert "1 recipe found" in page and "Uses: chicken, garlic" in page
+    page = owner_client.get(picker_url(ctx, "chicken", "ginger", match="any")).data.decode()
+    assert "2 recipes found" in page
+
+
+def test_ids_that_arent_mine_are_ignored(box, ctx, owner_client, app, other_id):
+    add_recipe(app, other_id, "Secret", ["1 cup lola's secret sauce"])
+    secret = resolve(ctx, "lola's secret sauce")
+    page = owner_client.get(f"/ingredients?have={secret.id}&have=abc&have=99999").data.decode()
+    assert "Tap at least one ingredient first" in page and "Secret" not in page
+
+
+def test_no_matches_offers_recipe_ideas(box, ctx, owner_client):
+    page = owner_client.get(picker_url(ctx, "chayote", match="ready")).data.decode()
+    assert "No matches" in page and "/discover?have=chayote" in page
+
+
+def test_bad_match_values_fall_back(box, ctx, owner_client):
+    response = owner_client.get(picker_url(ctx, "rice") + "&match=nope")
+    assert response.status_code == 200 and 'value="missing1" selected' in response.data.decode()
+
+
+def test_old_search_links_redirect(box, ctx, owner_client):
+    response = owner_client.get("/search?have=manok,+bawang&mode=pantry&missing=2")
+    location = response.headers["Location"]
+    assert response.status_code == 301 and location.startswith("/ingredients?")
+    assert "match=missing2" in location and location.endswith("#results")
+    assert all(f"have={i}" in location for i in ids_of(ctx, "chicken", "garlic"))
+    response = owner_client.get("/search?q=adobo")
+    assert response.status_code == 301 and response.headers["Location"] == "/?q=adobo"

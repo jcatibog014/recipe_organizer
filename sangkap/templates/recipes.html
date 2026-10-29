@@ -13,8 +13,13 @@
 </div>
 
 {% if total %}
-  {# With JavaScript, changing a filter shows the list at once; without it, press Show. #}
-  <form method="get" class="card card-soft toolbar" aria-label="Sort and filter" data-autosubmit>
+  {# Changing a menu or the checkbox applies at once (JavaScript); the search box
+     searches when you press Enter or the button. #}
+  <form method="get" class="card card-soft toolbar" role="search" aria-label="Search and filter" data-autosubmit>
+    <label class="field search-box">
+      <span>Search</span>
+      <input type="search" name="q" value="{{ q_text }}" maxlength="100" placeholder="Recipe name" autocomplete="off">
+    </label>
     <label class="field">
       <span>Sort by</span>
       <select name="sort">
@@ -37,18 +42,26 @@
     <label class="check check-pill">
       <input type="checkbox" name="favorites" value="1" {% if favorites %}checked{% endif %}> Favorites only
     </label>
-    <button type="submit" class="button button-secondary" data-autosubmit-button>Show</button>
+    <button type="submit" class="button">Search</button>
   </form>
 {% endif %}
 
 {% if recipes %}
-  <p class="list-count muted small">{{ plural(recipes|length, 'recipe') }}</p>
+  <p class="list-count muted small">
+    {% if q_text %}{{ plural(recipes|length, 'recipe') }} match “{{ q_text }}”{% else %}{{ plural(recipes|length, 'recipe') }}{% endif %}
+    {% if filtered %} · <a href="{{ url_for('recipes.index') }}">Clear</a>{% endif %}
+  </p>
   <ul class="recipe-grid">
     {% for recipe in recipes %}<li>{{ recipe_card(recipe) }}</li>{% endfor %}
   </ul>
 {% elif total %}
-  {% call empty('🙈', 'No recipes match', 'Try another tag, or show all your recipes.') %}
-    <a class="button button-secondary" href="{{ url_for('recipes.index') }}">Show all recipes</a>
+  {% call empty('🙈', 'No recipes match', 'Try another name or tag, or look for something new in Recipe ideas.') %}
+    <div class="row row-center">
+      <a class="button button-secondary" href="{{ url_for('recipes.index') }}">Show all recipes</a>
+      {% if has_page('discover.index') and q_text %}
+        <a class="button button-secondary" href="{{ url_for('discover.index', q=q_text) }}">Find recipe ideas</a>
+      {% endif %}
+    </div>
   {% endcall %}
 {% else %}
   {% call empty('🍜', 'No recipes yet', 'Add your first recipe, or save a ready-made one from Recipe ideas.') %}

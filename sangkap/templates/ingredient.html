@@ -2,13 +2,8 @@
 {% from "_macros.html" import recipe_card, empty, csrf %}
 {% block title %}{{ ingredient.name|capitalize }} · {{ APP_NAME }}{% endblock %}
 {% block content %}
-<a class="back-link" href="{{ url_for('ingredients.index') }}">‹ Ingredients</a>
-<div class="page-head">
-  <h1>{{ ingredient.name|capitalize }}</h1>
-  <div class="actions">
-    <a class="button button-secondary" href="{{ url_for('search.index', have=ingredient.name) }}">What can I cook with it?</a>
-  </div>
-</div>
+<a class="back-link" href="{{ url_for('ingredients.manage') }}">‹ Manage ingredients</a>
+<div class="page-head"><h1>{{ ingredient.name|capitalize }}</h1></div>
 {% if ingredient.aliases %}
   <p class="page-intro muted">Also called: {{ ingredient.aliases|map(attribute='alias')|sort|join(', ') }}</p>
 {% endif %}

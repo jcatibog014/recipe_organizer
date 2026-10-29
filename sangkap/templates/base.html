@@ -25,15 +25,15 @@
 <body class="{% if HAS_PATTERN_TILE %}has-tile{% endif %}">
   <a class="skip-link" href="#main">Skip to the content</a>
 
-  {# Tabs: (label, endpoint, the blueprints that count as "this tab"). #}
+  {# Tabs: (label, endpoint, the pages that count as "this tab"). A name ending
+     in "." means every page of that blueprint ("recipes." = recipes.show, ...). #}
   {% set tabs = [
-       ('Recipes', 'recipes.index', ['recipes']),
-       ('What can I cook?', 'search.index', ['search']),
-       ('Recipe ideas', 'discover.index', ['discover']),
-       ('Meal plan', 'plan.index', ['plan']),
-       ('Ingredients', 'ingredients.index', ['ingredients']),
-       ('Settings', 'auth.settings', ['tags'])] %}
-  {% set section = (request.endpoint or '').split('.')[0] %}
+       ('My recipes', 'recipes.index', ['recipes.']),
+       ('What can I cook?', 'ingredients.index', ['ingredients.index']),
+       ('Recipe ideas', 'discover.index', ['discover.']),
+       ('Meal plan', 'plan.index', ['plan.']),
+       ('Settings', 'auth.settings', ['auth.settings', 'tags.', 'ingredients.manage', 'ingredients.show'])] %}
+  {% set endpoint_now = request.endpoint or '' %}
 
   {# One row on wide screens: logo, tabs, then the theme switch and log out.
      On narrow screens the tabs move to a second row that scrolls sideways. #}
@@ -45,8 +45,12 @@
       </a>
       {% if g.user %}
         <nav class="site-nav" aria-label="Main">
-          {% for label, endpoint, sections in tabs if has_page(endpoint) %}
-            {% set current = section in sections or request.endpoint == endpoint %}
+          {% for label, endpoint, pages in tabs if has_page(endpoint) %}
+            {% set ns = namespace(current=false) %}
+            {% for page in pages %}
+              {% if endpoint_now == page or (page.endswith('.') and endpoint_now.startswith(page)) %}{% set ns.current = true %}{% endif %}
+            {% endfor %}
+            {% set current = ns.current %}
             <a href="{{ url_for(endpoint) }}" {% if current %}aria-current="page"{% endif %}>{{ label }}</a>
           {% endfor %}
         </nav>

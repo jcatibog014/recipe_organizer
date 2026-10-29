@@ -16,8 +16,8 @@
       {% endif %}
       {% if has_page('ingredients.index') %}
         <li>
-          <div><strong>Ingredients</strong><span class="muted small">See and rename the ingredients you use.</span></div>
-          <a class="button button-secondary button-small" href="{{ url_for('ingredients.index') }}">Open</a>
+          <div><strong>Ingredients</strong><span class="muted small">See how often you use each one, and rename or merge them.</span></div>
+          <a class="button button-secondary button-small" href="{{ url_for('ingredients.manage') }}">Manage ingredients</a>
         </li>
       {% endif %}
       {% if has_page('auth.export') %}
