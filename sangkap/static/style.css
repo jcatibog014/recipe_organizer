@@ -1105,12 +1105,12 @@ details.paste summary { cursor: pointer; font-weight: 800; min-height: 44px; dis
   font-weight: 800;
 }
 
-/* Seven day columns, all the same height. */
+/* Seven day columns; each box is only as tall as its meals. */
 .week {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 0.75rem;
-  align-items: stretch;
+  align-items: start;
 }
 .day-col { display: flex; flex-direction: column; gap: 0.45rem; min-width: 0; }
 .day-label {
@@ -1135,13 +1135,11 @@ details.paste summary { cursor: pointer; font-weight: 800; min-height: 44px; dis
   border-radius: 50%;
   background: var(--accent);
 }
-/* The faint box under each day; it fills the column's height. */
+/* The faint box under each day: its meals, then the Add button, then it ends. */
 .day-box {
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
-  min-height: 24rem;
   padding: 0.6rem;
   border-radius: 18px;
   background: var(--day-bg);
@@ -1254,7 +1252,6 @@ details.paste summary { cursor: pointer; font-weight: 800; min-height: 44px; dis
 
 @media (max-width: 1100px) {
   .week { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .day-box { min-height: 16rem; }
 }
 @media (max-width: 860px) {
   .plan-head { grid-template-columns: 1fr auto; }
@@ -1263,7 +1260,6 @@ details.paste summary { cursor: pointer; font-weight: 800; min-height: 44px; dis
 }
 @media (max-width: 560px) {
   .week { grid-template-columns: 1fr; }
-  .day-box { min-height: 0; }
   .week-pill .label { min-width: 0; }
 }
 
