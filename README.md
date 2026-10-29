@@ -17,21 +17,21 @@ It has a bright, cute ("kawaii") look, in light mode and dark mode.
 
 | | |
 |---|---|
-| ![My recipes](docs/screenshots/recipes.png) | ![My recipes in dark mode](docs/screenshots/recipes-dark.png) |
-| **My recipes**: every recipe on a card. | The same page in **dark mode**. |
-| ![A recipe](docs/screenshots/recipe.png) | ![What can I cook?](docs/screenshots/what-can-i-cook.png) |
-| **A recipe** for 6 people: the amounts change. | **What can I cook?** Tap what is in your fridge and pantry. |
-| ![Recipe ideas](docs/screenshots/discover.png) | ![Meal plan](docs/screenshots/meal-plan.png) |
-| **Recipe ideas**: new recipes from TheMealDB. | **Meal plan** for the week. |
+| ![My Recipes](docs/screenshots/recipes.png) | ![My Recipes in dark mode](docs/screenshots/recipes-dark.png) |
+| **My Recipes**: every recipe on a card. | The same page in **dark mode**. |
+| ![A recipe](docs/screenshots/recipe.png) | ![What Can I Cook?](docs/screenshots/what-can-i-cook.png) |
+| **A recipe** for 6 people: the amounts change. | **What Can I Cook?** Tap what is in your fridge and pantry. |
+| ![Recipe Ideas](docs/screenshots/discover.png) | ![Meal Plan](docs/screenshots/meal-plan.png) |
+| **Recipe Ideas**: new recipes from TheMealDB. | **Meal Plan** for the week. |
 | ![Shopping list](docs/screenshots/shopping-list.png) | ![Edit a recipe](docs/screenshots/edit-recipe.png) |
-| **Shopping list**: amounts are added up. | **Add or edit** a recipe. |
+| **Shopping List**: amounts are added up. | **Add or edit** a recipe. |
 | ![Ingredients](docs/screenshots/ingredients.png) | ![A shared recipe](docs/screenshots/shared-recipe.png) |
 | **Manage ingredients**: how many recipes use each one. | **A shared recipe**: anyone with the link can read it. |
 | ![Login](docs/screenshots/login.png) | ![Settings](docs/screenshots/settings.png) |
 | **Log in**, or try the demo. | **Settings**: tags, ingredients, backup and password. |
 
 <p>
-  <img src="docs/screenshots/phone.png" alt="My recipes on a phone" width="240">
+  <img src="docs/screenshots/phone.png" alt="My Recipes on a phone" width="240">
   <img src="docs/screenshots/cook-mode.png" alt="Cook mode on a phone" width="240">
 </p>
 
@@ -41,12 +41,12 @@ On a **phone**, and in **cook mode**: big text, one step at a time. The steps sl
 
 | Page | What it does |
 |---|---|
-| 📖 **My recipes** | See all your recipes. **Search by name**, sort them, and show one tag or your favorites. |
+| 📖 **My Recipes** | See all your recipes. **Search by name**, sort them, and show one tag or your favorites. |
 | ✏️ **Add / edit** | Write the ingredients one per row. Or **paste a whole list** ("2 cups rice", "3 cloves garlic, minced"): Sangkap makes the rows for you. Add steps, tags and a photo. |
 | 🍽️ **A recipe** | Press **−** or **+** to cook for more or fewer people. The amounts change (1 ½ cups → 2 ¼ cups). Press **Start cooking** to cook step by step. |
-| 🔍 **What can I cook?** | Your kitchen as a **fridge** and a **pantry**. **Tap** the ingredients you have, then press **Find recipes**. Choose: ready to cook, missing 1 or 2 things, uses all you picked, or uses any. Water, salt, oil and pepper always count as "in your kitchen". |
-| 🌏 **Recipe ideas** | Find **new** recipes on TheMealDB: by ingredient, by name, or by cuisine (start with **Filipino recipes**). Read one, cook it, or **save it** to your recipes. |
-| 📅 **Meal plan** | Put recipes on the days of the week. Then open the **shopping list**. |
+| 🔍 **What Can I Cook?** | Your kitchen as a **fridge** and a **pantry**. **Tap** the ingredients you have, then press **Find recipes**. Choose: ready to cook, missing 1 or 2 things, uses all you picked, or uses any. Water, salt, oil and pepper always count as "in your kitchen". |
+| 🌏 **Recipe Ideas** | Find **new** recipes on TheMealDB: by ingredient, by name, or by cuisine (start with **Filipino recipes**). Read one, cook it, or **save it** to your recipes. |
+| 📅 **Meal Plan** | Put recipes on the days of the week. Then open the **shopping list**. |
 | 🧄 **Manage ingredients** (in Settings) | See how many recipes use each ingredient. Fix a name you wrote two ways ("onions" and "onion"). |
 | 💌 **Share** | Make a link for one recipe. Anyone with the link can read it (not your notes). Stop sharing at any time. |
 | ⚙️ **Settings** | Manage your tags. Change your password. Download all your recipes (a backup file). |
@@ -55,8 +55,8 @@ Filipino and English names both work: **bawang** = garlic, **kamatis** = tomato,
 
 ## Try the demo
 
-On the login page, press **Try the demo**.
-The demo has 20 Filipino recipes (adobo, sinigang, pancit, leche flan…) and a meal plan.
+On the login page, press **Try Demo**.
+The demo has 9 Filipino recipes (adobo, sinigang, pancit, leche flan…) and a meal plan.
 You can change anything. Every hour, the demo starts fresh again.
 
 ## Put it on your phone
@@ -125,13 +125,13 @@ users ─┬─< recipes ─┬─< recipe_ingredients >── ingredients ─< 
 | **SQLite** | A small database in one file | The database on your computer and in tests |
 | **PostgreSQL (Neon)** | A big database in the cloud (free plan) | The database of the live website |
 | **Pillow** | A Python library for pictures | Making photos small, and the background picture |
-| **TheMealDB** | A free recipe website with an API | The Recipe ideas page |
+| **TheMealDB** | A free recipe website with an API | The Recipe Ideas page |
 | **HTML, CSS, JavaScript** | The languages of web pages | The kawaii look, dark mode, cook mode |
 | **pytest** | A testing tool | About 200 tests |
 | **Render** | A website host (free plan) | Running the live website |
 | **GitHub** | A home for code | Keeping the code and the pull requests |
 
-Recipe data and imagery on Recipe ideas: [TheMealDB](https://www.themealdb.com/).
+Recipe data and imagery on Recipe Ideas: [TheMealDB](https://www.themealdb.com/).
 
 ## Put it on the internet (Render + Neon)
 

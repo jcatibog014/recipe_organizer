@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% block title %}Something went wrong · {{ APP_NAME }}{% endblock %}
+{% block title %}Something Went Wrong · {{ APP_NAME }}{% endblock %}
 {% block content %}
 {% set art = {404: '🌶️', 403: '🙅', 413: '🐘'}.get(code, '😵') %}
 <div class="card narrow empty">
   <div class="empty-art" aria-hidden="true">{{ art }}</div>
-  <h1>Something went wrong <span class="muted">({{ code }})</span></h1>
+  <h1>Something Went Wrong <span class="muted">({{ code }})</span></h1>
   <p>{{ message }}</p>
-  <a class="button button-secondary" href="{{ url_for('recipes.index') }}">Back to my recipes</a>
+  <a class="button button-secondary" href="{{ url_for('recipes.index') }}">Back to My Recipes</a>
 </div>
 {% endblock %}

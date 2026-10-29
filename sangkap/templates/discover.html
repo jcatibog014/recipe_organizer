@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% from "_macros.html" import recipe_card, empty %}
-{% block title %}Recipe ideas · {{ APP_NAME }}{% endblock %}
+{% block title %}Recipe Ideas · {{ APP_NAME }}{% endblock %}
 {% block content %}
 <div class="page-head">
-  <h1>Recipe ideas</h1>
+  <h1>Recipe Ideas</h1>
   <div class="actions">
     <a class="button button-secondary" href="{{ url_for('discover.index', area='Filipino') }}">Filipino recipes</a>
   </div>
@@ -49,17 +49,17 @@
 
 {% if mine %}
   <section class="section-gap">
-    <h2>Already in your recipes</h2>
+    <h2>Already in Your Recipes</h2>
     <ul class="recipe-grid">{% for recipe in mine %}<li>{{ recipe_card(recipe) }}</li>{% endfor %}</ul>
   </section>
 {% endif %}
 
 <section class="section-gap" aria-live="polite">
   {% if error %}
-    {% call empty('😴', 'Recipe ideas are unavailable', error) %}{% endcall %}
+    {% call empty('😴', 'Recipe Ideas Are Unavailable', error) %}{% endcall %}
   {% else %}
     <h2>
-      {% if have_text %}Recipes with {{ have_text }}{% elif q %}Results for “{{ q }}”{% elif featured %}Filipino favorites{% else %}{{ area or category }}{% endif %}
+      {% if have_text %}Recipes with {{ have_text }}{% elif q %}Results for “{{ q }}”{% elif featured %}Filipino Favorites{% else %}{{ area or category }}{% endif %}
       <span class="muted small">({{ plural(meals|length, 'recipe') }})</span>
     </h2>
     {% if have_text %}<p class="small muted">Each recipe uses every ingredient you listed.</p>{% endif %}
@@ -82,7 +82,7 @@
         {% endfor %}
       </ul>
     {% else %}
-      {% call empty('🧅', 'No matches', 'Try fewer ingredients, or use the English name (TheMealDB is in English).') %}{% endcall %}
+      {% call empty('🧅', 'No Matches', 'Try fewer ingredients, or use the English name (TheMealDB is in English).') %}{% endcall %}
     {% endif %}
   {% endif %}
 </section>

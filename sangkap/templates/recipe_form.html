@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% from "_macros.html" import field, textarea, csrf %}
-{% block title %}{{ 'Edit ' ~ recipe.title if recipe else 'New recipe' }} · {{ APP_NAME }}{% endblock %}
+{% block title %}{{ 'Edit ' ~ recipe.title if recipe else 'New Recipe' }} · {{ APP_NAME }}{% endblock %}
 
 {% macro row_tools(what) %}
   <div class="row-tools">
@@ -72,8 +72,8 @@
 {% endmacro %}
 
 {% block content %}
-<a class="back-link" href="{{ url_for('recipes.show', recipe_id=recipe.id) if recipe else url_for('recipes.index') }}">‹ {{ 'Back to the recipe' if recipe else 'My recipes' }}</a>
-<div class="page-head"><h1>{{ 'Edit recipe' if recipe else 'New recipe' }}</h1></div>
+<a class="back-link" href="{{ url_for('recipes.show', recipe_id=recipe.id) if recipe else url_for('recipes.index') }}">‹ {{ 'Back to the recipe' if recipe else 'My Recipes' }}</a>
+<div class="page-head"><h1>{{ 'Edit Recipe' if recipe else 'New Recipe' }}</h1></div>
 
 {% if message %}<p class="notice" role="status">{{ message }}</p>{% endif %}
 {% if errors %}<p class="notice notice-warn" role="alert">Please fix the fields marked below.</p>{% endif %}
@@ -148,7 +148,7 @@
   </section>
 
   <section class="card form" aria-labelledby="notes-title">
-    <h2 id="notes-title">Private notes</h2>
+    <h2 id="notes-title">Private Notes</h2>
     {{ textarea('notes', 'Notes', form.notes, errors.notes, hint='(only you can see these)', rows=3) }}
     {{ field('source_url', 'Source link', form.source_url, errors.source_url, type='url', hint='(optional)', attrs='maxlength="500" placeholder="https://"') }}
   </section>

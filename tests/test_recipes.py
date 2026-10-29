@@ -156,7 +156,7 @@ def test_demo_recipe_limit(app, client):
     post(client, "/demo")
     from sangkap.views import recipes
     original = recipes.DEMO_MAX_RECIPES
-    recipes.DEMO_MAX_RECIPES = 20  # the demo already has 20
+    recipes.DEMO_MAX_RECIPES = 9  # the demo already has 9
     try:
         assert post(client, "/recipes/new", form()).status_code == 403
     finally:
@@ -180,4 +180,4 @@ def test_search_my_recipes_by_name(app, owner_client, owner_id):
     page = owner_client.get("/?q=flan&favorites=1&tag=dessert").data.decode()
     assert "Leche Flan" in page
     page = owner_client.get("/?q=halo-halo").data.decode()
-    assert "No recipes match" in page and "/discover?q=halo-halo" in page
+    assert "No Recipes Match" in page and "/discover?q=halo-halo" in page

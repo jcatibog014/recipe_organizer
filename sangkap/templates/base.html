@@ -32,10 +32,10 @@
   {# Menu items: (label, endpoint, icon, the pages that count as "this item"). A page name
      ending in "." means every page of that blueprint ("recipes." = recipes.show, ...). #}
   {% set tabs = [
-       ('My recipes', 'recipes.index', 'book', ['recipes.']),
-       ('What can I cook?', 'ingredients.index', 'pot', ['ingredients.index']),
-       ('Recipe ideas', 'discover.index', 'bulb', ['discover.']),
-       ('Meal plan', 'plan.index', 'calendar', ['plan.']),
+       ('My Recipes', 'recipes.index', 'book', ['recipes.']),
+       ('What Can I Cook?', 'ingredients.index', 'pot', ['ingredients.index']),
+       ('Recipe Ideas', 'discover.index', 'bulb', ['discover.']),
+       ('Meal Plan', 'plan.index', 'calendar', ['plan.']),
        ('Settings', 'auth.settings', 'sliders', ['auth.settings', 'tags.', 'ingredients.manage', 'ingredients.show'])] %}
   {% set endpoint_now = request.endpoint or '' %}
 
@@ -129,7 +129,7 @@
         {# The login page: a big welcome instead of the menu. #}
         <div class="welcome">
           <img class="welcome-logo" src="{{ url_for('static', filename='icons/logo.svg') }}" alt="" width="140" height="140">
-          <h1>Kain na!</h1>
+          <h1>Hi, cook!</h1>
           <p>Your kawaii recipe box. Save your recipes, then find what you can cook with the ingredients you have.</p>
         </div>
       {% endif %}

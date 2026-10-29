@@ -130,7 +130,7 @@ def picker_url(ctx, *names, match=None):
 
 def test_kitchen_shows_my_ingredients_in_fridge_and_pantry(box, owner_client):
     page = owner_client.get("/ingredients").data.decode()
-    assert "Fridge" in page and "Pantry" in page and "Fruits &amp; vegetables" in page
+    assert "Fridge" in page and "Pantry" in page and "Fruits &amp; Vegetables" in page
     assert ">Chayote<" in page and ">Soy sauce<" in page
     assert "Pedro" not in page and "recipes found" not in page  # no search yet
 
@@ -164,7 +164,7 @@ def test_ids_that_arent_mine_are_ignored(box, ctx, owner_client, app, other_id):
 
 def test_no_matches_offers_recipe_ideas(box, ctx, owner_client):
     page = owner_client.get(picker_url(ctx, "chayote", match="ready")).data.decode()
-    assert "No matches" in page and "/discover?have=chayote" in page
+    assert "No Matches" in page and "/discover?have=chayote" in page
 
 
 def test_bad_match_values_fall_back(box, ctx, owner_client):

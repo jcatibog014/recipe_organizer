@@ -46,7 +46,7 @@ def card_options():
 def index():
     """My recipes, with a search by name and filters (sort, tag, favorites).
 
-    Searching by ingredients you have is on "What can I cook?" (views/ingredients.py).
+    Searching by ingredients you have is on "What Can I Cook?" (views/ingredients.py).
     It is a GET form, so every search has an address you can bookmark: /?q=adobo&sort=az
     """
     s = db.session()

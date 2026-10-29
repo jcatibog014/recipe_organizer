@@ -7,15 +7,15 @@ All the search SQL lives here. Four ways to use the ingredients you list:
            GROUP BY recipe HAVING COUNT(DISTINCT ingredient_id) = how many you listed
   any      recipes with at least ONE of them, the best matches first
            the same GROUP BY, ORDER BY the count
-  pantry   "What can I cook?": recipes where the needed ingredients you
+  pantry   "What Can I Cook?": recipes where the needed ingredients you
            DON'T have are few (0, 1, 2...). Optional ones never count as missing,
            and neither do STAPLES (water, salt, oil, pepper).
            COUNT(DISTINCT CASE WHEN ingredient_id NOT IN (yours) THEN ... END) <= N
   (and "without": recipes with none of these, as NOT EXISTS)
 
 Only the user's own recipes are ever searched (WHERE recipes.user_id = ?).
-Where it's used: "What can I cook?" (views/ingredients.index) picks the
-ingredients from your fridge and pantry; My recipes (views/recipes.index)
+Where it's used: "What Can I Cook?" (views/ingredients.index) picks the
+ingredients from your fridge and pantry; My Recipes (views/recipes.index)
 searches by name with `text`.
 """
 from dataclasses import dataclass, field

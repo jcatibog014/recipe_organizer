@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Log in · {{ APP_NAME }}{% endblock %}
+{% block title %}Log In · {{ APP_NAME }}{% endblock %}
 {% block content %}
 {# The welcome is in the panel on the left (base.html); this side has one card. #}
 <section class="card login-card" aria-labelledby="login-title">
-  <h2 id="login-title">Log in</h2>
+  <h2 id="login-title">Log In</h2>
   <p class="muted">Welcome back! Your recipes are waiting.</p>
 
   {% if error %}
@@ -28,8 +28,8 @@
 
   <form method="post" action="{{ url_for('auth.demo') }}" class="demo-form">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-    <button type="submit" class="button button-secondary button-large button-block">Try the demo</button>
+    <button type="submit" class="button button-secondary button-large button-block">Try Demo</button>
   </form>
-  <p class="muted demo-note">20 sample Filipino recipes to play with. <span class="nowrap">No sign-up needed.</span></p>
+  <p class="muted demo-note">9 sample Filipino recipes to play with. <span class="nowrap">No sign-up needed.</span></p>
 </section>
 {% endblock %}

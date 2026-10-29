@@ -27,5 +27,5 @@ def test_every_sample_ingredient_is_in_the_catalog(ctx):
 def test_plan_uses_sample_titles():
     titles = {sample["title"] for sample in DEMO_RECIPES}
     assert {title for _day, _meal, title in DEMO_PLAN} <= titles
-    assert len(titles) == len(DEMO_RECIPES) == 20
+    assert len(titles) == len(DEMO_RECIPES) == 9
 

@@ -5,6 +5,7 @@ from sqlalchemy import func, select
 from sangkap import auth, db
 from sangkap.dates import utcnow
 from sangkap.models import PlanEntry, Recipe, User
+from sangkap.seed import DEMO_RECIPES
 
 from conftest import CSRF, OWNER, OWNER_PASSWORD, add_recipe, post
 
@@ -64,7 +65,7 @@ def test_demo_login_makes_sample_recipes_and_a_plan(app, client):
     with app.app_context():
         s = db.session()
         demo = s.scalar(select(User).where(User.is_demo.is_(True)))
-        assert s.scalar(select(func.count()).select_from(Recipe).where(Recipe.user_id == demo.id)) == 20
+        assert s.scalar(select(func.count()).select_from(Recipe).where(Recipe.user_id == demo.id)) == len(DEMO_RECIPES)
         assert s.scalar(select(func.count()).select_from(PlanEntry).where(PlanEntry.user_id == demo.id)) == 7
 
 
@@ -141,9 +142,9 @@ def test_settings_page(owner_client, client):
     page = owner_client.get("/settings").data.decode()
     # Three rows in "Your recipe box", each with its own button, then the account.
     assert page.count('class="setting-row"') == 5  # tags, ingredients, backup, install, logged in as
-    for label in ("Manage tags", "Manage ingredients", "Download backup", "Log out", "Change password"):
+    for label in ("Manage Tags", "Manage Ingredients", "Download backup", "Log out", "Change password"):
         assert label in page
-    assert "Logged in as" in page and OWNER in page
+    assert "Logged In As" in page and OWNER in page
     assert 'name="current_password"' in page
 
 

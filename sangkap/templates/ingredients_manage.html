@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% from "_macros.html" import empty %}
-{% block title %}Manage ingredients · {{ APP_NAME }}{% endblock %}
+{% block title %}Manage Ingredients · {{ APP_NAME }}{% endblock %}
 {% block content %}
 <a class="back-link" href="{{ url_for('auth.settings') }}">‹ Settings</a>
-<div class="page-head"><h1>Manage ingredients</h1></div>
+<div class="page-head"><h1>Manage Ingredients</h1></div>
 <p class="page-intro muted">{{ plural(total, 'ingredient') }} in your recipes. The number shows how many recipes use each one. Open an ingredient to rename or merge it.</p>
 
 {% if total %}
@@ -23,7 +23,7 @@
     {% endfor %}
   </div>
 {% else %}
-  {% call empty('🧺', 'No ingredients yet', 'They show up here when you add recipes.') %}
+  {% call empty('🧺', 'No Ingredients Yet', 'They show up here when you add recipes.') %}
     <a class="button" href="{{ url_for('recipes.new') }}">Add a recipe</a>
   {% endcall %}
 {% endif %}

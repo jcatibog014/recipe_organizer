@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% from "_macros.html" import recipe_card, empty %}
-{% block title %}What can I cook? · {{ APP_NAME }}{% endblock %}
+{% block title %}What Can I Cook? · {{ APP_NAME }}{% endblock %}
 
 {# One shelf of the fridge or pantry: its name, then an item to tap for each ingredient. #}
 {% macro shelf(kind) %}
@@ -28,11 +28,11 @@
 {% endmacro %}
 
 {% block content %}
-<div class="page-head"><h1>What can I cook?</h1></div>
+<div class="page-head"><h1>What Can I Cook?</h1></div>
 <p class="page-intro muted">Tap what you have in your fridge and pantry, then find recipes you can make.</p>
 
 {% if not shelves %}
-  {% call empty('🧺', 'Your kitchen is empty', 'Add a recipe, and its ingredients will appear here.') %}
+  {% call empty('🧺', 'Your Kitchen Is Empty', 'Add a recipe, and its ingredients will appear here.') %}
     <a class="button" href="{{ url_for('recipes.new') }}">Add a recipe</a>
   {% endcall %}
 {% else %}
@@ -87,9 +87,9 @@
           {% for result in results %}<li>{{ recipe_card(result.recipe, why(result)) }}</li>{% endfor %}
         </ul>
       {% else %}
-        {% call empty('🧅', 'No matches', 'Try “Missing 2 ingredients at most”, or find new recipes with these.') %}
+        {% call empty('🧅', 'No Matches', 'Try “Missing 2 ingredients at most”, or find new recipes with these.') %}
           {% if has_page('discover.index') %}
-            <a class="button button-secondary" href="{{ url_for('discover.index', have=picked_names[:3]|join(', ')) }}">Find recipe ideas</a>
+            <a class="button button-secondary" href="{{ url_for('discover.index', have=picked_names[:3]|join(', ')) }}">Find Recipe Ideas</a>
           {% endif %}
         {% endcall %}
       {% endif %}
