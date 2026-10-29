@@ -189,6 +189,11 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html { -webkit-text-size-adjust: 100%; }
+/* Bigger screens get bigger text, so it stays easy to read from further away.
+   Almost every size is in rem, so cards, buttons and the sidebar grow with it. */
+@media (min-width: 1600px) { html { font-size: 106.25%; } }  /* 17px */
+@media (min-width: 1920px) { html { font-size: 112.5%; } }   /* 18px */
+@media (min-width: 2300px) { html { font-size: 118.75%; } }  /* 19px */
 
 /* A column: header, the page (it grows), then the footer at the bottom. */
 body {
@@ -267,7 +272,9 @@ img { max-width: 100%; display: block; }
 .shell { flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
 .content { flex: 1; display: flex; flex-direction: column; min-width: 0; }
 .page, .footer-inner {
-  max-width: 1180px;
+  /* The page fills the space next to the sidebar; only on very wide screens
+     does it stop growing, so a line of text never gets too long to follow. */
+  max-width: 110rem;
   margin: 0 auto;
   padding-left: 16px;
   padding-right: 16px;
@@ -360,7 +367,7 @@ img { max-width: 100%; display: block; }
     flex: none;
     display: flex;
     flex-direction: column;
-    width: 248px;
+    width: 15.5rem;
     height: 100vh;
     overflow-y: auto;
     padding: 24px 20px;
@@ -381,7 +388,7 @@ img { max-width: 100%; display: block; }
     animation: none;
   }
   .has-sidebar .sidebar-footer { margin-top: auto; }
-  .has-sidebar .page, .has-sidebar .footer-inner { padding-left: 32px; padding-right: 32px; }
+  .has-sidebar .page, .has-sidebar .footer-inner { padding-left: 2.5rem; padding-right: 2.5rem; }
 }
 
 /* ---------- Layout ---------- */
@@ -407,7 +414,7 @@ img { max-width: 100%; display: block; }
 .section-gap { margin-top: 1.5rem; }
 
 /* Settings: one readable column of cards. */
-.settings-page { max-width: 46rem; margin: 0 auto; display: grid; gap: 1.25rem; }
+.settings-page { max-width: 60rem; margin: 0 auto; display: grid; gap: 1.25rem; }
 .settings-page .page-head { margin-bottom: 0; }
 .settings-page .card h2 { margin-bottom: 0.25rem; }
 .setting-rows { list-style: none; margin: 0; padding: 0; }
@@ -1378,7 +1385,7 @@ details.paste summary { cursor: pointer; font-weight: 800; min-height: 44px; dis
   display: flex;
   flex-direction: column;
   justify-content: center;
-  max-width: 460px;
+  max-width: 30rem;
 }
 .login-card { margin: 0; padding: 28px; }
 .login-card h2 { margin-bottom: 4px; font-size: 1.7rem; }
@@ -1404,7 +1411,7 @@ details.paste summary { cursor: pointer; font-weight: 800; min-height: 44px; dis
 /* ---------- Cook mode ---------- */
 
 .cook {
-  max-width: 46rem;
+  max-width: 60rem;
   margin: 0 auto;
   display: grid;
   gap: 1rem;
