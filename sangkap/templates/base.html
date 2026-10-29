@@ -28,8 +28,8 @@
   {# Tabs: (label, endpoint, the blueprints that count as "this tab"). #}
   {% set tabs = [
        ('Recipes', 'recipes.index', ['recipes']),
-       ('Search', 'search.index', ['search']),
-       ('Discover', 'discover.index', ['discover']),
+       ('What can I cook?', 'search.index', ['search']),
+       ('Recipe ideas', 'discover.index', ['discover']),
        ('Meal plan', 'plan.index', ['plan']),
        ('Ingredients', 'ingredients.index', ['ingredients']),
        ('Settings', 'auth.settings', ['tags'])] %}
@@ -64,10 +64,9 @@
           </svg>
         </button>
         {% if g.user %}
-          <span class="header-user">{{ g.user.username }}</span>
           <form method="post" action="{{ url_for('auth.logout') }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <button type="submit" class="button button-secondary button-small">Log out</button>
+            <button type="submit" class="button button-secondary button-small" title="Logged in as {{ g.user.username }}">Log out</button>
           </form>
         {% endif %}
       </div>

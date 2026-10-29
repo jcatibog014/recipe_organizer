@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% from "_macros.html" import csrf %}
-{% block title %}{{ recipe.title }} · Discover · {{ APP_NAME }}{% endblock %}
+{% block title %}{{ recipe.title }} · Recipe ideas · {{ APP_NAME }}{% endblock %}
 {% block content %}
 <div class="recipe-head">
-  <a class="back-link no-print" href="{{ url_for('discover.index') }}">‹ Discover</a>
+  <a class="back-link no-print" href="{{ url_for('discover.index') }}">‹ Recipe ideas</a>
   <div class="page-head">
     <h1>{{ recipe.title }}</h1>
     <div class="actions no-print">

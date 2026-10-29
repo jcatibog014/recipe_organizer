@@ -78,6 +78,6 @@ def test_when_themealdb_is_down(owner_client, monkeypatch):
         raise OSError("no internet")
     monkeypatch.setattr(mealdb, "FETCH_JSON", broken)
     page = owner_client.get("/discover").data.decode()
-    assert "Discover is unavailable" in page
+    assert "Recipe ideas are unavailable" in page
     assert owner_client.get("/discover/53069").status_code == 503
     assert owner_client.get("/").status_code == 200  # the rest of the app is fine

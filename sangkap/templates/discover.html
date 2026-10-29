@@ -1,13 +1,14 @@
 {% extends "base.html" %}
 {% from "_macros.html" import recipe_card, empty %}
-{% block title %}Discover · {{ APP_NAME }}{% endblock %}
+{% block title %}Recipe ideas · {{ APP_NAME }}{% endblock %}
 {% block content %}
 <div class="page-head">
-  <h1>Discover recipes</h1>
+  <h1>Recipe ideas</h1>
   <div class="actions">
     <a class="button button-secondary" href="{{ url_for('discover.index', area='Filipino') }}">Filipino recipes</a>
   </div>
 </div>
+<p class="page-intro muted">New recipes from TheMealDB. Cook one right away, or save it to your recipes.</p>
 
 <form method="get" action="{{ url_for('discover.index') }}" class="card search-panel" role="search">
   <div class="fields-row">
@@ -55,7 +56,7 @@
 
 <section class="section-gap" aria-live="polite">
   {% if error %}
-    {% call empty('😴', 'Discover is unavailable', error) %}{% endcall %}
+    {% call empty('😴', 'Recipe ideas are unavailable', error) %}{% endcall %}
   {% else %}
     <h2>
       {% if have_text %}Recipes with {{ have_text }}{% elif q %}Results for “{{ q }}”{% elif featured %}Filipino favorites{% else %}{{ area or category }}{% endif %}
