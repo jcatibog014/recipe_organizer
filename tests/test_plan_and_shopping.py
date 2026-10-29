@@ -118,3 +118,14 @@ def test_deleting_a_recipe_takes_it_off_the_plan(app, week, owner_client, ctx):
     post(owner_client, f"/recipes/{adobo.id}/delete")
     assert ctx.scalar(select(func.count()).select_from(PlanEntry)) == 1
     assert resolve(ctx, "chicken") is not None
+
+
+def test_plan_page_layout(week, owner_client):
+    page = owner_client.get("/plan").data.decode()
+    # Meal type as a coloured pill, removing inside the ⋯ menu, a dashed Add button per day.
+    assert 'class="meal-pill meal-dinner">Dinner<' in page
+    assert 'class="meal-menu"' in page and 'aria-label="Remove Adobo from Monday">Remove<' in page and "Open recipe" in page
+    assert page.count('class="add-meal"') == 7
+    # The week picker and Today, and today's column is marked.
+    assert 'aria-label="Previous week"' in page and ">Today</a>" in page and 'aria-current="date"' in page
+    assert '<span class="visually-hidden">(today)</span>' in page

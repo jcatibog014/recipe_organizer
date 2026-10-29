@@ -111,6 +111,8 @@ Results load with `selectinload` (a test counts the queries: no N+1).
 
 - **One place for each search (PR #5, 2026-10-29):** the separate search page is gone. **"What can I cook?"** is now the Ingredients tab, drawn as a **fridge** (meat, seafood, dairy shelves + a crisper drawer for produce) and a wooden **pantry** (pantry, spices, other): tap what you have, press Find recipes (default: missing 1 ingredient at most; water, salt, oil and pepper always count as had). **My recipes** got a search-by-name box in its filter row. Removed: the most-used-ingredient chips, the autocomplete list, the tag checkbox list, and the Without / Keywords / Total time / staples fields. The ingredient counts moved to Settings → Manage ingredients; old `/search` links redirect.
 
+- **Meal plan redesign (PR #6, 2026-10-29):** the background pattern is now a soft texture everywhere (14% light / 10% dark, was 40% / 25%). The meal plan has one header row (title, a white pill week picker with Today, Shopping list), day columns with the date above a faint grey box that ends after its meals, solid white meal cards (a coloured meal pill, a dark bold title, small grey servings, a ⋯ menu with Open recipe / Remove instead of an ✕), and a dashed "+ Add a meal" button. Today is a pink label with a dot.
+
 ## Ideas for later
 
 - Import a recipe from any web page (schema.org `Recipe` JSON-LD).

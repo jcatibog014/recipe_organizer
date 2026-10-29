@@ -72,6 +72,27 @@ function setUpPicker() {
   });
 }
 
+// ---------- Meal plan: the ⋯ menus ----------
+// They are <details>, so they open without JavaScript. This closes the
+// others when one opens, and closes them on a click outside or Escape.
+
+function setUpMealMenus() {
+  const menus = Array.from(document.querySelectorAll("details.meal-menu"));
+  if (!menus.length) return;
+  const closeAll = (except) => menus.forEach((menu) => {
+    if (menu !== except) menu.open = false;
+  });
+  menus.forEach((menu) => menu.addEventListener("toggle", () => {
+    if (menu.open) closeAll(menu);
+  }));
+  document.addEventListener("click", (event) => {
+    if (!event.target.closest("details.meal-menu")) closeAll(null);
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeAll(null);
+  });
+}
+
 // ---------- Recipe form: add, remove and move rows ----------
 // Without JavaScript the form still works: it shows a few empty rows, and
 // "More rows" sends the form to get more. With it, rows are added here.
@@ -291,6 +312,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setUpConfirms();
   setUpAutosubmit();
   setUpPicker();
+  setUpMealMenus();
   setUpRowEditing();
   setUpCookMode();
   setUpShoppingTicks();

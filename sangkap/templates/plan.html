@@ -2,70 +2,82 @@
 {% from "_macros.html" import csrf, empty %}
 {% block title %}Meal plan · {{ APP_NAME }}{% endblock %}
 {% block content %}
-<div class="page-head">
+{# Title on the left, the week picker in the middle, the shopping list on the right. #}
+<div class="plan-head">
   <h1>Meal plan</h1>
-  <div class="actions">
-    <a class="button" href="{{ url_for('plan.shopping_list', week=monday.isoformat()) }}">Shopping list</a>
-  </div>
+  <nav class="week-picker" aria-label="Weeks">
+    <div class="week-pill">
+      <a class="week-arrow" href="{{ url_for('plan.index', week=previous.isoformat()) }}" aria-label="Previous week">‹</a>
+      <span class="label">{{ label }}</span>
+      <a class="week-arrow" href="{{ url_for('plan.index', week=next.isoformat()) }}" aria-label="Next week">›</a>
+    </div>
+    <a class="button button-secondary button-small" href="{{ url_for('plan.index') }}#day-{{ today.isoformat() }}"
+       {% if monday == this_week %}aria-current="date"{% endif %}>Today</a>
+  </nav>
+  <a class="button plan-shopping" href="{{ url_for('plan.shopping_list', week=monday.isoformat()) }}">Shopping list</a>
 </div>
-
-<nav class="week-nav" aria-label="Weeks">
-  <a class="icon-button" href="{{ url_for('plan.index', week=previous.isoformat()) }}" aria-label="Previous week">‹</a>
-  <span class="label">{{ label }}</span>
-  <a class="icon-button" href="{{ url_for('plan.index', week=next.isoformat()) }}" aria-label="Next week">›</a>
-  {% if monday != this_week %}
-    <a class="week-today" href="{{ url_for('plan.index') }}">This week</a>
-  {% endif %}
-</nav>
 
 {% if not recipes %}
   {% call empty('📖', 'Add a recipe first', 'Then you can add it to your meal plan.') %}
     <a class="button" href="{{ url_for('recipes.new') }}">Add a recipe</a>
   {% endcall %}
 {% else %}
-  {% if add_id %}<p class="notice">Choose a day below and select “Add a meal”. Your recipe is already selected.</p>{% endif %}
+  {% if add_id %}<p class="notice">Choose a day and select “Add a meal”. Your recipe is already selected.</p>{% endif %}
   <div class="week">
     {% for day, meals in days %}
-      <section class="day{% if day == today %} is-today{% endif %}" id="day-{{ day.isoformat() }}" aria-labelledby="h-{{ day.isoformat() }}">
-        <h2 id="h-{{ day.isoformat() }}">
+      {% set is_today = day == today %}
+      <section class="day-col{% if is_today %} is-today{% endif %}" id="day-{{ day.isoformat() }}" aria-labelledby="h-{{ day.isoformat() }}">
+        {# The date is a label above the day's box. #}
+        <h2 class="day-label" id="h-{{ day.isoformat() }}">
           <span>{{ day.strftime('%a') }}</span>
-          <span class="muted">{{ day.strftime('%b') }} {{ day.day }}</span>
+          <span class="day-date">{{ day.strftime('%b') }} {{ day.day }}</span>
+          {% if is_today %}<span class="visually-hidden">(today)</span>{% endif %}
         </h2>
-        {% for meal, entries in meals %}
-          {% for entry in entries %}
-            <div class="meal">
-              <div class="meal-name">{{ meal_labels[meal] }}</div>
-              <a href="{{ url_for('recipes.show', recipe_id=entry.recipe.id, servings=entry.servings) }}">{{ entry.recipe.title }}</a>
-              <span class="small muted">Serves {{ entry.servings }}</span>
-              <form method="post" action="{{ url_for('plan.delete', entry_id=entry.id) }}" class="meal-remove">
-                {{ csrf() }}
-                <button type="submit" aria-label="Remove {{ entry.recipe.title }} from {{ day.strftime('%A') }}" title="Remove">✕</button>
-              </form>
-            </div>
+        <div class="day-box">
+          {% for meal, entries in meals %}
+            {% for entry in entries %}
+              <article class="meal-card">
+                <div class="meal-top">
+                  <span class="meal-pill meal-{{ meal }}">{{ meal_labels[meal] }}</span>
+                  <details class="meal-menu">
+                    <summary aria-label="Options for {{ entry.recipe.title }}">⋯</summary>
+                    <div class="menu-pop">
+                      <a href="{{ url_for('recipes.show', recipe_id=entry.recipe.id, servings=entry.servings) }}">Open recipe</a>
+                      <form method="post" action="{{ url_for('plan.delete', entry_id=entry.id) }}">
+                        {{ csrf() }}
+                        <button type="submit" class="danger" aria-label="Remove {{ entry.recipe.title }} from {{ day.strftime('%A') }}">Remove</button>
+                      </form>
+                    </div>
+                  </details>
+                </div>
+                <a class="meal-title" href="{{ url_for('recipes.show', recipe_id=entry.recipe.id, servings=entry.servings) }}">{{ entry.recipe.title }}</a>
+                <span class="meal-serves">Serves {{ entry.servings }}</span>
+              </article>
+            {% endfor %}
           {% endfor %}
-        {% endfor %}
-        <details {% if add_id and day == today %}open{% endif %}>
-          <summary>+ Add a meal</summary>
-          <form method="post" action="{{ url_for('plan.add') }}" class="form">
-            {{ csrf() }}
-            <input type="hidden" name="day" value="{{ day.isoformat() }}">
-            <input type="hidden" name="week" value="{{ monday.isoformat() }}">
-            <label class="field"><span>Recipe</span>
-              <select name="recipe_id" required>
-                {% for recipe in recipes %}<option value="{{ recipe.id }}" {% if recipe.id == add_id %}selected{% endif %}>{{ recipe.title }}</option>{% endfor %}
-              </select>
-            </label>
-            <label class="field"><span>Meal</span>
-              <select name="meal">
-                {% for meal in meal_kinds %}<option value="{{ meal }}" {% if meal == 'dinner' %}selected{% endif %}>{{ meal_labels[meal] }}</option>{% endfor %}
-              </select>
-            </label>
-            <label class="field"><span>Servings <span class="hint">(optional)</span></span>
-              <input type="number" name="servings" min="1" max="100" inputmode="numeric">
-            </label>
-            <button type="submit" class="button button-small">Add</button>
-          </form>
-        </details>
+          <details class="add-meal" {% if add_id and is_today %}open{% endif %}>
+            <summary>+ Add a meal</summary>
+            <form method="post" action="{{ url_for('plan.add') }}" class="form">
+              {{ csrf() }}
+              <input type="hidden" name="day" value="{{ day.isoformat() }}">
+              <input type="hidden" name="week" value="{{ monday.isoformat() }}">
+              <label class="field"><span>Recipe</span>
+                <select name="recipe_id" required>
+                  {% for recipe in recipes %}<option value="{{ recipe.id }}" {% if recipe.id == add_id %}selected{% endif %}>{{ recipe.title }}</option>{% endfor %}
+                </select>
+              </label>
+              <label class="field"><span>Meal</span>
+                <select name="meal">
+                  {% for meal in meal_kinds %}<option value="{{ meal }}" {% if meal == 'dinner' %}selected{% endif %}>{{ meal_labels[meal] }}</option>{% endfor %}
+                </select>
+              </label>
+              <label class="field"><span>Servings <span class="hint">(optional)</span></span>
+                <input type="number" name="servings" min="1" max="100" inputmode="numeric">
+              </label>
+              <button type="submit" class="button button-small">Add</button>
+            </form>
+          </details>
+        </div>
       </section>
     {% endfor %}
   </div>
