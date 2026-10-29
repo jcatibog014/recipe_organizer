@@ -7,7 +7,7 @@
 
   {# Every row: what it is on the left, one button of the same width on the right. #}
   <section class="card" aria-labelledby="box-title">
-    <h2 id="box-title">Your recipe box</h2>
+    <h2 id="box-title">Your Recipe Box</h2>
     <ul class="setting-rows">
       {% if has_page('tags.index') %}
         <li class="setting-row">
@@ -15,7 +15,7 @@
             <h3>Tags</h3>
             <p>Rename, merge or delete your tags.</p>
           </div>
-          <a class="button button-secondary" href="{{ url_for('tags.index') }}">Manage tags</a>
+          <a class="button button-secondary" href="{{ url_for('tags.index') }}">Manage Tags</a>
         </li>
       {% endif %}
       {% if has_page('ingredients.manage') %}
@@ -24,7 +24,7 @@
             <h3>Ingredients</h3>
             <p>See how often you use each one, and rename or merge them.</p>
           </div>
-          <a class="button button-secondary" href="{{ url_for('ingredients.manage') }}">Manage ingredients</a>
+          <a class="button button-secondary" href="{{ url_for('ingredients.manage') }}">Manage Ingredients</a>
         </li>
       {% endif %}
       {% if has_page('auth.export') %}
@@ -40,11 +40,11 @@
   </section>
 
   <section class="card" aria-labelledby="install-title">
-    <h2 id="install-title">Put Sangkap on your phone</h2>
+    <h2 id="install-title">Put Sangkap on Your Phone</h2>
     <ul class="setting-rows">
       <li class="setting-row">
         <div class="setting-text">
-          <h3>Install the app</h3>
+          <h3>Install the App</h3>
           <p>Sangkap can sit on your home screen like an app, with its own icon and the full screen.</p>
         </div>
         {# Shown by app.js only when this browser can install Sangkap right away. #}
@@ -64,7 +64,7 @@
     <ul class="setting-rows">
       <li class="setting-row">
         <div class="setting-text">
-          <h3>Logged in as</h3>
+          <h3>Logged In As</h3>
           <p>{{ g.user.username }}{% if g.user.is_demo %} (the shared demo account){% endif %}</p>
         </div>
         <form method="post" action="{{ url_for('auth.logout') }}">
@@ -74,7 +74,7 @@
       </li>
       <li class="setting-row setting-row-stack">
         <div class="setting-text">
-          <h3 id="password-title">Change password</h3>
+          <h3 id="password-title">Change Password</h3>
           {% if g.user.is_demo %}<p>The demo account can't change its password.</p>
           {% else %}<p>Use at least 8 characters.</p>{% endif %}
         </div>

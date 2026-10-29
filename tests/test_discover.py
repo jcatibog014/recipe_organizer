@@ -8,7 +8,7 @@ from conftest import add_recipe, post
 
 def test_discover_starts_with_filipino_recipes(owner_client):
     page = owner_client.get("/discover").data.decode()
-    assert "Filipino favorites" in page and "Bistek" in page and "Tortang Talong" in page
+    assert "Filipino Favorites" in page and "Bistek" in page and "Tortang Talong" in page
     assert "TheMealDB" in page  # the credit
 
 
@@ -25,12 +25,12 @@ def test_discover_by_name(owner_client):
 def test_discover_shows_your_own_matches_too(app, owner_client, owner_id):
     add_recipe(app, owner_id, "My Adobo", ["1 kg chicken"])
     page = owner_client.get("/discover?q=adobo").data.decode()
-    assert "Already in your recipes" in page and "My Adobo" in page
+    assert "Already in Your Recipes" in page and "My Adobo" in page
 
 
 def test_follow_a_recipe_right_away(owner_client):
     page = owner_client.get("/discover/53069?servings=8").data.decode()
-    assert "Bistek" in page and "Save to my recipes" in page
+    assert "Bistek" in page and "Save to My Recipes" in page
     assert "10 tbsp" in page  # 5 tablespoons for 4, shown for 8
     assert "Marinate beef" in owner_client.get("/discover/53069/cook").data.decode()
 
@@ -80,6 +80,6 @@ def test_when_themealdb_is_down(owner_client, monkeypatch):
         raise OSError("no internet")
     monkeypatch.setattr(mealdb, "FETCH_JSON", broken)
     page = owner_client.get("/discover").data.decode()
-    assert "Recipe ideas are unavailable" in page
+    assert "Recipe Ideas Are Unavailable" in page
     assert owner_client.get("/discover/53069").status_code == 503
     assert owner_client.get("/").status_code == 200  # the rest of the app is fine

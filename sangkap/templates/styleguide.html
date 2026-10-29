@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% from "_macros.html" import field %}
-{% block title %}Style board · {{ APP_NAME }}{% endblock %}
+{% block title %}Style Board · {{ APP_NAME }}{% endblock %}
 {% block content %}
-<div class="page-head"><h1>Style board</h1></div>
+<div class="page-head"><h1>Style Board</h1></div>
 <p class="page-intro muted">Every part of the look on one page (only while developing). Try the light and dark switch.</p>
 
 <div class="stack">
   <section class="card">
-    <h2>Candy colours</h2>
+    <h2>Candy Colours</h2>
     <div class="swatches">
       {% for name in ['pink', 'mint', 'lemon', 'sky', 'peach', 'lilac', 'pink-soft', 'mint-soft', 'lemon-soft', 'sky-soft', 'surface-soft', 'bg'] %}
         <div class="swatch" style="background: var(--{{ name }}); color: {{ '#4a2c2a' if name in ['pink', 'mint', 'lemon', 'sky', 'peach', 'lilac'] else 'var(--ink)' }}">--{{ name }}</div>
@@ -22,7 +22,7 @@
   </section>
 
   <section class="card">
-    <h2>Jelly buttons</h2>
+    <h2>Jelly Buttons</h2>
     <div class="row">
       <button class="button" type="button">Save recipe</button>
       <button class="button button-secondary" type="button">Cancel</button>
@@ -45,7 +45,7 @@
   </section>
 
   <section class="card form">
-    <h2>Sunken inputs</h2>
+    <h2>Sunken Inputs</h2>
     {{ field('example', 'Recipe name', 'Chicken adobo') }}
     {{ field('example2', 'With an error', '', 'Give your recipe a name.') }}
   </section>
@@ -66,7 +66,7 @@
 
   <div class="card empty">
     <div class="empty-art" aria-hidden="true">🍜</div>
-    <h2>No recipes yet</h2>
+    <h2>No Recipes Yet</h2>
     <p class="muted">An empty state, floating gently.</p>
   </div>
 </div>

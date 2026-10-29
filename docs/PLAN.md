@@ -119,6 +119,8 @@ Results load with `selectinload` (a test counts the queries: no N+1).
 
 - **Fill wide screens (PR #9, 2026-10-29):** pages used to stop at 1180px, leaving big empty margins on wide monitors. Now they fill the space beside the sidebar (up to 110rem), and the text grows on big screens (17px at 1600px, 18px at 1920px, 19px at 2300px wide), so everything stays readable. Settings and cook mode keep a comfortable reading width.
 
+- **Title Case (PR #10, 2026-10-29):** the owner asked for Title Case in the menu (My Recipes, What Can I Cook?, Recipe Ideas, Meal Plan) and on every page: page titles, section headings, empty-state titles, tab titles, shelf names, and buttons or sentences that name a page. Action buttons, labels and messages stay in sentence case.
+
 ## Ideas for later
 
 - Import a recipe from any web page (schema.org `Recipe` JSON-LD).

@@ -3,7 +3,7 @@
 {% block title %}{{ recipe.title }} · {{ APP_NAME }}{% endblock %}
 {% block content %}
 <div class="recipe-head">
-  <a class="back-link no-print" href="{{ url_for('recipes.index') }}">‹ My recipes</a>
+  <a class="back-link no-print" href="{{ url_for('recipes.index') }}">‹ My Recipes</a>
   <div class="page-head">
     <h1>{{ recipe.title }}</h1>
     <div class="actions no-print">
@@ -12,7 +12,7 @@
         <button type="submit" class="button button-secondary">{{ 'Remove from favorites' if recipe.is_favorite else 'Add to favorites' }}</button>
       </form>
       {% if has_page('plan.index') %}
-        <a class="button button-secondary" href="{{ url_for('plan.index', add=recipe.id) }}">Add to meal plan</a>
+        <a class="button button-secondary" href="{{ url_for('plan.index', add=recipe.id) }}">Add to Meal Plan</a>
       {% endif %}
       <button type="button" class="button button-secondary" data-print hidden>Print</button>
       <a class="button" href="{{ url_for('recipes.edit', recipe_id=recipe.id) }}">Edit</a>
@@ -57,7 +57,7 @@
   </section>
 
   <section class="card card-soft" aria-labelledby="notes-title">
-    <h2 id="notes-title">Private notes</h2>
+    <h2 id="notes-title">Private Notes</h2>
     {% if recipe.notes %}<p class="pre-line">{{ recipe.notes }}</p>{% else %}<p class="muted">No notes yet. Only you can see them.</p>{% endif %}
     {% if recipe.source_url %}
       <p class="credit">Source: <a href="{{ recipe.source_url }}" rel="noopener noreferrer" target="_blank">{{ recipe.source_url|truncate(60) }}</a></p>

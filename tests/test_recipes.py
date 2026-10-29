@@ -180,4 +180,4 @@ def test_search_my_recipes_by_name(app, owner_client, owner_id):
     page = owner_client.get("/?q=flan&favorites=1&tag=dessert").data.decode()
     assert "Leche Flan" in page
     page = owner_client.get("/?q=halo-halo").data.decode()
-    assert "No recipes match" in page and "/discover?q=halo-halo" in page
+    assert "No Recipes Match" in page and "/discover?q=halo-halo" in page

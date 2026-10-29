@@ -32,10 +32,10 @@
   {# Menu items: (label, endpoint, icon, the pages that count as "this item"). A page name
      ending in "." means every page of that blueprint ("recipes." = recipes.show, ...). #}
   {% set tabs = [
-       ('My recipes', 'recipes.index', 'book', ['recipes.']),
-       ('What can I cook?', 'ingredients.index', 'pot', ['ingredients.index']),
-       ('Recipe ideas', 'discover.index', 'bulb', ['discover.']),
-       ('Meal plan', 'plan.index', 'calendar', ['plan.']),
+       ('My Recipes', 'recipes.index', 'book', ['recipes.']),
+       ('What Can I Cook?', 'ingredients.index', 'pot', ['ingredients.index']),
+       ('Recipe Ideas', 'discover.index', 'bulb', ['discover.']),
+       ('Meal Plan', 'plan.index', 'calendar', ['plan.']),
        ('Settings', 'auth.settings', 'sliders', ['auth.settings', 'tags.', 'ingredients.manage', 'ingredients.show'])] %}
   {% set endpoint_now = request.endpoint or '' %}
 

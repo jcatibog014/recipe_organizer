@@ -16,12 +16,12 @@ from .models import NAME_MAX, Ingredient, IngredientAlias, Recipe, RecipeIngredi
 
 KINDS = ("produce", "meat", "seafood", "dairy", "pantry", "spice", "other")
 KIND_LABELS = {
-    "produce": "Fruits & vegetables",
+    "produce": "Fruits & Vegetables",
     "meat": "Meat",
-    "seafood": "Fish & seafood",
-    "dairy": "Eggs & dairy",
-    "pantry": "Dry goods & sauces",
-    "spice": "Herbs & spices",
+    "seafood": "Fish & Seafood",
+    "dairy": "Eggs & Dairy",
+    "pantry": "Dry Goods & Sauces",
+    "spice": "Herbs & Spices",
     "other": "Other",
 }
 

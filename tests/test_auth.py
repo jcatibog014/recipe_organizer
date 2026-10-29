@@ -141,9 +141,9 @@ def test_settings_page(owner_client, client):
     page = owner_client.get("/settings").data.decode()
     # Three rows in "Your recipe box", each with its own button, then the account.
     assert page.count('class="setting-row"') == 5  # tags, ingredients, backup, install, logged in as
-    for label in ("Manage tags", "Manage ingredients", "Download backup", "Log out", "Change password"):
+    for label in ("Manage Tags", "Manage Ingredients", "Download backup", "Log out", "Change password"):
         assert label in page
-    assert "Logged in as" in page and OWNER in page
+    assert "Logged In As" in page and OWNER in page
     assert 'name="current_password"' in page
 
 

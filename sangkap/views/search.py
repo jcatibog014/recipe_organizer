@@ -1,7 +1,7 @@
 """The old search page (/search). Searching now lives on two pages:
 
-- "What can I cook?" (/ingredients) for the ingredients you have,
-- My recipes (/?q=...) for recipe names.
+- "What Can I Cook?" (/ingredients) for the ingredients you have,
+- My Recipes (/?q=...) for recipe names.
 
 Old bookmarks still work: /search sends you to the right one.
 """

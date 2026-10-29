@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% from "_macros.html" import empty %}
-{% block title %}Shopping list · {{ APP_NAME }}{% endblock %}
+{% block title %}Shopping List · {{ APP_NAME }}{% endblock %}
 {% block content %}
-<a class="back-link no-print" href="{{ url_for('plan.index', week=monday.isoformat()) }}">‹ Meal plan</a>
+<a class="back-link no-print" href="{{ url_for('plan.index', week=monday.isoformat()) }}">‹ Meal Plan</a>
 <div class="page-head">
-  <h1>Shopping list</h1>
+  <h1>Shopping List</h1>
   <div class="actions">
     <button type="button" class="button button-secondary no-print" data-print hidden>Print</button>
   </div>
@@ -39,8 +39,8 @@
     {% endfor %}
   </div>
 {% else %}
-  {% call empty('🛒', 'Nothing to buy yet', 'Plan some meals for this week first.') %}
-    <a class="button" href="{{ url_for('plan.index', week=monday.isoformat()) }}">Go to the meal plan</a>
+  {% call empty('🛒', 'Nothing to Buy Yet', 'Plan some meals for this week first.') %}
+    <a class="button" href="{{ url_for('plan.index', week=monday.isoformat()) }}">Go to the Meal Plan</a>
   {% endcall %}
 {% endif %}
 {% endblock %}

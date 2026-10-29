@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% from "_macros.html" import recipe_card, empty %}
-{% block title %}My recipes · {{ APP_NAME }}{% endblock %}
+{% block title %}My Recipes · {{ APP_NAME }}{% endblock %}
 {% block content %}
 <div class="page-head">
-  <h1>My recipes</h1>
+  <h1>My Recipes</h1>
   <div class="actions">
     {% if has_page('discover.index') %}
-      <a class="button button-secondary" href="{{ url_for('discover.index') }}">Find recipe ideas</a>
+      <a class="button button-secondary" href="{{ url_for('discover.index') }}">Find Recipe Ideas</a>
     {% endif %}
     <a class="button" href="{{ url_for('recipes.new') }}">Add a recipe</a>
   </div>
@@ -55,20 +55,20 @@
     {% for recipe in recipes %}<li>{{ recipe_card(recipe) }}</li>{% endfor %}
   </ul>
 {% elif total %}
-  {% call empty('🙈', 'No recipes match', 'Try another name or tag, or look for something new in Recipe ideas.') %}
+  {% call empty('🙈', 'No Recipes Match', 'Try another name or tag, or look for something new in Recipe Ideas.') %}
     <div class="row row-center">
       <a class="button button-secondary" href="{{ url_for('recipes.index') }}">Show all recipes</a>
       {% if has_page('discover.index') and q_text %}
-        <a class="button button-secondary" href="{{ url_for('discover.index', q=q_text) }}">Find recipe ideas</a>
+        <a class="button button-secondary" href="{{ url_for('discover.index', q=q_text) }}">Find Recipe Ideas</a>
       {% endif %}
     </div>
   {% endcall %}
 {% else %}
-  {% call empty('🍜', 'No recipes yet', 'Add your first recipe, or save a ready-made one from Recipe ideas.') %}
+  {% call empty('🍜', 'No Recipes Yet', 'Add your first recipe, or save a ready-made one from Recipe Ideas.') %}
     <div class="row row-center">
       <a class="button" href="{{ url_for('recipes.new') }}">Add a recipe</a>
       {% if has_page('discover.index') %}
-        <a class="button button-secondary" href="{{ url_for('discover.index') }}">Find recipe ideas</a>
+        <a class="button button-secondary" href="{{ url_for('discover.index') }}">Find Recipe Ideas</a>
       {% endif %}
     </div>
   {% endcall %}

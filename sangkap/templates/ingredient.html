@@ -2,7 +2,7 @@
 {% from "_macros.html" import recipe_card, empty, csrf %}
 {% block title %}{{ ingredient.name|capitalize }} · {{ APP_NAME }}{% endblock %}
 {% block content %}
-<a class="back-link" href="{{ url_for('ingredients.manage') }}">‹ Manage ingredients</a>
+<a class="back-link" href="{{ url_for('ingredients.manage') }}">‹ Manage Ingredients</a>
 <div class="page-head"><h1>{{ ingredient.name|capitalize }}</h1></div>
 {% if ingredient.aliases %}
   <p class="page-intro muted">Also called: {{ ingredient.aliases|map(attribute='alias')|sort|join(', ') }}</p>
@@ -14,7 +14,7 @@
   </ul>
 
   <section class="card card-soft section-gap" aria-labelledby="merge-title">
-    <h2 id="merge-title">Rename or merge</h2>
+    <h2 id="merge-title">Rename or Merge</h2>
     <p class="muted">Wrote it two ways, like “onions” and “onion”? Enter the name to keep. Your recipes that use
       “{{ ingredient.name }}” will switch to it.</p>
     <form method="post" action="{{ url_for('ingredients.merge', ingredient_id=ingredient.id) }}" class="inline-form">
@@ -26,6 +26,6 @@
     <datalist id="ingredient-names">{% for name in suggestions %}<option value="{{ name }}">{% endfor %}</datalist>
   </section>
 {% else %}
-  {% call empty('🫙', 'No recipes use this yet') %}{% endcall %}
+  {% call empty('🫙', 'No Recipes Use This Yet') %}{% endcall %}
 {% endif %}
 {% endblock %}

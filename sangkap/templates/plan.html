@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% from "_macros.html" import csrf, empty %}
-{% block title %}Meal plan · {{ APP_NAME }}{% endblock %}
+{% block title %}Meal Plan · {{ APP_NAME }}{% endblock %}
 {% block content %}
 {# Title on the left, the week picker in the middle, the shopping list on the right. #}
 <div class="plan-head">
-  <h1>Meal plan</h1>
+  <h1>Meal Plan</h1>
   <nav class="week-picker" aria-label="Weeks">
     <div class="week-pill">
       <a class="week-arrow" href="{{ url_for('plan.index', week=previous.isoformat()) }}" aria-label="Previous week">‹</a>
@@ -14,11 +14,11 @@
     <a class="button button-secondary button-small" href="{{ url_for('plan.index') }}#day-{{ today.isoformat() }}"
        {% if monday == this_week %}aria-current="date"{% endif %}>Today</a>
   </nav>
-  <a class="button plan-shopping" href="{{ url_for('plan.shopping_list', week=monday.isoformat()) }}">Shopping list</a>
+  <a class="button plan-shopping" href="{{ url_for('plan.shopping_list', week=monday.isoformat()) }}">Shopping List</a>
 </div>
 
 {% if not recipes %}
-  {% call empty('📖', 'Add a recipe first', 'Then you can add it to your meal plan.') %}
+  {% call empty('📖', 'Add a Recipe First', 'Then you can add it to your Meal Plan.') %}
     <a class="button" href="{{ url_for('recipes.new') }}">Add a recipe</a>
   {% endcall %}
 {% else %}

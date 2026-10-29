@@ -75,7 +75,7 @@ def test_plan_page_and_shopping_page(week, owner_client):
     shop = owner_client.get("/plan/shopping").data.decode()
     assert "2 kg" in shop and "1 ⅛ cups" in shop and ">to taste<" in shop
     nothing = owner_client.get(f"/plan/shopping?week={(week + timedelta(days=14)).isoformat()}").data.decode()
-    assert "Nothing to buy yet" in nothing
+    assert "Nothing to Buy Yet" in nothing
 
 
 def test_add_and_remove_a_meal(app, owner_client, owner_id, ctx):
