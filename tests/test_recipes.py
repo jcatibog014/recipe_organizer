@@ -156,7 +156,7 @@ def test_demo_recipe_limit(app, client):
     post(client, "/demo")
     from sangkap.views import recipes
     original = recipes.DEMO_MAX_RECIPES
-    recipes.DEMO_MAX_RECIPES = 20  # the demo already has 20
+    recipes.DEMO_MAX_RECIPES = 9  # the demo already has 9
     try:
         assert post(client, "/recipes/new", form()).status_code == 403
     finally:
