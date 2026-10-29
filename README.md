@@ -59,6 +59,15 @@ On the login page, press **Try the demo**.
 The demo has 20 Filipino recipes (adobo, sinigang, pancit, leche flan…) and a meal plan.
 You can change anything. Every hour, the demo starts fresh again.
 
+## Put it on your phone
+
+Sangkap can sit on your home screen like an app, with its own icon.
+
+- **Android or a computer:** press **Install app** (in the menu, or in Settings), or the install icon in the address bar.
+- **iPhone or iPad:** open Sangkap in **Safari**, tap **Share**, then **Add to Home Screen**.
+
+Without internet, the app shows a small "You're offline" page.
+
 ## How to run it on your computer
 
 You need **Python 3.13**. In the project folder, type:

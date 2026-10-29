@@ -31,6 +31,8 @@ CONTENT_SECURITY_POLICY = "; ".join([
     # TheMealDB's pictures show on Discover (saved recipes keep their own copy).
     "img-src 'self' data: https://www.themealdb.com",
     "connect-src 'self'",
+    "worker-src 'self'",  # the service worker, /sw.js (it makes Sangkap installable)
+    "manifest-src 'self'",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",

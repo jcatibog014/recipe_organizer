@@ -33,6 +33,59 @@ function setUpThemeToggle() {
   });
 }
 
+// ---------- The ☰ menu on phones ----------
+// The button opens and closes the menu. Escape closes it too. On computers
+// the menu is a sidebar that is always open, and the button is hidden.
+
+function setUpMenu() {
+  const menu = document.querySelector("[data-menu]");
+  const button = document.querySelector("[data-menu-button]");
+  if (!menu || !button) return;
+  const setOpen = (open) => {
+    menu.classList.toggle("is-open", open);
+    button.setAttribute("aria-expanded", String(open));
+    button.setAttribute("aria-label", open ? "Close the menu" : "Menu");
+  };
+  button.addEventListener("click", () => setOpen(!menu.classList.contains("is-open")));
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && menu.classList.contains("is-open")) {
+      setOpen(false);
+      button.focus();
+    }
+  });
+}
+
+// ---------- Install on a phone ----------
+// The service worker (/sw.js) makes Sangkap installable. Browsers that can
+// install it fire "beforeinstallprompt"; then every "Install app" button
+// (data-install: in the sidebar and in Settings) shows. iPhones never fire
+// it, so Settings also explains Safari's "Add to Home Screen".
+
+function setUpInstall() {
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/sw.js").catch(() => {
+      // Not a problem: the site works the same without it.
+    });
+  }
+  const buttons = Array.from(document.querySelectorAll("[data-install]"));
+  if (!buttons.length) return;
+  let offer = null;
+  const show = (visible) => buttons.forEach((button) => { button.hidden = !visible; });
+  window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault(); // we show our own button instead of the browser's banner
+    offer = event;
+    show(true);
+  });
+  buttons.forEach((button) => button.addEventListener("click", async () => {
+    if (!offer) return;
+    offer.prompt();
+    await offer.userChoice;
+    offer = null;
+    show(false);
+  }));
+  window.addEventListener("appinstalled", () => show(false));
+}
+
 // ---------- "Are you sure?" before deleting ----------
 // A form with data-confirm="Question?" asks first. Without JavaScript it just sends.
 
@@ -309,6 +362,8 @@ function setUpPrintButtons() {
 
 document.addEventListener("DOMContentLoaded", () => {
   setUpThemeToggle();
+  setUpMenu();
+  setUpInstall();
   setUpConfirms();
   setUpAutosubmit();
   setUpPicker();
