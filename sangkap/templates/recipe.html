@@ -19,6 +19,7 @@
     </div>
   </div>
   <div class="meta">
+    {% if recipe.is_favorite %}<span class="chip chip-big chip-favorite"><span aria-hidden="true">♥</span> Favorite</span>{% endif %}
     {% if recipe.prep_minutes %}<span class="chip chip-big">Prep {{ recipe.prep_minutes|minutes }}</span>{% endif %}
     {% if recipe.cook_minutes %}<span class="chip chip-big">Cook {{ recipe.cook_minutes|minutes }}</span>{% endif %}
     {% if recipe.total_minutes %}<span class="chip chip-big chip-have">Total {{ recipe.total_minutes|minutes }}</span>{% endif %}

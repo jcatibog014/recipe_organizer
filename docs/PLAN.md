@@ -82,9 +82,9 @@ Results load with `selectinload` (a test counts the queries: no N+1).
 ## Stages (all ✅, one commit each, one PR)
 
 1. ✅ **Setup, data model, migrations, login, theme**: `.venv`, all models, the first Alembic revision, `upgrade-db`, login/logout/CSRF/demo/lock-out, the kawaii theme (tokens for light + dark, toggle, puffy CSS, fonts, emoji background, logo), `/styleguide`, AGENTS.md/CLAUDE.md.
-2. ✅ **Recipes**: `quantities.py`, `paste.py`, the starter catalog with aliases + emoji, the add/edit form (dynamic rows; "more rows" and "paste" also work without JS), the recipe page with the servings scaler.
+2. ✅ **Recipes**: `quantities.py`, `paste.py`, the starter catalog with aliases, the add/edit form (dynamic rows; "more rows" and "paste" also work without JS), the recipe page with the servings scaler.
 3. ✅ **Search, tags, ingredients page**: every mode above, tags (rename = merge), ingredient counts and merge.
-4. ✅ **Photos, demo data, cook mode, share links**: Pillow uploads, kawaii photo frame, emoji placeholders, 20 Filipino demo recipes + a week's plan, favorites, cook mode, print, JSON export, `/r/<code>`.
+4. ✅ **Photos, demo data, cook mode, share links**: Pillow uploads, kawaii photo frame, 20 Filipino demo recipes + a week's plan, favorites, cook mode, print, JSON export, `/r/<code>`.
 5. ✅ **Discover (TheMealDB)**: `mealdb.py`, follow + save once, alias bridging, fixtures, credit, CSP.
 6. ✅ **Meal plan + shopping list**: week grid, totals per shelf with unit families combined.
 7. ✅ **Polish and go-live prep**: icons, contrast check (all ≥ 4.5:1), security headers + CSP, `/healthz`, `render.yaml`, README (A1 English) + screenshots.
@@ -104,6 +104,8 @@ Results load with `selectinload` (a test counts the queries: no N+1).
 ## After launch
 
 - **UI/UX cleanup (PR #2, 2026-10-29):** decorative emoji removed (kept only for recipe pictures, empty-state illustrations and the ♥ sticker), wording and capitalization checked, the header on one row with the tabs lined up with the logo, the star after "Sangkap" removed, a tidy filter row on My recipes ("Manage tags" moved to Settings; filters apply on change), aligned forms and cards, sliding steps in cook mode (with swipe), a two-column shopping list, and the footer kept at the bottom.
+
+- **Photo-only pictures (PR #3, 2026-10-29):** the emoji stand-in pictures repeated across recipes (every dessert had the same flan), so a recipe without a photo now gets a compact card with a candy-coloured strip, and the recipe page skips the picture. The emoji data was removed from the catalog.
 
 ## Ideas for later
 

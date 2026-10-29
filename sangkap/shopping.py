@@ -15,7 +15,7 @@ ingredients and water are left out. Plain Python (tests/test_plan_and_shopping.p
 import math
 from dataclasses import dataclass, field
 
-from .ingredients import KINDS, emoji_for
+from .ingredients import KINDS
 from .quantities import CONVERSIONS, format_quantity
 
 NOT_BOUGHT = {"water"}  # from the tap: never on the list
@@ -28,10 +28,6 @@ class Item:
     amounts: dict = field(default_factory=dict)  # unit -> total, before combining
     loose: bool = False  # some recipe needs it with no amount ("to taste")
     recipes: list = field(default_factory=list)
-
-    @property
-    def emoji(self):
-        return emoji_for(self.name)
 
     def add(self, amount, unit):
         self.amounts[unit] = self.amounts.get(unit, 0) + amount

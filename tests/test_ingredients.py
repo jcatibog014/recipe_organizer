@@ -1,7 +1,7 @@
 from sqlalchemy import select
 
 from sangkap import ingredients
-from sangkap.ingredients import CATALOG, emoji_for, normalize, resolve
+from sangkap.ingredients import CATALOG, normalize, resolve
 from sangkap.models import Ingredient, IngredientAlias
 
 from conftest import add_recipe
@@ -15,7 +15,7 @@ def test_normalize():
 
 def test_catalog_names_and_aliases_never_clash():
     seen = set()
-    for name, kind, _emoji, aliases in CATALOG:
+    for name, kind, aliases in CATALOG:
         assert kind in ingredients.KINDS
         assert name == normalize(name)
         for word in [name, *aliases]:
@@ -43,13 +43,6 @@ def test_get_or_create_adds_once(ctx):
     first = ingredients.get_or_create(ctx, "Dragon  Fruit")
     second = ingredients.get_or_create(ctx, "dragon fruit")
     assert first is second and first.name == "dragon fruit" and not first.is_seeded
-
-
-def test_emoji():
-    assert emoji_for("garlic") == "🧄"
-    assert emoji_for("red chili") == "🌶️"
-    assert emoji_for("pork chops") == "🥓"
-    assert emoji_for("dragon fruit") == ""
 
 
 def test_suggestions_hide_other_users_new_ingredients(app, owner_id, other_id, ctx):

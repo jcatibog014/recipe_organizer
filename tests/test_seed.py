@@ -1,6 +1,5 @@
 """The demo's sample recipes are clean data."""
 from sangkap import paste
-from sangkap.display import recipe_emoji
 from sangkap.ingredients import resolve
 from sangkap.seed import DEMO_PLAN, DEMO_RECIPES
 
@@ -30,7 +29,3 @@ def test_plan_uses_sample_titles():
     assert {title for _day, _meal, title in DEMO_PLAN} <= titles
     assert len(titles) == len(DEMO_RECIPES) == 20
 
-
-def test_sample_pictures_vary():
-    emojis = {recipe_emoji({"tags": [t.strip() for t in s["tags"].split(",")]}) for s in DEMO_RECIPES}
-    assert len(emojis) >= 8
