@@ -59,10 +59,12 @@ def test_save_copies_it_into_my_recipes_once(app, owner_client, owner_id, ctx):
     assert "Open your saved copy" in owner_client.get("/discover/53069").data.decode()
 
 
-def test_saved_recipes_are_searchable_by_our_names(app, owner_client, owner_id):
+def test_saved_recipes_are_searchable_by_our_names(app, owner_client, owner_id, ctx):
     post(owner_client, "/discover/53069/save")
-    # TheMealDB says "Beef" and "Soy Sauce"; our search finds it by "baka" and "toyo".
-    page = owner_client.get("/search?have=baka,toyo").data.decode()
+    # TheMealDB says "Beef" and "Soy Sauce"; they are the same rows as our "baka" and "toyo".
+    from sangkap.ingredients import resolve
+    ids = [resolve(ctx, name).id for name in ("baka", "toyo")]
+    page = owner_client.get(f"/ingredients?have={ids[0]}&have={ids[1]}&match=all").data.decode()
     assert "Bistek" in page and "1 recipe found" in page
 
 

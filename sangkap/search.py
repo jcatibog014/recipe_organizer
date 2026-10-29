@@ -9,23 +9,36 @@ All the search SQL lives here. Four ways to use the ingredients you list:
            the same GROUP BY, ORDER BY the count
   pantry   "What can I cook?": recipes where the needed ingredients you
            DON'T have are few (0, 1, 2...). Optional ones never count as missing,
-           and neither do STAPLES (water, salt...) when that box is ticked.
+           and neither do STAPLES (water, salt, oil, pepper).
            COUNT(DISTINCT CASE WHEN ingredient_id NOT IN (yours) THEN ... END) <= N
   (and "without": recipes with none of these, as NOT EXISTS)
 
 Only the user's own recipes are ever searched (WHERE recipes.user_id = ?).
+Where it's used: "What can I cook?" (views/ingredients.index) picks the
+ingredients from your fridge and pantry; My recipes (views/recipes.index)
+searches by name with `text`.
 """
 from dataclasses import dataclass, field
 
 from sqlalchemy import and_, case, distinct, func, or_, select
 from sqlalchemy.orm import selectinload
 
+from . import ingredients
 from .models import Recipe, RecipeIngredient, Tag
 
 MODES = ("all", "any", "pantry")
 MAX_INGREDIENTS = 12
-# Almost every kitchen has these. With "staples" on, they never count as missing,
-# or nearly every recipe would miss 2-3 things (most recipes list water, salt and oil).
+# The "Match" menu on "What can I cook?": value -> (label, mode, missing_max).
+MATCHES = {
+    "ready": ("Ready to cook (I have everything)", "pantry", 0),
+    "missing1": ("Missing 1 ingredient at most", "pantry", 1),
+    "missing2": ("Missing 2 ingredients at most", "pantry", 2),
+    "all": ("Uses all I picked", "all", 0),
+    "any": ("Uses any I picked", "any", 0),
+}
+DEFAULT_MATCH = "missing1"
+# Almost every kitchen has these, so they never count as missing; otherwise
+# nearly every recipe would miss 2-3 things (most recipes list water, salt and oil).
 STAPLES = ("water", "salt", "cooking oil", "black pepper")
 
 
@@ -51,6 +64,26 @@ class Query:
 
     def is_empty(self):
         return not (self.have or self.without or self.text or self.tag_ids or self.max_minutes or self.favorites)
+
+
+def split_names(text):
+    """ "chicken, Garlic ,, gata" -> ["chicken", "garlic", "gata"] (no repeats)."""
+    names = []
+    for part in (text or "").split(","):
+        name = ingredients.normalize(part)
+        if name and name not in names:
+            names.append(name)
+    return names[:MAX_INGREDIENTS]
+
+
+def resolve_staples(s):
+    """The ingredient ids of STAPLES (they never count as missing)."""
+    ids = []
+    for name in STAPLES:
+        ingredient = ingredients.resolve(s, name)
+        if ingredient is not None:
+            ids.append(ingredient.id)
+    return ids
 
 
 def like_pattern(text):

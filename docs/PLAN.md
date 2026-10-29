@@ -109,6 +109,8 @@ Results load with `selectinload` (a test counts the queries: no N+1).
 
 - **Clearer cards and tabs (PR #4, 2026-10-29):** recipe cards lead with the name and a two-line description; time, servings and tags sit in one quiet footer. The tabs "Search" and "Discover" looked alike, so they are now **"What can I cook?"** (your own recipes, by ingredient) and **"Recipe ideas"** (new recipes from TheMealDB); the code and web addresses keep the old names (`search`, `discover`). The username left the header (it's the Log out button's tooltip) so the tabs fit on one row down to 1120px.
 
+- **One place for each search (PR #5, 2026-10-29):** the separate search page is gone. **"What can I cook?"** is now the Ingredients tab, drawn as a **fridge** (meat, seafood, dairy shelves + a crisper drawer for produce) and a wooden **pantry** (pantry, spices, other): tap what you have, press Find recipes (default: missing 1 ingredient at most; water, salt, oil and pepper always count as had). **My recipes** got a search-by-name box in its filter row. Removed: the most-used-ingredient chips, the autocomplete list, the tag checkbox list, and the Without / Keywords / Total time / staples fields. The ingredient counts moved to Settings → Manage ingredients; old `/search` links redirect.
+
 ## Ideas for later
 
 - Import a recipe from any web page (schema.org `Recipe` JSON-LD).

@@ -166,3 +166,18 @@ def test_demo_recipe_limit(app, client):
 def test_logged_in_user_can_open_another_user_session_safely(app, client, owner_id, other_id):
     log_in_as(client, other_id)
     assert client.get("/").status_code == 200
+
+
+def test_search_my_recipes_by_name(app, owner_client, owner_id):
+    add_recipe(app, owner_id, "Chicken Adobo", tags=["ulam"], description="Salty and sour")
+    add_recipe(app, owner_id, "Leche Flan", tags=["dessert"], is_favorite=True)
+    add_recipe(app, owner_id, "Pedro's 100% Pancit")
+    page = owner_client.get("/?q=adobo").data.decode()
+    assert "1 recipe match “adobo”" in page and "Chicken Adobo" in page and "Leche Flan" not in page
+    assert "Chicken Adobo" in owner_client.get("/?q=sour").data.decode()          # the description too
+    page = owner_client.get("/?q=100%25").data.decode()                            # % is a plain character
+    assert "Pancit" in page and "Adobo" not in page
+    page = owner_client.get("/?q=flan&favorites=1&tag=dessert").data.decode()
+    assert "Leche Flan" in page
+    page = owner_client.get("/?q=halo-halo").data.decode()
+    assert "No recipes match" in page and "/discover?q=halo-halo" in page

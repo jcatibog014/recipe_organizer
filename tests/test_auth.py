@@ -10,7 +10,8 @@ from conftest import CSRF, OWNER, OWNER_PASSWORD, add_recipe, post
 
 
 def test_pages_need_login(client):
-    for url in ["/", "/recipes/new", "/search", "/discover", "/plan", "/ingredients", "/tags", "/settings"]:
+    for url in ["/", "/recipes/new", "/search", "/discover", "/plan", "/ingredients", "/ingredients/manage",
+                "/tags", "/settings"]:
         response = client.get(url)
         assert response.status_code == 302
         assert "/login" in response.headers["Location"]

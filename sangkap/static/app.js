@@ -45,12 +45,30 @@ function setUpConfirms() {
 }
 
 // ---------- Filters that apply at once ----------
-// A form with data-autosubmit sends itself when a box changes, so its
-// "Show" button (data-autosubmit-button) is only needed without JavaScript.
+// A form with data-autosubmit sends itself when a menu or checkbox changes.
+// Text boxes wait for Enter (or the button): sending on every change would
+// reload the page as soon as you click away.
 
 function setUpAutosubmit() {
   document.querySelectorAll("form[data-autosubmit]").forEach((form) => {
-    form.addEventListener("change", () => form.requestSubmit());
+    form.addEventListener("change", (event) => {
+      const box = event.target;
+      if (box.tagName === "SELECT" || box.type === "checkbox" || box.type === "radio") {
+        form.requestSubmit();
+      }
+    });
+  });
+}
+
+// ---------- "What can I cook?": count what's picked ----------
+
+function setUpPicker() {
+  const form = document.querySelector("form[data-picker]");
+  if (!form) return;
+  const count = form.querySelector("[data-picked-count]");
+  form.addEventListener("change", () => {
+    const n = form.querySelectorAll("input[name=have]:checked").length;
+    count.textContent = n === 0 ? "Nothing picked yet" : `${n} ingredient${n === 1 ? "" : "s"} picked`;
   });
 }
 
@@ -272,6 +290,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setUpThemeToggle();
   setUpConfirms();
   setUpAutosubmit();
+  setUpPicker();
   setUpRowEditing();
   setUpCookMode();
   setUpShoppingTicks();

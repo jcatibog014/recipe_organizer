@@ -1,4 +1,5 @@
-"""Your recipes: the list (home page), one recipe, the add/edit form, photo, share, cook mode."""
+"""Your recipes: the list with its search box (home page), one recipe, the add/edit
+form, photo, share, cook mode."""
 import secrets
 
 from flask import (
@@ -7,7 +8,7 @@ from flask import (
 from sqlalchemy import func, select
 from sqlalchemy.orm import selectinload
 
-from .. import db, ingredients, paste
+from .. import db, ingredients, paste, search
 from ..auth import login_required
 from ..display import ingredient_groups, servings_factor, wanted_servings
 from ..models import Photo, Recipe, RecipeIngredient, Step, Tag
@@ -18,11 +19,12 @@ from . import owned_recipe
 
 bp = Blueprint("recipes", __name__)
 
+# Sort options: key -> (label, how to sort a list of recipes in Python).
+# "match" (best match first) is only offered after an ingredient search.
 SORTS = {
-    "new": ("Newest", (Recipe.created_at.desc(), Recipe.id.desc())),
-    "az": ("A–Z", (func.lower(Recipe.title), Recipe.id)),
-    "quick": ("Quickest", (func.coalesce(Recipe.prep_minutes, 0) + func.coalesce(Recipe.cook_minutes, 0),
-                           Recipe.id)),
+    "new": ("Newest", lambda recipes: sorted(recipes, key=lambda r: (r.created_at, r.id), reverse=True)),
+    "az": ("A–Z", lambda recipes: sorted(recipes, key=lambda r: (r.title.lower(), r.id))),
+    "quick": ("Quickest", lambda recipes: sorted(recipes, key=lambda r: (r.total_minutes or 0, r.id))),
 }
 BLANK_ROWS = 4
 BLANK_STEPS = 3
@@ -42,24 +44,30 @@ def card_options():
 @bp.get("/")
 @login_required
 def index():
+    """My recipes, with a search by name and filters (sort, tag, favorites).
+
+    Searching by ingredients you have is on "What can I cook?" (views/ingredients.py).
+    It is a GET form, so every search has an address you can bookmark: /?q=adobo&sort=az
+    """
     s = db.session()
-    sort = request.args.get("sort", "new")
+    args = request.args
+    q_text = args.get("q", "").strip()[:100]
+    tags = s.scalars(select(Tag).where(Tag.user_id == g.user.id, Tag.recipes.any()).order_by(Tag.name)).all()
+    tag = next((t for t in tags if t.name == args.get("tag", "")), None)
+    favorites = args.get("favorites") == "1"
+    sort = args.get("sort", "new")
     if sort not in SORTS:
         sort = "new"
-    favorites = request.args.get("favorites") == "1"
-    tag_name = request.args.get("tag", "")
 
-    query = select(Recipe).where(Recipe.user_id == g.user.id).options(*card_options())
-    if favorites:
-        query = query.where(Recipe.is_favorite.is_(True))
-    if tag_name:
-        query = query.where(Recipe.tags.any(Tag.name == tag_name))
-    recipes = s.scalars(query.order_by(*SORTS[sort][1])).all()
+    query = search.Query(text=q_text, tag_ids=[tag.id] if tag else [], favorites=favorites)
+    recipes = SORTS[sort][1]([result.recipe for result in search.run(s, g.user.id, query)])
 
-    tags = s.scalars(select(Tag).where(Tag.user_id == g.user.id, Tag.recipes.any()).order_by(Tag.name)).all()
     total = s.scalar(select(func.count()).select_from(Recipe).where(Recipe.user_id == g.user.id))
-    return render_template("recipes.html", recipes=recipes, tags=tags, sort=sort, sorts=SORTS,
-                           favorites=favorites, tag_name=tag_name, total=total)
+    return render_template(
+        "recipes.html", recipes=recipes, total=total, q_text=q_text, tags=tags,
+        tag_name=tag.name if tag else "", favorites=favorites, sort=sort, sorts=SORTS,
+        filtered=bool(q_text or tag or favorites),
+    )
 
 
 @bp.get("/recipes/<int:recipe_id>")

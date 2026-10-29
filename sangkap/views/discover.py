@@ -9,7 +9,6 @@ from ..display import ingredient_groups, servings_factor, wanted_servings
 from ..models import Recipe, RecipeIngredient, Step, Tag
 from ..photos import PhotoError
 from .recipes import set_photo
-from .search import split_names
 
 bp = Blueprint("discover", __name__)
 
@@ -40,7 +39,7 @@ def saved_ids(s):
 def index():
     s = db.session()
     q = request.args.get("q", "").strip()[:60]
-    have_names = split_names(request.args.get("have"))[:MAX_INGREDIENTS]
+    have_names = search.split_names(request.args.get("have"))[:MAX_INGREDIENTS]
     area = request.args.get("area", "").strip()[:40]
     category = request.args.get("category", "").strip()[:40]
     if not (q or have_names or area or category):

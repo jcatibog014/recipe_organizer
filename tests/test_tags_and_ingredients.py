@@ -47,10 +47,10 @@ def test_other_users_tags_are_not_found(app, owner_client, other_id, ctx):
     assert post(owner_client, f"/tags/{tag.id}/delete").status_code == 404
 
 
-def test_ingredients_page(app, owner_client, owner_id):
+def test_manage_ingredients_page(app, owner_client, owner_id):
     add_recipe(app, owner_id, "Adobo", ["1 kg chicken", "1 head garlic"])
     add_recipe(app, owner_id, "Sinangag", ["8 cloves garlic"])
-    page = owner_client.get("/ingredients").data.decode()
+    page = owner_client.get("/ingredients/manage").data.decode()
     assert "Meat" in page and "Chicken" in page and 'aria-label="2 recipes"' in page
 
 
