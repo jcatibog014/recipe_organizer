@@ -117,6 +117,8 @@ Results load with `selectinload` (a test counts the queries: no N+1).
 
 - **Sidebar navigation (PR #8, 2026-10-29):** like Gawi, the menu moved from the top bar to a sidebar on the left (logo, menu items with icons, then the username, light/dark switch and Log out at the bottom), with a ☰ menu on phones. The demo banner became a note under the username. Page layouts now use container queries, so they fit the space beside the sidebar. The login page matches Gawi too: a candy welcome panel on the left (big logo, "Kain na!") and one login card on the right with "or" and a big Try the demo button. And like Gawi, Sangkap is installable on a phone: a web manifest, a service worker (with a "You're offline" page), an Install app button in the sidebar and in Settings (shown only when the browser can install), and the iPhone steps in Settings.
 
+- **Fill wide screens (PR #9, 2026-10-29):** pages used to stop at 1180px, leaving big empty margins on wide monitors. Now they fill the space beside the sidebar (up to 110rem), and the text grows on big screens (17px at 1600px, 18px at 1920px, 19px at 2300px wide), so everything stays readable. Settings and cook mode keep a comfortable reading width.
+
 ## Ideas for later
 
 - Import a recipe from any web page (schema.org `Recipe` JSON-LD).
