@@ -121,6 +121,8 @@ Results load with `selectinload` (a test counts the queries: no N+1).
 
 - **Title Case (PR #10, 2026-10-29):** the owner asked for Title Case in the menu (My Recipes, What Can I Cook?, Recipe Ideas, Meal Plan) and on every page: page titles, section headings, empty-state titles, tab titles, shelf names, and buttons or sentences that name a page. Action buttons, labels and messages stay in sentence case. The login page also got a bigger logo, "Hi, cook!" and a Try Demo button. The demo went from 20 recipes to **9** (the 7 in its meal plan, plus Sinangag and Leche Flan), so the demo and the README screenshots stay short: 3 rows of 3 on a wide screen.
 
+- **Even screenshots (PR #11, 2026-10-29):** the README pictures were full-page shots (Edit Recipe was 3200px tall), and a table row is as tall as its tallest picture. Now every desktop picture is one 1200×800 screen, so the table is short and even.
+
 ## Ideas for later
 
 - Import a recipe from any web page (schema.org `Recipe` JSON-LD).
