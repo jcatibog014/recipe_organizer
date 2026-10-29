@@ -1388,11 +1388,13 @@ details.paste summary { cursor: pointer; font-weight: 800; min-height: 44px; dis
   display: flex;
   flex-direction: column;
   justify-content: center;
-  max-width: 30rem;
+  max-width: 36rem;
 }
-.login-card { margin: 0; padding: 28px; }
-.login-card h2 { margin-bottom: 4px; font-size: 1.7rem; }
-.login-card .form { margin-top: 20px; }
+.login-card { margin: 0; padding: 2.5rem; font-size: 1.1rem; }
+.login-card h2 { margin-bottom: 6px; font-size: 2.1rem; }
+.login-card .form { margin-top: 24px; gap: 1.2rem; }
+.login-card input { min-height: 54px; font-size: 1.1rem; }
+.login-card .button-large { min-height: 58px; font-size: 1.2rem; }
 .button-large { min-height: 52px; font-size: 1.1rem; }
 .button-block { width: 100%; }
 
@@ -1487,6 +1489,8 @@ details.paste summary { cursor: pointer; font-weight: 800; min-height: 44px; dis
   .toolbar .field { flex: 1 1 8rem; }
   .toolbar .search-box { flex-basis: 100%; }
   .setting-row { grid-template-columns: minmax(0, 1fr); }
+  .login-card { padding: 1.5rem; }
+  .login-card h2 { font-size: 1.8rem; }
 }
 
 /* ---------- Motion and print ---------- */
