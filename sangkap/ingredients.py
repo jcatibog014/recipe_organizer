@@ -20,7 +20,7 @@ KIND_LABELS = {
     "meat": "Meat",
     "seafood": "Fish & seafood",
     "dairy": "Eggs & dairy",
-    "pantry": "Pantry",
+    "pantry": "Dry goods & sauces",
     "spice": "Herbs & spices",
     "other": "Other",
 }

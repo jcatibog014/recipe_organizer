@@ -61,7 +61,7 @@
         {{ plural(picked|length, 'ingredient') ~ ' picked' if picked else 'Nothing picked yet' }}
       </span>
       <label class="field find-match">
-        <span class="visually-hidden">Show recipes that are</span>
+        <span class="visually-hidden">Match</span>
         <select name="match">
           {% for key, (label, _mode, _missing) in matches.items() %}
             <option value="{{ key }}" {% if key == match %}selected{% endif %}>{{ label }}</option>

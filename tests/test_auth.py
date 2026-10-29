@@ -135,3 +135,20 @@ def test_export_is_a_json_backup_of_only_my_recipes(app, owner_client, owner_id,
     assert data["recipes"][0]["ingredients"][0] == {"section": "", "amount": 1.0, "amount_max": None,
                                                     "unit": "cup", "name": "rice", "note": "",
                                                     "optional": False}
+
+
+def test_settings_page(owner_client, client):
+    page = owner_client.get("/settings").data.decode()
+    # Three rows in "Your recipe box", each with its own button, then the account.
+    assert page.count('class="setting-row"') == 4  # tags, ingredients, backup, logged in as
+    for label in ("Manage tags", "Manage ingredients", "Download backup", "Log out", "Change password"):
+        assert label in page
+    assert "Logged in as" in page and OWNER in page
+    assert 'name="current_password"' in page
+
+
+def test_settings_page_for_the_demo(client):
+    post(client, "/demo")
+    page = client.get("/settings").data.decode()
+    assert "the shared demo account" in page and "can't change its password" in page
+    assert 'name="current_password"' not in page
