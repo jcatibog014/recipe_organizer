@@ -1,6 +1,6 @@
 """Take the README screenshots (docs/screenshots/*.png).
 
-It logs in with "Try the demo", so only sample recipes show. It uses
+It logs in with "Try Demo", so only sample recipes show. It uses
 Microsoft Edge, which Windows already has, through Playwright. Playwright
 is only a tool for this script, so it is not in requirements.txt:
 
@@ -43,7 +43,7 @@ PAGES = [
 def demo_page(browser, theme, size):
     page = browser.new_page(viewport=size, color_scheme=theme)
     page.goto(f"{BASE}/login")
-    page.get_by_role("button", name="Try the demo").click()
+    page.get_by_role("button", name="Try Demo").click()
     page.wait_for_load_state("networkidle")
     return page
 

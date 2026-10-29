@@ -4,7 +4,7 @@ There is no sign-up page. The owner's account is made on the command line:
 
     flask --app sangkap create-user <name>
 
-Anyone can press "Try the demo", which logs in as the shared demo user.
+Anyone can press "Try Demo", which logs in as the shared demo user.
 Every recipe and tag has a user_id, and every query filters on
 g.user.id, so the demo can never see the owner's recipes
 (tests/test_auth.py and tests/test_recipes.py check this).

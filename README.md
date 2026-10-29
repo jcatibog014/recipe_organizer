@@ -55,7 +55,7 @@ Filipino and English names both work: **bawang** = garlic, **kamatis** = tomato,
 
 ## Try the demo
 
-On the login page, press **Try the demo**.
+On the login page, press **Try Demo**.
 The demo has 20 Filipino recipes (adobo, sinigang, pancit, leche flan…) and a meal plan.
 You can change anything. Every hour, the demo starts fresh again.
 
