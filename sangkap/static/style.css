@@ -1326,10 +1326,74 @@ details.paste summary { cursor: pointer; font-weight: 800; min-height: 44px; dis
 
 /* ---------- Login ---------- */
 
-.login-layout { display: grid; gap: 1.25rem; max-width: 30rem; margin: 1rem auto 0; }
-.login-hero { text-align: center; }
-.login-hero img { width: 120px; height: 120px; margin: 0 auto 0.5rem; animation: float 4s ease-in-out infinite; }
-.login-hero h1 { margin-bottom: 0.25rem; }
+/* Like Gawi: the page is split like the app. The candy panel on the left
+   (where the sidebar is) holds the welcome, and the login card sits
+   centred on the other side. On phones the panel is on top. */
+.welcome {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 8px 16px 28px;
+  text-align: center;
+}
+.welcome h1 { margin: 0; font-size: 2.2rem; }
+.welcome p { margin: 0; max-width: 34ch; color: var(--ink-soft); font-weight: 700; }
+.welcome-logo { display: block; width: 88px; height: 88px; animation: float 4s ease-in-out infinite; }
+.welcome-layout .sidebar {
+  background:
+    radial-gradient(circle at 20% 15%, var(--lemon-soft), transparent 45%),
+    radial-gradient(circle at 85% 90%, var(--mint-soft), transparent 50%),
+    var(--pink-soft);
+}
+
+@media (min-width: 900px) {
+  .welcome-layout .shell { flex-direction: row; }
+  .welcome-layout .sidebar {
+    position: sticky;
+    top: 0;
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    width: clamp(360px, 42vw, 600px);
+    height: 100vh;
+    padding: 24px 40px;
+    border-bottom: 0;
+    border-right: 3px solid var(--line);
+    box-shadow: 2px 0 16px rgb(194 24 91 / 0.08);
+  }
+  .welcome-layout .sidebar-top { min-height: 48px; padding: 0; }
+  /* The welcome sits in the middle of the panel. */
+  .welcome-layout .welcome { flex: 1; align-content: center; gap: 16px; padding: 0 0 48px; }
+  .welcome-layout .welcome h1 { font-size: 3rem; }
+  .welcome-layout .welcome p { font-size: 1.15rem; }
+  .welcome-layout .welcome-logo { width: 140px; height: 140px; }
+}
+
+/* The login card, centred on the other side. */
+.welcome-layout .page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 460px;
+}
+.login-card { margin: 0; padding: 28px; }
+.login-card h2 { margin-bottom: 4px; font-size: 1.7rem; }
+.login-card .form { margin-top: 20px; }
+.button-large { min-height: 52px; font-size: 1.1rem; }
+.button-block { width: 100%; }
+
+/* "or", with a line on each side. */
+.or {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+.or::before, .or::after { content: ""; flex: 1; border-top: 2px dashed var(--line); }
+.login-card .demo-form { margin: 0; }
+.demo-note { margin: 10px 0 0; text-align: center; font-size: 0.95rem; }
 
 .photo-preview { max-width: 16rem; border-radius: 18px; }
 
