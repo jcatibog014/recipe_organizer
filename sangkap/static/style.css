@@ -376,13 +376,30 @@ img { max-width: 100%; display: block; }
 .back-link { display: inline-block; margin-bottom: 0.75rem; font-size: 0.95rem; }
 .section-gap { margin-top: 1.5rem; }
 
-.settings-grid {
+/* Settings: one readable column of cards. */
+.settings-page { max-width: 46rem; margin: 0 auto; display: grid; gap: 1.25rem; }
+.settings-page .page-head { margin-bottom: 0; }
+.settings-page .card h2 { margin-bottom: 0.25rem; }
+.setting-rows { list-style: none; margin: 0; padding: 0; }
+/* A row: name + description on the left, a button on the right. Every button
+   is the same width, so they line up down the card. */
+.setting-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
-  gap: 1.25rem;
-  align-items: start;
+  grid-template-columns: minmax(0, 1fr) 15rem;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+  padding: 1rem 0;
+  border-top: 2px dashed var(--line);
 }
-.settings-list > li > div { display: grid; gap: 0.1rem; }
+.setting-row:first-child { border-top: 0; }
+.setting-row:last-child { padding-bottom: 0; }
+.setting-row > .button, .setting-row > form:not(.password-form) .button { width: 100%; white-space: nowrap; }
+.setting-row > form { margin: 0; }
+.setting-text h3 { margin: 0 0 0.15rem; font-family: var(--font-body); font-size: 1.05rem; font-weight: 800; }
+.setting-text p { margin: 0; color: var(--ink-soft); font-size: 0.95rem; }
+/* The password row: the form goes under the text, at a comfortable width. */
+.setting-row-stack { grid-template-columns: minmax(0, 1fr); }
+.password-form { max-width: 26rem; }
 
 .stack > * + * { margin-top: 1.25rem; }
 .row { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
@@ -1361,6 +1378,7 @@ details.paste summary { cursor: pointer; font-weight: 800; min-height: 44px; dis
   .page-head .actions .button { flex: 1 1 auto; }
   .recipe-grid .picture { aspect-ratio: 16 / 9; }
   .toolbar .field { flex: 1 1 8rem; }
+  .setting-row { grid-template-columns: minmax(0, 1fr); }
 }
 
 /* ---------- Motion and print ---------- */

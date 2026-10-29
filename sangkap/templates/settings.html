@@ -2,46 +2,73 @@
 {% from "_macros.html" import field, csrf %}
 {% block title %}Settings · {{ APP_NAME }}{% endblock %}
 {% block content %}
-<div class="page-head"><h1>Settings</h1></div>
+<div class="settings-page">
+  <div class="page-head"><h1>Settings</h1></div>
 
-<div class="settings-grid">
-  <section class="card" aria-labelledby="more-title">
-    <h2 id="more-title">Your recipe box</h2>
-    <ul class="list settings-list">
+  {# Every row: what it is on the left, one button of the same width on the right. #}
+  <section class="card" aria-labelledby="box-title">
+    <h2 id="box-title">Your recipe box</h2>
+    <ul class="setting-rows">
       {% if has_page('tags.index') %}
-        <li>
-          <div><strong>Tags</strong><span class="muted small">Rename, merge or delete your tags.</span></div>
-          <a class="button button-secondary button-small" href="{{ url_for('tags.index') }}">Manage tags</a>
+        <li class="setting-row">
+          <div class="setting-text">
+            <h3>Tags</h3>
+            <p>Rename, merge or delete your tags.</p>
+          </div>
+          <a class="button button-secondary" href="{{ url_for('tags.index') }}">Manage tags</a>
         </li>
       {% endif %}
-      {% if has_page('ingredients.index') %}
-        <li>
-          <div><strong>Ingredients</strong><span class="muted small">See how often you use each one, and rename or merge them.</span></div>
-          <a class="button button-secondary button-small" href="{{ url_for('ingredients.manage') }}">Manage ingredients</a>
+      {% if has_page('ingredients.manage') %}
+        <li class="setting-row">
+          <div class="setting-text">
+            <h3>Ingredients</h3>
+            <p>See how often you use each one, and rename or merge them.</p>
+          </div>
+          <a class="button button-secondary" href="{{ url_for('ingredients.manage') }}">Manage ingredients</a>
         </li>
       {% endif %}
       {% if has_page('auth.export') %}
-        <li>
-          <div><strong>Backup</strong><span class="muted small">Download all your recipes as one JSON file.</span></div>
-          <a class="button button-secondary button-small" href="{{ url_for('auth.export') }}">Download</a>
+        <li class="setting-row">
+          <div class="setting-text">
+            <h3>Backup</h3>
+            <p>Download all your recipes as one JSON file.</p>
+          </div>
+          <a class="button button-secondary" href="{{ url_for('auth.export') }}">Download backup</a>
         </li>
       {% endif %}
     </ul>
   </section>
 
-  <section class="card" aria-labelledby="password-title">
-    <h2 id="password-title">Change password</h2>
-    {% if g.user.is_demo %}
-      <p class="muted">The demo account can't change its password.</p>
-    {% else %}
-      <form method="post" class="form">
-        {{ csrf() }}
-        {{ field('current_password', 'Current password', '', errors.current_password, type='password', attrs='autocomplete="current-password" required') }}
-        {{ field('new_password', 'New password', '', errors.new_password, type='password', hint='(at least 8 characters)', attrs='autocomplete="new-password" required minlength="8"') }}
-        {{ field('confirm_password', 'New password again', '', errors.confirm_password, type='password', attrs='autocomplete="new-password" required') }}
-        <button type="submit" class="button">Change password</button>
-      </form>
-    {% endif %}
+  <section class="card" aria-labelledby="account-title">
+    <h2 id="account-title">Account</h2>
+    <ul class="setting-rows">
+      <li class="setting-row">
+        <div class="setting-text">
+          <h3>Logged in as</h3>
+          <p>{{ g.user.username }}{% if g.user.is_demo %} (the shared demo account){% endif %}</p>
+        </div>
+        <form method="post" action="{{ url_for('auth.logout') }}">
+          {{ csrf() }}
+          <button type="submit" class="button button-secondary">Log out</button>
+        </form>
+      </li>
+      <li class="setting-row setting-row-stack">
+        <div class="setting-text">
+          <h3 id="password-title">Change password</h3>
+          {% if g.user.is_demo %}<p>The demo account can't change its password.</p>
+          {% else %}<p>Use at least 8 characters.</p>{% endif %}
+        </div>
+        {% if not g.user.is_demo %}
+          <form method="post" class="form password-form" aria-labelledby="password-title">
+            {{ csrf() }}
+            {{ field('current_password', 'Current password', '', errors.current_password, type='password', attrs='autocomplete="current-password" required') }}
+            {{ field('new_password', 'New password', '', errors.new_password, type='password', attrs='autocomplete="new-password" required minlength="8"') }}
+            {{ field('confirm_password', 'Confirm new password', '', errors.confirm_password, type='password', attrs='autocomplete="new-password" required') }}
+            <div class="form-actions"><button type="submit" class="button">Change password</button></div>
+          </form>
+        {% endif %}
+      </li>
+    </ul>
   </section>
 </div>
 {% endblock %}

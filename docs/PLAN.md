@@ -113,6 +113,8 @@ Results load with `selectinload` (a test counts the queries: no N+1).
 
 - **Meal plan redesign (PR #6, 2026-10-29):** the background pattern is now a soft texture everywhere (14% light / 10% dark, was 40% / 25%). The meal plan has one header row (title, a white pill week picker with Today, Shopping list), day columns with the date above a faint grey box that ends after its meals, solid white meal cards (a coloured meal pill, a dark bold title, small grey servings, a ⋯ menu with Open recipe / Remove instead of an ✕), and a dashed "+ Add a meal" button. Today is a pink label with a dot.
 
+- **Settings and wording (PR #7, 2026-10-29):** Settings is one centred column with two cards (Your recipe box; Account). Every row has its name and description on the left and a same-width button on the right (full width under the text on phones), and the password form sits under its heading. A capitalization check over every page's headings, buttons, labels and titles led to: "Logged in as" (matching Log in / Log out), the error page's tab title matching its heading, the pantry shelf renamed "Dry goods & sauces" (it was "Pantry" inside the Pantry), and a clearer hidden label for the Match menu.
+
 ## Ideas for later
 
 - Import a recipe from any web page (schema.org `Recipe` JSON-LD).
