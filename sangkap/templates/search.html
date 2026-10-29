@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% from "_macros.html" import recipe_card, empty %}
-{% block title %}Search · {{ APP_NAME }}{% endblock %}
+{% block title %}What can I cook? · {{ APP_NAME }}{% endblock %}
 
 {% macro why(result) %}
   <div class="result-why" aria-label="Ingredients">
@@ -12,6 +12,7 @@
 
 {% block content %}
 <div class="page-head"><h1>What can I cook?</h1></div>
+<p class="page-intro muted">Search your own recipes by the ingredients you have.</p>
 
 <form method="get" action="{{ url_for('search.index') }}" class="card search-panel" role="search">
   <input type="hidden" name="sent" value="1">
@@ -117,9 +118,9 @@
       {% endfor %}
     </ul>
   {% else %}
-    {% call empty('🧅', 'No matches', 'Try “Any ingredient”, allow a missing ingredient, or look for new recipes in Discover.') %}
+    {% call empty('🧅', 'No matches', 'Try “Any ingredient”, allow a missing ingredient, or look for new recipes in Recipe ideas.') %}
       {% if has_page('discover.index') and have_text %}
-        <a class="button button-secondary" href="{{ url_for('discover.index', have=have_text) }}">Discover recipes with these</a>
+        <a class="button button-secondary" href="{{ url_for('discover.index', have=have_text) }}">Find recipe ideas with these</a>
       {% endif %}
     {% endcall %}
   {% endif %}

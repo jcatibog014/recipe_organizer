@@ -6,7 +6,7 @@
 <div class="page-head">
   <h1>{{ ingredient.name|capitalize }}</h1>
   <div class="actions">
-    <a class="button button-secondary" href="{{ url_for('search.index', have=ingredient.name) }}">Search recipes with it</a>
+    <a class="button button-secondary" href="{{ url_for('search.index', have=ingredient.name) }}">What can I cook with it?</a>
   </div>
 </div>
 {% if ingredient.aliases %}

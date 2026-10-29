@@ -56,8 +56,8 @@
         <div class="recipe-card no-photo accent-{{ loop.index0 }}">
           <div class="card-body">
             <div class="card-title"><h2>{{ title }}</h2>{% if loop.first %}<span class="heart" aria-hidden="true">♥</span>{% endif %}</div>
-            <p class="meta">45 min · Serves 4</p>
-            <ul class="chips"><li class="chip chip-tag">#{{ tag }}</li></ul>
+            <p class="card-desc">A short description of the dish, shown in up to two lines.</p>
+            <div class="card-foot"><span class="meta">45 min · Serves 4</span><span class="card-tags">#{{ tag }} #filipino</span></div>
           </div>
         </div>
       </li>

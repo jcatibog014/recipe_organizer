@@ -1,4 +1,5 @@
-"""Discover: find ready recipes on TheMealDB, cook them right away, or save them."""
+"""Recipe ideas (the code calls it "discover"): ready-made recipes from TheMealDB
+to cook right away or save."""
 from flask import Blueprint, abort, flash, g, redirect, render_template, request, url_for
 from sqlalchemy import func, select
 
@@ -16,7 +17,7 @@ SOURCE = "themealdb"
 FEATURED_AREA = "Filipino"
 MAX_INGREDIENTS = 3  # one TheMealDB call each
 DEMO_MAX_SAVED = 10
-DOWN_MESSAGE = "Discover is unavailable because we can't reach TheMealDB right now. Please try again later."
+DOWN_MESSAGE = "We can't reach TheMealDB right now, so recipe ideas are unavailable. Please try again later."
 
 
 def candidates(s, name):
@@ -122,7 +123,7 @@ def save(meal_id):
         count = s.scalar(select(func.count()).select_from(Recipe)
                          .where(Recipe.user_id == g.user.id, Recipe.source == SOURCE))
         if count >= DEMO_MAX_SAVED:
-            abort(403, f"The demo can save up to {DEMO_MAX_SAVED} Discover recipes.")
+            abort(403, f"The demo can save up to {DEMO_MAX_SAVED} recipe ideas.")
 
     data = get_meal(meal_id)
     tags = []

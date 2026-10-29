@@ -260,14 +260,6 @@ img { max-width: 100%; display: block; }
 .brand:hover img { transform: rotate(-8deg) scale(1.06); }
 .header-actions { grid-area: actions; display: flex; align-items: center; gap: 0.6rem; }
 .header-actions form { margin: 0; }
-.header-user {
-  font-weight: 700;
-  color: var(--ink-soft);
-  max-width: 10rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 
 .site-nav {
   grid-area: nav;
@@ -282,7 +274,7 @@ img { max-width: 100%; display: block; }
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  padding: 0.4rem 0.95rem;
+  padding: 0.4rem 0.8rem;
   border-radius: 999px;
   color: var(--ink);
   text-decoration: none;
@@ -294,7 +286,7 @@ img { max-width: 100%; display: block; }
 
 /* Narrower screens: the tabs get their own row under the logo, lined up
    with it, and scroll sideways if they don't fit. */
-@media (max-width: 1040px) {
+@media (max-width: 1120px) {
   .header-inner {
     /* minmax(0, 1fr): the long, scrolling tab row must not widen the columns. */
     grid-template-columns: minmax(0, 1fr) auto;
@@ -647,9 +639,32 @@ a.chip:hover { filter: brightness(0.97); }
   transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 .recipe-card:hover { transform: translateY(-4px) rotate(-0.4deg); }
-.recipe-card .card-body { padding: 0.9rem 1.1rem 1.1rem; display: grid; gap: 0.45rem; }
-.recipe-card h2, .recipe-card h3 { font-size: 1.15rem; margin: 0; color: var(--ink); }
-.recipe-card .meta { color: var(--ink-soft); font-size: 0.92rem; font-weight: 600; }
+.recipe-card .card-body { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; padding: 1rem 1.15rem 0.9rem; }
+.recipe-card h2, .recipe-card h3 { font-size: 1.2rem; margin: 0; color: var(--ink); }
+/* The description: at most two lines, so every card stays about the same size. */
+.card-desc {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+/* Time, servings and tags: one quiet line at the bottom of the card. */
+.card-foot {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  margin-top: auto;
+  padding-top: 0.6rem;
+  border-top: 2px dashed var(--line);
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+}
+.card-foot .meta { font-weight: 700; }
+.card-tags { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* A recipe's photo (only shown when it has one). */
 .picture {
@@ -983,7 +998,6 @@ details.paste summary { cursor: pointer; font-weight: 800; min-height: 44px; dis
   body { font-size: 1rem; }
   .brand { font-size: 1.35rem; }
   .brand img { width: 38px; height: 38px; }
-  .header-user { display: none; }
   .card { padding: 1rem; }
   .page { padding-top: 1rem; }
   .page-head .actions { width: 100%; }

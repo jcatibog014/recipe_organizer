@@ -31,7 +31,8 @@
 {%- endmacro %}
 
 {# A recipe in the grid. With a photo, it's on top; without one, the card is
-   compact and gets a candy-coloured strip instead. #}
+   compact and gets a candy-coloured strip instead. The recipe comes first
+   (name and description); time, servings and tags sit quietly at the bottom. #}
 {% macro recipe_card(recipe, extra=None) %}
   {% set photo_url = own_photo_url(recipe) %}
   <a class="recipe-card{% if not photo_url %} no-photo {{ accent_class(recipe) }}{% endif %}" href="{{ url_for('recipes.show', recipe_id=recipe.id) }}">
@@ -41,16 +42,15 @@
         <h2>{{ recipe.title }}</h2>
         {% if recipe.is_favorite and not photo_url %}<span class="heart" aria-hidden="true">♥</span>{% endif %}
       </div>
-      <p class="meta">
-        {% if recipe.total_minutes %}{{ recipe.total_minutes|minutes }} · {% endif %}Serves {{ recipe.servings }}
-        {% if recipe.is_favorite %}<span class="visually-hidden">(favorite)</span>{% endif %}
-      </p>
+      {% if recipe.is_favorite %}<span class="visually-hidden">(favorite)</span>{% endif %}
+      {% if recipe.description %}<p class="card-desc">{{ recipe.description }}</p>{% endif %}
       {% if extra %}{{ extra }}{% endif %}
-      {% if recipe.tags %}
-        <ul class="chips" aria-label="Tags">
-          {% for tag in recipe.tags[:4] %}<li class="chip chip-tag">#{{ tag.name }}</li>{% endfor %}
-        </ul>
-      {% endif %}
+      <div class="card-foot">
+        <span class="meta">{% if recipe.total_minutes %}{{ recipe.total_minutes|minutes }} · {% endif %}Serves {{ recipe.servings }}</span>
+        {% if recipe.tags %}
+          <span class="card-tags" aria-label="Tags">{% for tag in recipe.tags %}#{{ tag.name }}{{ ' ' if not loop.last }}{% endfor %}</span>
+        {% endif %}
+      </div>
     </div>
   </a>
 {% endmacro %}

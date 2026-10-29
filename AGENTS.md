@@ -46,7 +46,8 @@ Python 3.13 is at `%LOCALAPPDATA%\Programs\Python\Python313\python.exe`. Use the
   - **Pictures only when real:** a recipe with a photo shows it; one without gets a compact card with a candy strip (`.no-photo` + `accent_class()`), never a stand-in picture.
   - Sentence case everywhere ("Add a recipe", "Meal plan"); plain, correct English; the main button of a page is last on the right.
   - Layout helpers: `.page-head` (title + `.actions`), `.back-link` above the title, `.page-intro` under it, `.card-head` (card title + control), `.fields-row` and `.toolbar` (controls bottom-aligned, same height). Don't use inline `style=""` for layout.
-  - Header: logo, tabs and actions on one row; under 1040px the tabs move to a second, sideways-scrolling row.
+  - Tab names: "What can I cook?" = `search` (your own recipes), "Recipe ideas" = `discover` (TheMealDB). Keep user-facing text on these names, never "Search"/"Discover".
+  - Header: logo, tabs and actions (theme switch, Log out; the username is only its tooltip) on one row; under 1120px the tabs move to a second, sideways-scrolling row.
   - Filters with `data-autosubmit` apply on change; their `data-autosubmit-button` only shows without JavaScript.
   - Cook mode slides steps with the Web Animations API (`slideFrames()` in `app.js`), swipe included; reduced motion = fade.
 - **README screenshots** live in `docs/screenshots/` and are taken as the demo. Retake a screenshot whenever its page changes visibly.

@@ -6,7 +6,7 @@
   <h1>My recipes</h1>
   <div class="actions">
     {% if has_page('discover.index') %}
-      <a class="button button-secondary" href="{{ url_for('discover.index') }}">Discover recipes</a>
+      <a class="button button-secondary" href="{{ url_for('discover.index') }}">Find recipe ideas</a>
     {% endif %}
     <a class="button" href="{{ url_for('recipes.new') }}">Add a recipe</a>
   </div>
@@ -51,11 +51,11 @@
     <a class="button button-secondary" href="{{ url_for('recipes.index') }}">Show all recipes</a>
   {% endcall %}
 {% else %}
-  {% call empty('🍜', 'No recipes yet', 'Add your first recipe, or save a ready-made one from Discover.') %}
+  {% call empty('🍜', 'No recipes yet', 'Add your first recipe, or save a ready-made one from Recipe ideas.') %}
     <div class="row row-center">
       <a class="button" href="{{ url_for('recipes.new') }}">Add a recipe</a>
       {% if has_page('discover.index') %}
-        <a class="button button-secondary" href="{{ url_for('discover.index') }}">Discover recipes</a>
+        <a class="button button-secondary" href="{{ url_for('discover.index') }}">Find recipe ideas</a>
       {% endif %}
     </div>
   {% endcall %}

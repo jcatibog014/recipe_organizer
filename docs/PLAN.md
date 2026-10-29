@@ -107,6 +107,8 @@ Results load with `selectinload` (a test counts the queries: no N+1).
 
 - **Photo-only pictures (PR #3, 2026-10-29):** the emoji stand-in pictures repeated across recipes (every dessert had the same flan), so a recipe without a photo now gets a compact card with a candy-coloured strip, and the recipe page skips the picture. The emoji data was removed from the catalog.
 
+- **Clearer cards and tabs (PR #4, 2026-10-29):** recipe cards lead with the name and a two-line description; time, servings and tags sit in one quiet footer. The tabs "Search" and "Discover" looked alike, so they are now **"What can I cook?"** (your own recipes, by ingredient) and **"Recipe ideas"** (new recipes from TheMealDB); the code and web addresses keep the old names (`search`, `discover`). The username left the header (it's the Log out button's tooltip) so the tabs fit on one row down to 1120px.
+
 ## Ideas for later
 
 - Import a recipe from any web page (schema.org `Recipe` JSON-LD).
