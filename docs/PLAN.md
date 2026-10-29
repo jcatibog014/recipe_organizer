@@ -115,6 +115,8 @@ Results load with `selectinload` (a test counts the queries: no N+1).
 
 - **Settings and wording (PR #7, 2026-10-29):** Settings is one centred column with two cards (Your recipe box; Account). Every row has its name and description on the left and a same-width button on the right (full width under the text on phones), and the password form sits under its heading. A capitalization check over every page's headings, buttons, labels and titles led to: "Logged in as" (matching Log in / Log out), the error page's tab title matching its heading, the pantry shelf renamed "Dry goods & sauces" (it was "Pantry" inside the Pantry), and a clearer hidden label for the Match menu.
 
+- **Sidebar navigation (PR #8, 2026-10-29):** like Gawi, the menu moved from the top bar to a sidebar on the left (logo, menu items with icons, then the username, light/dark switch and Log out at the bottom), with a ☰ menu on phones. The demo banner became a note under the username. Page layouts now use container queries, so they fit the space beside the sidebar.
+
 ## Ideas for later
 
 - Import a recipe from any web page (schema.org `Recipe` JSON-LD).

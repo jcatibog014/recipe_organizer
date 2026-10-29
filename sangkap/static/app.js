@@ -33,6 +33,28 @@ function setUpThemeToggle() {
   });
 }
 
+// ---------- The ☰ menu on phones ----------
+// The button opens and closes the menu. Escape closes it too. On computers
+// the menu is a sidebar that is always open, and the button is hidden.
+
+function setUpMenu() {
+  const menu = document.querySelector("[data-menu]");
+  const button = document.querySelector("[data-menu-button]");
+  if (!menu || !button) return;
+  const setOpen = (open) => {
+    menu.classList.toggle("is-open", open);
+    button.setAttribute("aria-expanded", String(open));
+    button.setAttribute("aria-label", open ? "Close the menu" : "Menu");
+  };
+  button.addEventListener("click", () => setOpen(!menu.classList.contains("is-open")));
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && menu.classList.contains("is-open")) {
+      setOpen(false);
+      button.focus();
+    }
+  });
+}
+
 // ---------- "Are you sure?" before deleting ----------
 // A form with data-confirm="Question?" asks first. Without JavaScript it just sends.
 
@@ -309,6 +331,7 @@ function setUpPrintButtons() {
 
 document.addEventListener("DOMContentLoaded", () => {
   setUpThemeToggle();
+  setUpMenu();
   setUpConfirms();
   setUpAutosubmit();
   setUpPicker();

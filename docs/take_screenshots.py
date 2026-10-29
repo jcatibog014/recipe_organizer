@@ -68,7 +68,10 @@ def shoot(page, name, path, size):
     page.wait_for_timeout(500)
     # Sticky bars (Save, Find recipes) would float mid-picture in a full-page shot,
     # so pin them where they are in the page first.
-    page.add_style_tag(content=".find-bar, .sticky-actions { position: static !important; }")
+    # The sidebar is as tall as the screen and stays put while you scroll; in a
+    # full-page picture, stretch it down the whole page instead.
+    page.add_style_tag(content=".find-bar, .sticky-actions { position: static !important; }"
+                       " .has-sidebar .sidebar { position: static !important; height: auto !important; }")
     page.screenshot(path=OUT / name, full_page=size is DESKTOP)
     print("saved", name)
 

@@ -260,33 +260,35 @@ img { max-width: 100%; display: block; }
 }
 .skip-link:focus { top: 1rem; }
 
-/* ---------- Header ---------- */
+/* ---------- Layout: a sidebar on computers, a top bar with a ☰ menu on phones ----------
+   Like Gawi. One left edge for everything in the sidebar: the logo, the menu
+   icons, the username and the buttons all start at the same place. */
 
-.site-header {
-  background: var(--surface);
-  border-bottom: 3px solid var(--line);
-  box-shadow: var(--shadow-small);
-  position: relative;
-}
-.header-inner, .page, .footer-inner {
-  max-width: 1120px;
+.shell { flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+.content { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.page, .footer-inner {
+  max-width: 1180px;
   margin: 0 auto;
   padding-left: 16px;
   padding-right: 16px;
 }
-/* Wide screens: logo | tabs | actions, all on one centred line. */
-.header-inner {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  grid-template-areas: "brand nav actions";
+
+.sidebar {
+  position: relative;
+  z-index: 10;
+  background: var(--surface);
+  border-bottom: 3px solid var(--line);
+  box-shadow: var(--shadow-small);
+}
+.sidebar-top {
+  display: flex;
   align-items: center;
-  column-gap: 1.5rem;
-  min-height: 72px;
-  padding-top: 0.6rem;
-  padding-bottom: 0.6rem;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 64px;
+  padding: 10px 16px;
 }
 .brand {
-  grid-area: brand;
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
@@ -299,66 +301,93 @@ img { max-width: 100%; display: block; }
 }
 .brand img { width: 40px; height: 40px; transition: transform 0.25s; }
 .brand:hover img { transform: rotate(-8deg) scale(1.06); }
-.header-actions { grid-area: actions; display: flex; align-items: center; gap: 0.6rem; }
-.header-actions form { margin: 0; }
 
-.site-nav {
-  grid-area: nav;
+/* The ☰ menu (phones): folded away until the button opens it.
+   Without JavaScript it simply stays open. */
+.sidebar-panel { display: grid; gap: 12px; padding: 0 16px 16px; }
+.js .sidebar-panel { display: none; }
+.js .sidebar.is-open .sidebar-panel { display: grid; animation: menu-in 0.2s ease-out; }
+@keyframes menu-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: none; }
+}
+.menu-button .icon-close { display: none; }
+.sidebar.is-open .menu-button .icon-open { display: none; }
+.sidebar.is-open .menu-button .icon-close { display: block; }
+
+/* Menu items: full-width rows. Their side padding (12px) is taken back with a
+   negative margin, so each icon lines up with the logo above it. */
+.site-nav { display: grid; gap: 4px; margin: 0 -12px; }
+.site-nav a {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.site-nav::-webkit-scrollbar { display: none; }
-.site-nav a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 0.4rem 0.8rem;
-  border-radius: 999px;
-  color: var(--ink);
-  text-decoration: none;
+  gap: 12px;
+  min-height: 48px;
+  padding: 0 12px;
+  border-radius: 14px;
+  color: var(--ink-soft);
   font-weight: 700;
-  white-space: nowrap;
-  border: 2px solid transparent;
+  text-decoration: none;
+  transition: background-color 0.15s ease;
 }
-.site-nav a:hover { background: var(--surface-soft); }
-
-/* Narrower screens: the tabs get their own row under the logo, lined up
-   with it, and scroll sideways if they don't fit. */
-@media (max-width: 1120px) {
-  .header-inner {
-    /* minmax(0, 1fr): the long, scrolling tab row must not widen the columns. */
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas: "brand actions" "nav nav";
-    row-gap: 0.5rem;
-    padding-bottom: 0.5rem;
-  }
-  .brand { justify-self: start; }
-  /* A soft fade on the right shows that more tabs scroll into view. */
-  .site-nav { mask-image: linear-gradient(to right, #000 85%, transparent); }
-}
+.site-nav a:hover { background: var(--surface-soft); color: var(--ink); }
 .site-nav a[aria-current="page"] {
   background: var(--mint) var(--gloss);
-  background-blend-mode: normal;
-  border-color: rgb(0 0 0 / 0.06);
-  box-shadow: inset 0 -3px 0 rgb(0 0 0 / 0.08), var(--shadow-small);
   color: #173c2e;
+  box-shadow: inset 0 -3px 0 rgb(0 0 0 / 0.08);
 }
+.nav-icon { flex: none; }
 
-.demo-banner {
-  margin: 0;
-  padding: 0.6rem 16px;
-  text-align: center;
-  background: var(--banner-bg);
-  border-bottom: 2px solid var(--line);
-  font-weight: 600;
+/* The bottom of the sidebar: who's logged in, the light/dark switch, Log out. */
+.sidebar-footer {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 2px dashed var(--line);
+}
+.sidebar-user { display: grid; margin: 0; font-weight: 800; overflow-wrap: anywhere; }
+.sidebar-user-note { font-size: 0.85rem; font-weight: 600; color: var(--ink-soft); }
+.sidebar-actions { display: flex; align-items: center; gap: 8px; }
+.sidebar-actions form { margin: 0; }
+
+@media (min-width: 900px) {
+  .has-sidebar .shell { flex-direction: row; }
+  .has-sidebar .sidebar {
+    position: sticky;
+    top: 0;
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    width: 248px;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 24px 20px;
+    border-bottom: 0;
+    border-right: 3px solid var(--line);
+    box-shadow: 2px 0 16px rgb(194 24 91 / 0.06);
+  }
+  .has-sidebar .sidebar-top { min-height: 48px; padding: 0; }
+  .has-sidebar .menu-button { display: none; }
+  .has-sidebar .sidebar-panel,
+  .js .has-sidebar .sidebar-panel {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 28px;
+    padding: 0;
+    animation: none;
+  }
+  .has-sidebar .sidebar-footer { margin-top: auto; }
+  .has-sidebar .page, .has-sidebar .footer-inner { padding-left: 32px; padding-right: 32px; }
 }
 
 /* ---------- Layout ---------- */
 
-.page { flex: 1 0 auto; width: 100%; padding-top: 1.5rem; padding-bottom: 3rem; }
+/* The page is a container: its layouts (recipe page, meal plan, form rows) change
+   with the space next to the sidebar, not with the whole window. */
+.page { flex: 1 0 auto; width: 100%; padding-top: 1.5rem; padding-bottom: 3rem; container: page / inline-size; }
 
 .page-head {
   display: flex;
@@ -605,11 +634,11 @@ img { max-width: 100%; display: block; }
   align-items: flex-end;
   gap: 0.75rem 1rem;
 }
-.toolbar .field { flex: 0 1 13rem; }
+.toolbar .field { flex: 0 1 9.5rem; }
 .toolbar .check { flex: none; }
 .toolbar .button { flex: none; }
 .js .toolbar [data-autosubmit-button] { display: none; }
-.toolbar .search-box { flex: 1 1 16rem; }
+.toolbar .search-box { flex: 1 1 11rem; }
 
 /* A checkbox that looks like the boxes next to it (a pill, 46px tall). */
 .check-pill {
@@ -1267,15 +1296,15 @@ details.paste summary { cursor: pointer; font-weight: 800; min-height: 44px; dis
   background: var(--surface);
 }
 
-@media (max-width: 1100px) {
+@container page (max-width: 1000px) {
   .week { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
-@media (max-width: 860px) {
+@container page (max-width: 720px) {
   .plan-head { grid-template-columns: 1fr auto; }
   .week-picker { grid-column: 1 / -1; grid-row: 2; justify-content: center; flex-wrap: wrap; }
   .week { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-@media (max-width: 560px) {
+@container page (max-width: 500px) {
   .week { grid-template-columns: 1fr; }
   .week-pill .label { min-width: 0; }
 }
@@ -1359,10 +1388,10 @@ details.paste summary { cursor: pointer; font-weight: 800; min-height: 44px; dis
 
 /* ---------- Phone ---------- */
 
-@media (max-width: 860px) {
+@container page (max-width: 760px) {
   .recipe-layout, .two-columns { grid-template-columns: 1fr; }
 }
-@media (max-width: 720px) {
+@container page (max-width: 660px) {
   .ingredient-row { grid-template-columns: 5rem minmax(0, 1fr); }
   .ingredient-row .name-field { grid-column: 1 / -1; order: -1; }
   .ingredient-row .note-field { grid-column: 1 / -1; }
@@ -1378,6 +1407,7 @@ details.paste summary { cursor: pointer; font-weight: 800; min-height: 44px; dis
   .page-head .actions .button { flex: 1 1 auto; }
   .recipe-grid .picture { aspect-ratio: 16 / 9; }
   .toolbar .field { flex: 1 1 8rem; }
+  .toolbar .search-box { flex-basis: 100%; }
   .setting-row { grid-template-columns: minmax(0, 1fr); }
 }
 
@@ -1394,7 +1424,7 @@ details.paste summary { cursor: pointer; font-weight: 800; min-height: 44px; dis
 
 @media print {
   body { background: #fff; color: #000; }
-  body::before, .site-header, .site-footer, .demo-banner, .no-print, .flash, .servings,
+  body::before, .sidebar, .site-footer, .no-print, .flash, .servings,
   .row-tools, form { display: none !important; }
   .card, .recipe-card, .photo-frame { box-shadow: none; transform: none; }
   .recipe-layout { grid-template-columns: 1fr 2fr; }
