@@ -140,7 +140,7 @@ def test_export_is_a_json_backup_of_only_my_recipes(app, owner_client, owner_id,
 def test_settings_page(owner_client, client):
     page = owner_client.get("/settings").data.decode()
     # Three rows in "Your recipe box", each with its own button, then the account.
-    assert page.count('class="setting-row"') == 4  # tags, ingredients, backup, logged in as
+    assert page.count('class="setting-row"') == 5  # tags, ingredients, backup, install, logged in as
     for label in ("Manage tags", "Manage ingredients", "Download backup", "Log out", "Change password"):
         assert label in page
     assert "Logged in as" in page and OWNER in page
@@ -152,3 +152,22 @@ def test_settings_page_for_the_demo(client):
     page = client.get("/settings").data.decode()
     assert "the shared demo account" in page and "can't change its password" in page
     assert 'name="current_password"' not in page
+
+
+def test_installable_as_an_app(client, owner_client):
+    # The service worker is served from the top of the site, never cached for long.
+    worker = client.get("/sw.js")
+    assert worker.status_code == 200 and "javascript" in worker.mimetype
+    assert worker.headers["Cache-Control"] == "no-cache" and b"sangkap-v1" in worker.data
+    # It is allowed by the Content-Security-Policy, and its files exist.
+    assert "worker-src 'self'" in worker.headers["Content-Security-Policy"]
+    for path in ("/static/offline.html", "/static/site.webmanifest", "/static/icons/icon-192.png",
+                 "/static/icons/icon-512.png"):
+        assert client.get(path).status_code == 200, path
+    manifest = client.get("/static/site.webmanifest").get_json(force=True)
+    assert manifest["display"] == "standalone" and manifest["scope"] == "/"
+    # The Install buttons are in the page (hidden until the browser offers to install),
+    # and Settings explains the iPhone way too.
+    page = owner_client.get("/settings").data.decode()
+    assert page.count("data-install hidden") == 2
+    assert "Add to Home Screen" in page

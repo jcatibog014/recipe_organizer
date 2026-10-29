@@ -349,6 +349,7 @@ img { max-width: 100%; display: block; }
 .sidebar-user { display: grid; margin: 0; font-weight: 800; overflow-wrap: anywhere; }
 .sidebar-user-note { font-size: 0.85rem; font-weight: 600; color: var(--ink-soft); }
 .sidebar-actions { display: flex; align-items: center; gap: 8px; }
+.install-button[hidden], [data-install][hidden] { display: none; }
 .sidebar-actions form { margin: 0; }
 
 @media (min-width: 900px) {
@@ -428,6 +429,9 @@ img { max-width: 100%; display: block; }
 .setting-text p { margin: 0; color: var(--ink-soft); font-size: 0.95rem; }
 /* The password row: the form goes under the text, at a comfortable width. */
 .setting-row-stack { grid-template-columns: minmax(0, 1fr); }
+.install-steps { margin: 0; padding-left: 1.25rem; display: grid; gap: 0.4rem; color: var(--ink-soft); }
+.install-steps strong { color: var(--ink); }
+.offline-page { display: flex; flex-direction: column; justify-content: center; min-height: 100vh; max-width: 460px; }
 .password-form { max-width: 26rem; }
 
 .stack > * + * { margin-top: 1.25rem; }
